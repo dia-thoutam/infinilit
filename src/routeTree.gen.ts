@@ -9,38 +9,146 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeacherNewRouteImport } from './routes/teacher.new'
+import { Route as TeacherIdEditRouteImport } from './routes/teacher.$id.edit'
 
+const TeacherRoute = TeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeacherNewRoute = TeacherNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherIdEditRoute = TeacherIdEditRouteImport.update({
+  id: '/$id/edit',
+  path: '/$id/edit',
+  getParentRoute: () => TeacherRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/quiz': typeof QuizRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teacher': typeof TeacherRouteWithChildren
+  '/teacher/new': typeof TeacherNewRoute
+  '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/quiz': typeof QuizRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teacher': typeof TeacherRouteWithChildren
+  '/teacher/new': typeof TeacherNewRoute
+  '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/quiz': typeof QuizRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teacher': typeof TeacherRouteWithChildren
+  '/teacher/new': typeof TeacherNewRoute
+  '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/quiz'
+    | '/sitemap.xml'
+    | '/teacher'
+    | '/teacher/new'
+    | '/teacher/$id/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/analytics'
+    | '/quiz'
+    | '/sitemap.xml'
+    | '/teacher'
+    | '/teacher/new'
+    | '/teacher/$id/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/analytics'
+    | '/quiz'
+    | '/sitemap.xml'
+    | '/teacher'
+    | '/teacher/new'
+    | '/teacher/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  QuizRoute: typeof QuizRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TeacherRoute: typeof TeacherRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +156,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher/new': {
+      id: '/teacher/new'
+      path: '/new'
+      fullPath: '/teacher/new'
+      preLoaderRoute: typeof TeacherNewRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/$id/edit': {
+      id: '/teacher/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/teacher/$id/edit'
+      preLoaderRoute: typeof TeacherIdEditRouteImport
+      parentRoute: typeof TeacherRoute
+    }
   }
 }
 
+interface TeacherRouteChildren {
+  TeacherNewRoute: typeof TeacherNewRoute
+  TeacherIdEditRoute: typeof TeacherIdEditRoute
+}
+
+const TeacherRouteChildren: TeacherRouteChildren = {
+  TeacherNewRoute: TeacherNewRoute,
+  TeacherIdEditRoute: TeacherIdEditRoute,
+}
+
+const TeacherRouteWithChildren =
+  TeacherRoute._addFileChildren(TeacherRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  QuizRoute: QuizRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TeacherRoute: TeacherRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
