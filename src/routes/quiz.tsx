@@ -27,6 +27,8 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, Badge3D } from "@/components/app-shell";
+import { HexBadge } from "@/components/hex-badge";
+import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -45,7 +47,7 @@ export const Route = createFileRoute("/quiz")({
   component: QuizPage,
 });
 
-type Phase = "lobby" | "question" | "confidence" | "reveal" | "leaderboard" | "progress";
+type Phase = "lobby" | "question" | "confidence" | "reveal" | "completed" | "leaderboard" | "progress";
 type Confidence = "sure" | "unsure" | "guessing";
 
 function QuizPage() {
@@ -61,6 +63,8 @@ function QuizPage() {
   const [xp, setXp] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [votes, setVotes] = useState<[number, number, number, number]>([0, 0, 0, 0]);
+  const [finalXp, setFinalXp] = useState(0);
+  const [finalAccuracy, setFinalAccuracy] = useState(0);
 
   const quiz = useMemo(() => quizzes.find((q) => q.id === activeQuizId) ?? null, [quizzes, activeQuizId]);
   const question = quiz?.questions[qIndex];
@@ -127,7 +131,9 @@ function QuizPage() {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
       recordAttempt(quiz.id, accuracy, totalXp);
-      setPhase("leaderboard");
+      setFinalAccuracy(accuracy);
+      setFinalXp(totalXp);
+      setPhase("completed");
     }
   };
 
@@ -140,7 +146,18 @@ function QuizPage() {
   }
 
   if (phase === "leaderboard") {
-    return <LeaderboardScreen onNext={() => setPhase("progress")} myXp={xp} />;
+    return <LeaderboardScreen onNext={() => setPhase("progress")} myXp={finalXp || xp} />;
+  }
+
+  if (phase === "completed") {
+    return (
+      <CompletedScreen
+        xp={finalXp}
+        accuracy={finalAccuracy}
+        quizTitle={quiz.title}
+        onContinue={() => setPhase("leaderboard")}
+      />
+    );
   }
 
   if (phase === "progress") {
@@ -303,9 +320,9 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
               <div className={cn("h-2", c === "coral" && "bg-coral", c === "sunshine" && "bg-sunshine", c === "mint" && "bg-mint", c === "sky" && "bg-sky")} />
               <div className="space-y-4 p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <Badge3D color={c} className="h-14 w-14">
-                    <Trophy className="h-6 w-6" strokeWidth={2.5} />
-                  </Badge3D>
+                  <HexBadge tone={c} size={64}>
+                    <Trophy className="h-full w-full" strokeWidth={2.5} />
+                  </HexBadge>
                   {q.lastAttempt && (
                     <div className="text-right text-xs">
                       <div className="font-bold text-mint">{q.lastAttempt.accuracy}% acc</div>
@@ -514,9 +531,11 @@ function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number 
             const Icon = a.icon;
             return (
               <Card key={a.label} className="border-2 border-foreground bg-card p-5 text-center badge-shadow">
-                <Badge3D color={a.color} className="mx-auto h-16 w-16">
-                  <Icon className="h-7 w-7" strokeWidth={2.5} />
-                </Badge3D>
+                <div className="mx-auto w-fit">
+                  <HexBadge tone={a.color} size={88}>
+                    <Icon className="h-full w-full" strokeWidth={2.5} />
+                  </HexBadge>
+                </div>
                 <div className="mt-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{a.label}</div>
                 <div className="mt-1 font-display text-xl font-bold">{a.winner}</div>
               </Card>

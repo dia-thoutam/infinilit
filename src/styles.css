@@ -69,6 +69,8 @@
   --color-sky-foreground: var(--sky-foreground);
   --color-amber-alert: var(--amber-alert);
   --color-ink: var(--ink);
+  --color-violet: var(--violet);
+  --color-violet-foreground: var(--violet-foreground);
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
 }
@@ -102,6 +104,10 @@
   --sky: oklch(0.72 0.13 240);                  /* sky #4DA8F2 */
   --sky-foreground: oklch(0.99 0.005 85);
   --amber-alert: oklch(0.78 0.16 70);
+  --violet: oklch(0.55 0.22 295);
+  --violet-foreground: oklch(0.99 0.005 85);
+  --celebration-from: oklch(0.7 0.18 295);
+  --celebration-to: oklch(0.5 0.22 285);
 
   --muted: oklch(0.94 0.025 85);
   --muted-foreground: oklch(0.5 0.04 270);
