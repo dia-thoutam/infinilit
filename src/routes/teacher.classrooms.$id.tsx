@@ -60,7 +60,8 @@ function ClassroomStatsPage() {
     let correct = 0,
       total = 0,
       sure = 0,
-      sureCorrect = 0;
+      sureCorrect = 0,
+      xp = 0;
     sessions.forEach((s) => {
       const row = s.perStudent.find((p) => p.studentId === st.id);
       if (row) {
@@ -68,6 +69,8 @@ function ClassroomStatsPage() {
         total += row.total;
         sure += row.sure;
         sureCorrect += row.sureCorrect;
+        // Estimate per-student XP as their share of the session XP, weighted by accuracy.
+        if (row.total > 0) xp += Math.round((row.correct / row.total) * s.xp);
       }
     });
     return {
@@ -75,8 +78,9 @@ function ClassroomStatsPage() {
       accuracy: total ? Math.round((correct / total) * 100) : 0,
       calibration: sure ? Math.round((sureCorrect / sure) * 100) : null,
       answered: total,
+      xp,
     };
-  });
+  }).sort((a, b) => b.xp - a.xp);
 
   return (
     <AppShell>
@@ -176,17 +180,26 @@ function ClassroomStatsPage() {
               </div>
               <div className="mt-4 overflow-hidden rounded-xl border-2 border-foreground/10">
                 <div className="grid grid-cols-12 bg-foreground/5 px-4 py-2 text-[10px] font-bold uppercase tracking-wider">
-                  <div className="col-span-5">Student</div>
+                  <div className="col-span-4">Student</div>
                   <div className="col-span-2 text-right">Answered</div>
                   <div className="col-span-2 text-right">Accuracy</div>
-                  <div className="col-span-3 text-right">Confidence calibration</div>
+                  <div className="col-span-2 text-right">XP</div>
+                  <div className="col-span-2 text-right">Confidence</div>
                 </div>
-                {perStudent.map((p) => (
-                  <div key={p.student} className="grid grid-cols-12 border-t border-foreground/5 px-4 py-2 text-sm">
-                    <div className="col-span-5 font-semibold">{p.student}</div>
+                {perStudent.map((p, i) => (
+                  <div key={p.student} className="grid grid-cols-12 items-center border-t border-foreground/5 px-4 py-2 text-sm">
+                    <div className="col-span-4 flex items-center gap-2 font-semibold">
+                      <span className="grid h-6 w-6 place-items-center rounded-full bg-foreground/10 text-[10px] font-bold">{i + 1}</span>
+                      {p.student}
+                    </div>
                     <div className="col-span-2 text-right">{p.answered}</div>
                     <div className="col-span-2 text-right font-bold">{p.accuracy}%</div>
-                    <div className="col-span-3 text-right">
+                    <div className="col-span-2 text-right">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-sunshine/30 px-2 py-0.5 text-xs font-bold text-foreground">
+                        <Zap className="h-3 w-3" strokeWidth={3} /> {p.xp.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-right">
                       {p.calibration === null ? <span className="text-muted-foreground">—</span> : <span className="font-bold">{p.calibration}%</span>}
                     </div>
                   </div>
