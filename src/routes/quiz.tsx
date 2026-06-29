@@ -355,7 +355,16 @@ function QuizPage() {
 }
 
 /* ---------- Lobby ---------- */
-function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"]; onStart: (id: string) => void }) {
+function Lobby({
+  quizzes,
+  classrooms,
+  onStart,
+}: {
+  quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"];
+  classrooms: Classroom[];
+  onStart: (id: string, classroomId: string | null) => void;
+}) {
+  const [selectedClassroom, setSelectedClassroom] = useState<string>("solo");
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -370,11 +379,25 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
             Easy = 20 XP · Medium = 50 XP · Hard = 100 XP. Race the timer, lock in your confidence, and outscore the class.
           </p>
         </div>
-        <Link to="/teacher" className="inline-flex">
-          <Button variant="badge" size="lg">
-            <Sparkles className="h-4 w-4" /> Browse all quizzes
-          </Button>
-        </Link>
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Classroom</label>
+            <Select value={selectedClassroom} onValueChange={setSelectedClassroom}>
+              <SelectTrigger className="h-11 w-[240px] rounded-xl border-2 text-base"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="solo">Solo (no roster)</SelectItem>
+                {classrooms.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>{c.name} · {c.students.length}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Link to="/teacher/classrooms" className="inline-flex">
+            <Button variant="badge" size="lg">
+              <Sparkles className="h-4 w-4" /> Manage classrooms
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -406,7 +429,7 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
                     {q.questions.reduce((sum, x) => sum + xpFor(x.difficulty), 0)} XP total
                   </span>
                 </div>
-                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id)}>
+                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom)}>
                   Start <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
