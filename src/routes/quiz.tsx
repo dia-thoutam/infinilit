@@ -53,6 +53,7 @@ export const Route = createFileRoute("/quiz")({
 });
 
 type Phase = "lobby" | "question" | "confidence" | "reveal" | "completed" | "leaderboard" | "progress";
+type PhaseExt = Phase | "podium";
 type Confidence = "sure" | "unsure" | "guessing";
 
 function QuizPage() {
@@ -240,6 +241,17 @@ function QuizPage() {
         xp={finalXp}
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
+        onContinue={() => setPhase("podium" as Phase)}
+      />
+    );
+  }
+
+  if ((phase as PhaseExt) === "podium") {
+    return (
+      <PodiumScreen
+        classroom={classroom}
+        tally={tally}
+        myXp={finalXp}
         onContinue={() => setPhase("leaderboard")}
       />
     );
