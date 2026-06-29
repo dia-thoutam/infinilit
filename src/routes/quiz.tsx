@@ -743,9 +743,14 @@ function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number 
     <div className="min-h-screen bg-sunshine text-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="flex items-center justify-between">
-          <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
-            <Trophy className="h-4 w-4" strokeWidth={3} /> Session Leaderboard
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
+              <Home className="h-4 w-4" strokeWidth={3} /> Home
+            </Link>
+            <span className="inline-flex items-center gap-2 rounded-full stat-gradient-violet px-4 py-2 text-xs font-bold uppercase text-white">
+              <Trophy className="h-4 w-4" strokeWidth={3} /> Session Leaderboard
+            </span>
+          </div>
           <Button variant="coral" onClick={onNext}>
             See class progress <ChevronRight className="h-4 w-4" />
           </Button>
