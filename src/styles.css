@@ -194,3 +194,34 @@
 @utility chunky-border {
   border: 2px solid var(--color-ink);
 }
+
+@utility stat-gradient-violet {
+  background: radial-gradient(120% 120% at 20% 10%, #c4b5fd 0%, #a78bfa 40%, #f0abfc 80%, #fdba74 100%);
+  color: #0f0a1f;
+}
+
+@utility stat-gradient-mint {
+  background: radial-gradient(120% 120% at 80% 0%, #d9f99d 0%, #34d399 50%, #0f766e 100%);
+  color: #f0fdf4;
+}
+
+@utility stat-gradient-sky {
+  background: radial-gradient(120% 120% at 0% 100%, #bae6fd 0%, #60a5fa 50%, #1e3a8a 100%);
+  color: #f0f9ff;
+}
+
+@utility stat-gradient-coral {
+  background: radial-gradient(120% 120% at 100% 0%, #fed7aa 0%, #fb7185 55%, #be185d 100%);
+  color: #fff7ed;
+}
+
+@utility stat-gradient-dark {
+  background: radial-gradient(140% 140% at 0% 0%, #1f2937 0%, #0b1020 60%, #000 100%);
+  color: #f8fafc;
+}
+
+@utility glass-card {
+  backdrop-filter: blur(14px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
+  border: 1px solid rgba(255,255,255,0.4);
+}

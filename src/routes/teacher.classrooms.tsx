@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Plus, Trash2, Users, UserPlus, GraduationCap } from "lucide-react";
+import { ArrowLeft, BarChart3, Plus, Trash2, Users, UserPlus, GraduationCap } from "lucide-react";
 import { AppShell, Badge3D } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -82,9 +82,17 @@ function ClassroomsPage() {
                         onChange={(e) => upsert({ ...c, name: e.target.value })}
                         className="h-9 rounded-lg border-2 font-display text-lg font-bold"
                       />
-                      <div className="mt-1 text-xs text-muted-foreground">{c.students.length} students</div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {c.students.length} students · {c.sessions?.length ?? 0} sessions
+                      </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-1">
+                  <Link to="/teacher/classrooms/$id" params={{ id: c.id }}>
+                    <Button variant="gradient" size="sm">
+                      <BarChart3 className="h-4 w-4" /> Stats
+                    </Button>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -95,6 +103,7 @@ function ClassroomsPage() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                  </div>
                 </div>
 
                 <StudentList

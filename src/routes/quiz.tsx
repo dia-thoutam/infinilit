@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Crown,
   Flame,
+  Home,
   Medal,
   Sparkles,
   Star,
@@ -29,7 +30,8 @@ import {
 import { AppShell, Badge3D } from "@/components/app-shell";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useClassrooms, type Classroom } from "@/store/classrooms";
+import { Switch } from "@/components/ui/switch";
+import { useClassrooms, type Classroom, type StudentSessionStat } from "@/store/classrooms";
 import { HexBadge } from "@/components/hex-badge";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
@@ -57,9 +59,11 @@ function QuizPage() {
   const quizzes = useQuizzes((s) => s.quizzes);
   const recordAttempt = useQuizzes((s) => s.recordAttempt);
   const classrooms = useClassrooms((s) => s.classrooms);
+  const addSession = useClassrooms((s) => s.addSession);
 
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [classroomId, setClassroomId] = useState<string | null>(null);
+  const [trackConfidence, setTrackConfidence] = useState(false);
   const [phase, setPhase] = useState<Phase>("lobby");
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -72,6 +76,8 @@ function QuizPage() {
   const [finalAccuracy, setFinalAccuracy] = useState(0);
   const emptyPicks = (): Record<0 | 1 | 2 | 3, string[]> => ({ 0: [], 1: [], 2: [], 3: [] });
   const [studentPicks, setStudentPicks] = useState<Record<0 | 1 | 2 | 3, string[]>>(emptyPicks);
+  const [studentConfidence, setStudentConfidence] = useState<Record<string, Confidence>>({});
+  const [tally, setTally] = useState<Record<string, StudentSessionStat>>({});
 
   const quiz = useMemo(() => quizzes.find((q) => q.id === activeQuizId) ?? null, [quizzes, activeQuizId]);
   const question = quiz?.questions[qIndex];
@@ -108,9 +114,10 @@ function QuizPage() {
     return () => clearTimeout(id);
   }, [phase, confidence, question]);
 
-  const start = (id: string, cid: string | null) => {
+  const start = (id: string, cid: string | null, track: boolean) => {
     setActiveQuizId(id);
     setClassroomId(cid);
+    setTrackConfidence(track);
     setPhase("question");
     setQIndex(0);
     setPicked(null);
@@ -118,6 +125,8 @@ function QuizPage() {
     setXp(0);
     setCorrectCount(0);
     setStudentPicks(emptyPicks());
+    setStudentConfidence({});
+    setTally({});
   };
 
   const choose = (idx: number) => {
@@ -151,6 +160,29 @@ function QuizPage() {
     // pick = the choice with most votes (for advance logic / xp award proxy)
     const top = v.indexOf(Math.max(...v));
     setPicked(top);
+    // update per-student tally for this question
+    setTally((prev) => {
+      const next = { ...prev };
+      ([0, 1, 2, 3] as const).forEach((k) => {
+        studentPicks[k].forEach((sid) => {
+          const cur =
+            next[sid] ??
+            ({ studentId: sid, correct: 0, total: 0, sure: 0, unsure: 0, guessing: 0, sureCorrect: 0 } as StudentSessionStat);
+          const isCorrect = k === question.correct;
+          const conf = studentConfidence[sid];
+          next[sid] = {
+            ...cur,
+            total: cur.total + 1,
+            correct: cur.correct + (isCorrect ? 1 : 0),
+            sure: cur.sure + (conf === "sure" ? 1 : 0),
+            unsure: cur.unsure + (conf === "unsure" ? 1 : 0),
+            guessing: cur.guessing + (conf === "guessing" ? 1 : 0),
+            sureCorrect: cur.sureCorrect + (conf === "sure" && isCorrect ? 1 : 0),
+          };
+        });
+      });
+      return next;
+    });
     setPhase("reveal");
   };
 
@@ -165,11 +197,25 @@ function QuizPage() {
       setQIndex((i) => i + 1);
       setPicked(null);
       setConfidence(null);
+      setStudentPicks(emptyPicks());
+      setStudentConfidence({});
       setPhase("question");
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
       recordAttempt(quiz.id, accuracy, totalXp);
+      if (classroom) {
+        addSession(classroom.id, {
+          id: `sess-${Date.now()}`,
+          date: new Date().toISOString().slice(0, 10),
+          quizId: quiz.id,
+          quizTitle: quiz.title,
+          accuracy,
+          xp: totalXp,
+          trackedConfidence: trackConfidence,
+          perStudent: Object.values(tally),
+        });
+      }
       setFinalAccuracy(accuracy);
       setFinalXp(totalXp);
       setPhase("completed");
@@ -224,6 +270,15 @@ function QuizPage() {
             {/* Top bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (confirm("Exit quiz and return to home?")) setPhase("lobby");
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-background hover:opacity-90"
+                  aria-label="Exit to home"
+                >
+                  <Home className="h-3 w-3" strokeWidth={3} /> Home
+                </button>
                 <span className="rounded-full bg-foreground/10 px-3 py-1">Session 7</span>
                 <span className="rounded-full bg-sky/20 px-3 py-1 text-sky">{question.section}</span>
                 <span className="rounded-full bg-foreground/10 px-3 py-1">
@@ -231,6 +286,9 @@ function QuizPage() {
                 </span>
                 {classroom && (
                   <span className="rounded-full bg-mint/20 px-3 py-1 text-foreground">{classroom.name}</span>
+                )}
+                {trackConfidence && classroom && (
+                  <span className="rounded-full stat-gradient-violet px-3 py-1 text-white">Confidence ON</span>
                 )}
                 <span
                   className={cn(
@@ -270,6 +328,11 @@ function QuizPage() {
                       picked={studentPicks[i as 0 | 1 | 2 | 3]}
                       allPicks={studentPicks}
                       onToggle={(sid) => toggleStudentPick(i as 0 | 1 | 2 | 3, sid)}
+                      trackConfidence={trackConfidence}
+                      studentConfidence={studentConfidence}
+                      onSetConfidence={(sid, c) =>
+                        setStudentConfidence((prev) => ({ ...prev, [sid]: c }))
+                      }
                     />
                   );
                 }
@@ -362,9 +425,10 @@ function Lobby({
 }: {
   quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"];
   classrooms: Classroom[];
-  onStart: (id: string, classroomId: string | null) => void;
+  onStart: (id: string, classroomId: string | null, trackConfidence: boolean) => void;
 }) {
   const [selectedClassroom, setSelectedClassroom] = useState<string>("solo");
+  const [trackConfidence, setTrackConfidence] = useState(false);
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -400,6 +464,18 @@ function Lobby({
         </div>
       </div>
 
+      {selectedClassroom !== "solo" && (
+        <Card className="flex flex-wrap items-center justify-between gap-3 border-2 border-foreground/10 p-4 stat-gradient-violet text-white badge-shadow">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider opacity-90">Confidence tracking</div>
+            <div className="text-sm">Add sure / unsure / guessing buttons next to each student in the picker.</div>
+          </div>
+          <label className="inline-flex items-center gap-2 text-sm font-semibold">
+            <Switch checked={trackConfidence} onCheckedChange={setTrackConfidence} /> {trackConfidence ? "ON" : "OFF"}
+          </label>
+        </Card>
+      )}
+
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {quizzes.map((q, i) => {
           const colors = ["coral", "sunshine", "mint", "sky"] as const;
@@ -429,7 +505,7 @@ function Lobby({
                     {q.questions.reduce((sum, x) => sum + xpFor(x.difficulty), 0)} XP total
                   </span>
                 </div>
-                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom)}>
+                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom, trackConfidence)}>
                   Start <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -449,6 +525,9 @@ function ChoiceWithStudents({
   picked,
   allPicks,
   onToggle,
+  trackConfidence,
+  studentConfidence,
+  onSetConfidence,
 }: {
   letter: string;
   text: string;
@@ -456,6 +535,9 @@ function ChoiceWithStudents({
   picked: string[];
   allPicks: Record<0 | 1 | 2 | 3, string[]>;
   onToggle: (studentId: string) => void;
+  trackConfidence: boolean;
+  studentConfidence: Record<string, Confidence>;
+  onSetConfidence: (studentId: string, c: Confidence) => void;
 }) {
   const assignedElsewhere = (sid: string) =>
     ([0, 1, 2, 3] as const).some((k) => allPicks[k].includes(sid)) && !picked.includes(sid);
@@ -489,27 +571,61 @@ function ChoiceWithStudents({
               const checked = picked.includes(s.id);
               const elsewhere = assignedElsewhere(s.id);
               return (
-                <button
+                <div
                   key={s.id}
-                  onClick={() => onToggle(s.id)}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-muted",
+                    "flex w-full flex-col gap-1 rounded-lg px-2 py-2 text-sm",
                     checked && "bg-mint/15",
                   )}
                 >
-                  <span
-                    className={cn(
-                      "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
-                      checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
-                    )}
+                  <button
+                    onClick={() => onToggle(s.id)}
+                    className="flex w-full items-center gap-2 text-left hover:bg-muted/50 rounded"
                   >
-                    {checked && <Check className="h-3 w-3" strokeWidth={4} />}
-                  </span>
-                  <span className="flex-1 font-medium">{s.name}</span>
-                  {elsewhere && (
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                    <span
+                      className={cn(
+                        "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
+                        checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
+                      )}
+                    >
+                      {checked && <Check className="h-3 w-3" strokeWidth={4} />}
+                    </span>
+                    <span className="flex-1 font-medium">{s.name}</span>
+                    {elsewhere && (
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                    )}
+                  </button>
+                  {trackConfidence && checked && (
+                    <div className="ml-7 flex gap-1">
+                      {(["sure", "unsure", "guessing"] as const).map((c) => {
+                        const active = studentConfidence[s.id] === c;
+                        const icon = c === "sure" ? Check : c === "unsure" ? Sparkles : Zap;
+                        const Icon = icon;
+                        return (
+                          <button
+                            key={c}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSetConfidence(s.id, c);
+                            }}
+                            className={cn(
+                              "inline-flex flex-1 items-center justify-center gap-1 rounded-md border px-1.5 py-1 text-[10px] font-bold uppercase",
+                              active
+                                ? c === "sure"
+                                  ? "bg-mint text-mint-foreground border-mint"
+                                  : c === "unsure"
+                                  ? "bg-sunshine text-foreground border-sunshine"
+                                  : "bg-coral text-coral-foreground border-coral"
+                                : "border-foreground/20 text-muted-foreground hover:bg-muted",
+                            )}
+                          >
+                            <Icon className="h-3 w-3" strokeWidth={3} /> {c}
+                          </button>
+                        );
+                      })}
+                    </div>
                   )}
-                </button>
+                </div>
               );
             })
           )}
@@ -627,9 +743,14 @@ function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number 
     <div className="min-h-screen bg-sunshine text-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="flex items-center justify-between">
-          <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
-            <Trophy className="h-4 w-4" strokeWidth={3} /> Session Leaderboard
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
+              <Home className="h-4 w-4" strokeWidth={3} /> Home
+            </Link>
+            <span className="inline-flex items-center gap-2 rounded-full stat-gradient-violet px-4 py-2 text-xs font-bold uppercase text-white">
+              <Trophy className="h-4 w-4" strokeWidth={3} /> Session Leaderboard
+            </span>
+          </div>
           <Button variant="coral" onClick={onNext}>
             See class progress <ChevronRight className="h-4 w-4" />
           </Button>
@@ -732,7 +853,10 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
           </div>
           <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">This session vs last</h2>
         </div>
-        <Button variant="coral" onClick={onDone}>Back to lobby</Button>
+        <div className="flex gap-2">
+          <Link to="/quiz"><Button variant="badge"><Home className="h-4 w-4" /> Home</Button></Link>
+          <Button variant="coral" onClick={onDone}>Back to lobby</Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
