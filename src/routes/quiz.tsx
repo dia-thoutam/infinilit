@@ -441,6 +441,84 @@ function Lobby({
   );
 }
 
+/* ---------- Choice w/ student picker (teacher mode) ---------- */
+function ChoiceWithStudents({
+  letter,
+  text,
+  classroom,
+  picked,
+  allPicks,
+  onToggle,
+}: {
+  letter: string;
+  text: string;
+  classroom: Classroom;
+  picked: string[];
+  allPicks: Record<0 | 1 | 2 | 3, string[]>;
+  onToggle: (studentId: string) => void;
+}) {
+  const assignedElsewhere = (sid: string) =>
+    ([0, 1, 2, 3] as const).some((k) => allPicks[k].includes(sid)) && !picked.includes(sid);
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          className={cn(
+            "group flex items-center gap-4 rounded-2xl border-2 border-foreground/10 bg-card p-4 text-left transition-all badge-shadow hover:-translate-y-1 hover:border-coral",
+            picked.length > 0 && "border-mint bg-mint/10",
+          )}
+        >
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl chunky-border bg-sunshine font-display text-xl font-bold text-foreground">
+            {letter}
+          </div>
+          <div className="flex-1 font-medium">{text}</div>
+          <div className="grid h-9 min-w-9 place-items-center rounded-full bg-foreground px-2 text-sm font-bold text-background">
+            {picked.length}
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-2" align="end">
+        <div className="mb-1 px-2 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Who picked {letter}?
+        </div>
+        <div className="max-h-72 overflow-y-auto">
+          {classroom.students.length === 0 ? (
+            <div className="px-2 py-3 text-sm text-muted-foreground">No students in this classroom.</div>
+          ) : (
+            classroom.students.map((s) => {
+              const checked = picked.includes(s.id);
+              const elsewhere = assignedElsewhere(s.id);
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => onToggle(s.id)}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-muted",
+                    checked && "bg-mint/15",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
+                      checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
+                    )}
+                  >
+                    {checked && <Check className="h-3 w-3" strokeWidth={4} />}
+                  </span>
+                  <span className="flex-1 font-medium">{s.name}</span>
+                  {elsewhere && (
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                  )}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 /* ---------- Timer ---------- */
 function TimerCircle({ seconds, max }: { seconds: number; max: number }) {
   const pct = seconds / max;
