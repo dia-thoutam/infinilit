@@ -525,6 +525,9 @@ function ChoiceWithStudents({
   picked,
   allPicks,
   onToggle,
+  trackConfidence,
+  studentConfidence,
+  onSetConfidence,
 }: {
   letter: string;
   text: string;
@@ -532,6 +535,9 @@ function ChoiceWithStudents({
   picked: string[];
   allPicks: Record<0 | 1 | 2 | 3, string[]>;
   onToggle: (studentId: string) => void;
+  trackConfidence: boolean;
+  studentConfidence: Record<string, Confidence>;
+  onSetConfidence: (studentId: string, c: Confidence) => void;
 }) {
   const assignedElsewhere = (sid: string) =>
     ([0, 1, 2, 3] as const).some((k) => allPicks[k].includes(sid)) && !picked.includes(sid);
@@ -565,27 +571,61 @@ function ChoiceWithStudents({
               const checked = picked.includes(s.id);
               const elsewhere = assignedElsewhere(s.id);
               return (
-                <button
+                <div
                   key={s.id}
-                  onClick={() => onToggle(s.id)}
                   className={cn(
-                    "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-muted",
+                    "flex w-full flex-col gap-1 rounded-lg px-2 py-2 text-sm",
                     checked && "bg-mint/15",
                   )}
                 >
-                  <span
-                    className={cn(
-                      "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
-                      checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
-                    )}
+                  <button
+                    onClick={() => onToggle(s.id)}
+                    className="flex w-full items-center gap-2 text-left hover:bg-muted/50 rounded"
                   >
-                    {checked && <Check className="h-3 w-3" strokeWidth={4} />}
-                  </span>
-                  <span className="flex-1 font-medium">{s.name}</span>
-                  {elsewhere && (
-                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                    <span
+                      className={cn(
+                        "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
+                        checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
+                      )}
+                    >
+                      {checked && <Check className="h-3 w-3" strokeWidth={4} />}
+                    </span>
+                    <span className="flex-1 font-medium">{s.name}</span>
+                    {elsewhere && (
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                    )}
+                  </button>
+                  {trackConfidence && checked && (
+                    <div className="ml-7 flex gap-1">
+                      {(["sure", "unsure", "guessing"] as const).map((c) => {
+                        const active = studentConfidence[s.id] === c;
+                        const icon = c === "sure" ? Check : c === "unsure" ? Sparkles : Zap;
+                        const Icon = icon;
+                        return (
+                          <button
+                            key={c}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSetConfidence(s.id, c);
+                            }}
+                            className={cn(
+                              "inline-flex flex-1 items-center justify-center gap-1 rounded-md border px-1.5 py-1 text-[10px] font-bold uppercase",
+                              active
+                                ? c === "sure"
+                                  ? "bg-mint text-mint-foreground border-mint"
+                                  : c === "unsure"
+                                  ? "bg-sunshine text-foreground border-sunshine"
+                                  : "bg-coral text-coral-foreground border-coral"
+                                : "border-foreground/20 text-muted-foreground hover:bg-muted",
+                            )}
+                          >
+                            <Icon className="h-3 w-3" strokeWidth={3} /> {c}
+                          </button>
+                        );
+                      })}
+                    </div>
                   )}
-                </button>
+                </div>
               );
             })
           )}
