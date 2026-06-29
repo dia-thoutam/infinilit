@@ -848,6 +848,125 @@ function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number 
 }
 
 /* ---------- Progress split ---------- */
+/* ---------- Podium (1st / 2nd / 3rd with hex badges) ---------- */
+function PodiumScreen({
+  classroom,
+  tally,
+  myXp,
+  onContinue,
+}: {
+  classroom: Classroom | null;
+  tally: Record<string, StudentSessionStat>;
+  myXp: number;
+  onContinue: () => void;
+}) {
+  // Build ranking. If classroom + tally, rank real students by accuracy then correct.
+  // Else fall back to a friendly default trio so solo runs still get a podium.
+  let ranked: { name: string; xp: number; acc: number }[] = [];
+  if (classroom && Object.keys(tally).length > 0) {
+    ranked = classroom.students
+      .map((s) => {
+        const t = tally[s.id];
+        const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
+        const xp = t ? t.correct * 50 : 0;
+        return { name: s.name, xp, acc };
+      })
+      .sort((a, b) => b.acc - a.acc || b.xp - a.xp);
+  } else {
+    ranked = [
+      { name: "You", xp: myXp || 320, acc: 92 },
+      { name: "Maya", xp: 280, acc: 86 },
+      { name: "Zara", xp: 240, acc: 78 },
+    ];
+  }
+  const top3 = ranked.slice(0, 3);
+  while (top3.length < 3) top3.push({ name: "—", xp: 0, acc: 0 });
+
+  const tones = ["sunshine", "sky", "coral"] as const;
+  const icons = [Crown, Medal, Award];
+  const labels = ["1st place", "2nd place", "3rd place"];
+  const sizes = [180, 150, 130];
+  // Visual order: 2nd, 1st, 3rd
+  const order = [1, 0, 2];
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#7B5BFF] via-[#5C3FE0] to-[#3B249E] text-white">
+      <div className="pointer-events-none absolute inset-0 opacity-30">
+        {Array.from({ length: 18 }).map((_, i) => (
+          <span
+            key={i}
+            className="absolute h-2 w-2 rounded-full bg-white"
+            style={{
+              left: `${(i * 53) % 100}%`,
+              top: `${(i * 37) % 90 + 5}%`,
+              opacity: 0.3 + ((i % 5) / 10),
+            }}
+          />
+        ))}
+      </div>
+      <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+        <div className="flex items-center justify-between">
+          <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
+            <Home className="h-4 w-4" strokeWidth={3} /> Home
+          </Link>
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
+            <Trophy className="h-4 w-4" strokeWidth={3} /> Podium
+          </span>
+        </div>
+
+        <div className="mt-6 text-center">
+          <h1 className="font-display text-5xl font-black sm:text-7xl drop-shadow">Top of the class</h1>
+          <p className="mt-2 text-sm font-semibold uppercase tracking-[0.25em] text-white/80">
+            Quiz complete · winners
+          </p>
+        </div>
+
+        <div className="mt-12 flex flex-1 items-end justify-center gap-4 sm:gap-8">
+          {order.map((rank) => {
+            const s = top3[rank];
+            const Icon = icons[rank];
+            const heights = ["h-44", "h-64", "h-36"];
+            const visualSlot = rank === 0 ? 1 : rank === 1 ? 0 : 2;
+            return (
+              <div key={rank} className="flex flex-1 max-w-[220px] flex-col items-center">
+                <div className="mb-3 inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur">
+                  {labels[rank]}
+                </div>
+                <HexBadge tone={tones[rank]} size={sizes[rank]} className="bg-white/95">
+                  <Icon className="h-full w-full" strokeWidth={2.5} />
+                </HexBadge>
+                <div className="mt-4 text-center font-display text-2xl font-bold drop-shadow">
+                  {s.name}
+                </div>
+                <div className="mt-1 text-xs font-semibold uppercase tracking-wider text-white/75">
+                  {s.acc}% · {s.xp} XP
+                </div>
+                <div
+                  className={cn(
+                    "mt-4 w-full rounded-t-2xl border-x-2 border-t-2 border-white/20 bg-white/10 backdrop-blur grid place-items-center font-display text-5xl font-black",
+                    heights[visualSlot],
+                  )}
+                >
+                  {rank + 1}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <Button
+            onClick={onContinue}
+            className="h-14 rounded-2xl bg-white px-10 text-base font-bold text-[#5C3FE0] shadow-[0_8px_0_rgba(0,0,0,0.18)] hover:bg-white/95"
+          >
+            See full leaderboard <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProgressSplit({ onDone }: { onDone: () => void }) {
   const data = seedSectionAccuracy.map((s) => ({ section: s.section, "Last session": s.last, "This session": s.current }));
   const spotlights = [
