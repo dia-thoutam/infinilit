@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Crown,
   Flame,
+  Home,
   Medal,
   Sparkles,
   Star,
@@ -29,7 +30,8 @@ import {
 import { AppShell, Badge3D } from "@/components/app-shell";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useClassrooms, type Classroom } from "@/store/classrooms";
+import { Switch } from "@/components/ui/switch";
+import { useClassrooms, type Classroom, type StudentSessionStat } from "@/store/classrooms";
 import { HexBadge } from "@/components/hex-badge";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
@@ -57,9 +59,11 @@ function QuizPage() {
   const quizzes = useQuizzes((s) => s.quizzes);
   const recordAttempt = useQuizzes((s) => s.recordAttempt);
   const classrooms = useClassrooms((s) => s.classrooms);
+  const addSession = useClassrooms((s) => s.addSession);
 
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [classroomId, setClassroomId] = useState<string | null>(null);
+  const [trackConfidence, setTrackConfidence] = useState(false);
   const [phase, setPhase] = useState<Phase>("lobby");
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -72,6 +76,8 @@ function QuizPage() {
   const [finalAccuracy, setFinalAccuracy] = useState(0);
   const emptyPicks = (): Record<0 | 1 | 2 | 3, string[]> => ({ 0: [], 1: [], 2: [], 3: [] });
   const [studentPicks, setStudentPicks] = useState<Record<0 | 1 | 2 | 3, string[]>>(emptyPicks);
+  const [studentConfidence, setStudentConfidence] = useState<Record<string, Confidence>>({});
+  const [tally, setTally] = useState<Record<string, StudentSessionStat>>({});
 
   const quiz = useMemo(() => quizzes.find((q) => q.id === activeQuizId) ?? null, [quizzes, activeQuizId]);
   const question = quiz?.questions[qIndex];
@@ -108,9 +114,10 @@ function QuizPage() {
     return () => clearTimeout(id);
   }, [phase, confidence, question]);
 
-  const start = (id: string, cid: string | null) => {
+  const start = (id: string, cid: string | null, track: boolean) => {
     setActiveQuizId(id);
     setClassroomId(cid);
+    setTrackConfidence(track);
     setPhase("question");
     setQIndex(0);
     setPicked(null);
@@ -118,6 +125,8 @@ function QuizPage() {
     setXp(0);
     setCorrectCount(0);
     setStudentPicks(emptyPicks());
+    setStudentConfidence({});
+    setTally({});
   };
 
   const choose = (idx: number) => {
@@ -151,6 +160,29 @@ function QuizPage() {
     // pick = the choice with most votes (for advance logic / xp award proxy)
     const top = v.indexOf(Math.max(...v));
     setPicked(top);
+    // update per-student tally for this question
+    setTally((prev) => {
+      const next = { ...prev };
+      ([0, 1, 2, 3] as const).forEach((k) => {
+        studentPicks[k].forEach((sid) => {
+          const cur =
+            next[sid] ??
+            ({ studentId: sid, correct: 0, total: 0, sure: 0, unsure: 0, guessing: 0, sureCorrect: 0 } as StudentSessionStat);
+          const isCorrect = k === question.correct;
+          const conf = studentConfidence[sid];
+          next[sid] = {
+            ...cur,
+            total: cur.total + 1,
+            correct: cur.correct + (isCorrect ? 1 : 0),
+            sure: cur.sure + (conf === "sure" ? 1 : 0),
+            unsure: cur.unsure + (conf === "unsure" ? 1 : 0),
+            guessing: cur.guessing + (conf === "guessing" ? 1 : 0),
+            sureCorrect: cur.sureCorrect + (conf === "sure" && isCorrect ? 1 : 0),
+          };
+        });
+      });
+      return next;
+    });
     setPhase("reveal");
   };
 
@@ -165,11 +197,25 @@ function QuizPage() {
       setQIndex((i) => i + 1);
       setPicked(null);
       setConfidence(null);
+      setStudentPicks(emptyPicks());
+      setStudentConfidence({});
       setPhase("question");
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
       recordAttempt(quiz.id, accuracy, totalXp);
+      if (classroom) {
+        addSession(classroom.id, {
+          id: `sess-${Date.now()}`,
+          date: new Date().toISOString().slice(0, 10),
+          quizId: quiz.id,
+          quizTitle: quiz.title,
+          accuracy,
+          xp: totalXp,
+          trackedConfidence: trackConfidence,
+          perStudent: Object.values(tally),
+        });
+      }
       setFinalAccuracy(accuracy);
       setFinalXp(totalXp);
       setPhase("completed");
@@ -224,6 +270,15 @@ function QuizPage() {
             {/* Top bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (confirm("Exit quiz and return to home?")) setPhase("lobby");
+                  }}
+                  className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-background hover:opacity-90"
+                  aria-label="Exit to home"
+                >
+                  <Home className="h-3 w-3" strokeWidth={3} /> Home
+                </button>
                 <span className="rounded-full bg-foreground/10 px-3 py-1">Session 7</span>
                 <span className="rounded-full bg-sky/20 px-3 py-1 text-sky">{question.section}</span>
                 <span className="rounded-full bg-foreground/10 px-3 py-1">
@@ -231,6 +286,9 @@ function QuizPage() {
                 </span>
                 {classroom && (
                   <span className="rounded-full bg-mint/20 px-3 py-1 text-foreground">{classroom.name}</span>
+                )}
+                {trackConfidence && classroom && (
+                  <span className="rounded-full stat-gradient-violet px-3 py-1 text-white">Confidence ON</span>
                 )}
                 <span
                   className={cn(
@@ -270,6 +328,11 @@ function QuizPage() {
                       picked={studentPicks[i as 0 | 1 | 2 | 3]}
                       allPicks={studentPicks}
                       onToggle={(sid) => toggleStudentPick(i as 0 | 1 | 2 | 3, sid)}
+                      trackConfidence={trackConfidence}
+                      studentConfidence={studentConfidence}
+                      onSetConfidence={(sid, c) =>
+                        setStudentConfidence((prev) => ({ ...prev, [sid]: c }))
+                      }
                     />
                   );
                 }
