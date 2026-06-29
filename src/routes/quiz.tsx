@@ -27,6 +27,9 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, Badge3D } from "@/components/app-shell";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useClassrooms, type Classroom } from "@/store/classrooms";
 import { HexBadge } from "@/components/hex-badge";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
@@ -53,8 +56,10 @@ type Confidence = "sure" | "unsure" | "guessing";
 function QuizPage() {
   const quizzes = useQuizzes((s) => s.quizzes);
   const recordAttempt = useQuizzes((s) => s.recordAttempt);
+  const classrooms = useClassrooms((s) => s.classrooms);
 
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
+  const [classroomId, setClassroomId] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("lobby");
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -65,9 +70,13 @@ function QuizPage() {
   const [votes, setVotes] = useState<[number, number, number, number]>([0, 0, 0, 0]);
   const [finalXp, setFinalXp] = useState(0);
   const [finalAccuracy, setFinalAccuracy] = useState(0);
+  const emptyPicks = (): Record<0 | 1 | 2 | 3, string[]> => ({ 0: [], 1: [], 2: [], 3: [] });
+  const [studentPicks, setStudentPicks] = useState<Record<0 | 1 | 2 | 3, string[]>>(emptyPicks);
 
   const quiz = useMemo(() => quizzes.find((q) => q.id === activeQuizId) ?? null, [quizzes, activeQuizId]);
   const question = quiz?.questions[qIndex];
+  const classroom = useMemo(() => classrooms.find((c) => c.id === classroomId) ?? null, [classrooms, classroomId]);
+  const teacherMode = !!classroom;
 
   // Question timer
   useEffect(() => {
@@ -99,20 +108,50 @@ function QuizPage() {
     return () => clearTimeout(id);
   }, [phase, confidence, question]);
 
-  const start = (id: string) => {
+  const start = (id: string, cid: string | null) => {
     setActiveQuizId(id);
+    setClassroomId(cid);
     setPhase("question");
     setQIndex(0);
     setPicked(null);
     setConfidence(null);
     setXp(0);
     setCorrectCount(0);
+    setStudentPicks(emptyPicks());
   };
 
   const choose = (idx: number) => {
     if (phase !== "question") return;
+    if (teacherMode) return; // teacher mode uses per-choice student picker
     setPicked(idx);
     setPhase("confidence");
+  };
+
+  const toggleStudentPick = (choice: 0 | 1 | 2 | 3, studentId: string) => {
+    setStudentPicks((prev) => {
+      const next = { ...prev, 0: [...prev[0]], 1: [...prev[1]], 2: [...prev[2]], 3: [...prev[3]] };
+      // remove from all other choices (a student can only vote once)
+      ([0, 1, 2, 3] as const).forEach((k) => {
+        next[k] = next[k].filter((id) => id !== studentId);
+      });
+      if (!prev[choice].includes(studentId)) next[choice] = [...next[choice], studentId];
+      return next;
+    });
+  };
+
+  const lockInTeacherVotes = () => {
+    if (!question) return;
+    const v: [number, number, number, number] = [
+      studentPicks[0].length,
+      studentPicks[1].length,
+      studentPicks[2].length,
+      studentPicks[3].length,
+    ];
+    setVotes(v);
+    // pick = the choice with most votes (for advance logic / xp award proxy)
+    const top = v.indexOf(Math.max(...v));
+    setPicked(top);
+    setPhase("reveal");
   };
 
   const advance = () => {
@@ -140,7 +179,7 @@ function QuizPage() {
   if (phase === "lobby" || !quiz || !question) {
     return (
       <AppShell>
-        <Lobby quizzes={quizzes} onStart={start} />
+        <Lobby quizzes={quizzes} classrooms={classrooms} onStart={start} />
       </AppShell>
     );
   }
@@ -190,6 +229,9 @@ function QuizPage() {
                 <span className="rounded-full bg-foreground/10 px-3 py-1">
                   Q{qIndex + 1}/{quiz.questions.length}
                 </span>
+                {classroom && (
+                  <span className="rounded-full bg-mint/20 px-3 py-1 text-foreground">{classroom.name}</span>
+                )}
                 <span
                   className={cn(
                     "rounded-full px-3 py-1",
@@ -218,6 +260,19 @@ function QuizPage() {
                 const isCorrect = phase === "reveal" && i === question.correct;
                 const isWrongPick = phase === "reveal" && i === picked && i !== question.correct;
                 const dim = phase === "reveal" && i !== question.correct;
+                if (teacherMode && phase === "question") {
+                  return (
+                    <ChoiceWithStudents
+                      key={i}
+                      letter={letter}
+                      text={c}
+                      classroom={classroom!}
+                      picked={studentPicks[i as 0 | 1 | 2 | 3]}
+                      allPicks={studentPicks}
+                      onToggle={(sid) => toggleStudentPick(i as 0 | 1 | 2 | 3, sid)}
+                    />
+                  );
+                }
                 return (
                   <button
                     key={i}
@@ -246,6 +301,17 @@ function QuizPage() {
                 );
               })}
             </div>
+
+            {teacherMode && phase === "question" && (
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm text-muted-foreground">
+                  {Object.values(studentPicks).reduce((a, b) => a + b.length, 0)} / {classroom!.students.length} students recorded
+                </div>
+                <Button variant="coral" size="xl" onClick={lockInTeacherVotes}>
+                  Lock in & reveal <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
 
             {phase === "reveal" && (
               <div className="mt-6 space-y-4">
@@ -289,7 +355,16 @@ function QuizPage() {
 }
 
 /* ---------- Lobby ---------- */
-function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"]; onStart: (id: string) => void }) {
+function Lobby({
+  quizzes,
+  classrooms,
+  onStart,
+}: {
+  quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"];
+  classrooms: Classroom[];
+  onStart: (id: string, classroomId: string | null) => void;
+}) {
+  const [selectedClassroom, setSelectedClassroom] = useState<string>("solo");
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -304,11 +379,25 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
             Easy = 20 XP · Medium = 50 XP · Hard = 100 XP. Race the timer, lock in your confidence, and outscore the class.
           </p>
         </div>
-        <Link to="/teacher" className="inline-flex">
-          <Button variant="badge" size="lg">
-            <Sparkles className="h-4 w-4" /> Browse all quizzes
-          </Button>
-        </Link>
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Classroom</label>
+            <Select value={selectedClassroom} onValueChange={setSelectedClassroom}>
+              <SelectTrigger className="h-11 w-[240px] rounded-xl border-2 text-base"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="solo">Solo (no roster)</SelectItem>
+                {classrooms.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>{c.name} · {c.students.length}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Link to="/teacher/classrooms" className="inline-flex">
+            <Button variant="badge" size="lg">
+              <Sparkles className="h-4 w-4" /> Manage classrooms
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -340,7 +429,7 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
                     {q.questions.reduce((sum, x) => sum + xpFor(x.difficulty), 0)} XP total
                   </span>
                 </div>
-                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id)}>
+                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom)}>
                   Start <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -349,6 +438,84 @@ function Lobby({ quizzes, onStart }: { quizzes: ReturnType<typeof useQuizzes.get
         })}
       </div>
     </div>
+  );
+}
+
+/* ---------- Choice w/ student picker (teacher mode) ---------- */
+function ChoiceWithStudents({
+  letter,
+  text,
+  classroom,
+  picked,
+  allPicks,
+  onToggle,
+}: {
+  letter: string;
+  text: string;
+  classroom: Classroom;
+  picked: string[];
+  allPicks: Record<0 | 1 | 2 | 3, string[]>;
+  onToggle: (studentId: string) => void;
+}) {
+  const assignedElsewhere = (sid: string) =>
+    ([0, 1, 2, 3] as const).some((k) => allPicks[k].includes(sid)) && !picked.includes(sid);
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          className={cn(
+            "group flex items-center gap-4 rounded-2xl border-2 border-foreground/10 bg-card p-4 text-left transition-all badge-shadow hover:-translate-y-1 hover:border-coral",
+            picked.length > 0 && "border-mint bg-mint/10",
+          )}
+        >
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl chunky-border bg-sunshine font-display text-xl font-bold text-foreground">
+            {letter}
+          </div>
+          <div className="flex-1 font-medium">{text}</div>
+          <div className="grid h-9 min-w-9 place-items-center rounded-full bg-foreground px-2 text-sm font-bold text-background">
+            {picked.length}
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-2" align="end">
+        <div className="mb-1 px-2 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Who picked {letter}?
+        </div>
+        <div className="max-h-72 overflow-y-auto">
+          {classroom.students.length === 0 ? (
+            <div className="px-2 py-3 text-sm text-muted-foreground">No students in this classroom.</div>
+          ) : (
+            classroom.students.map((s) => {
+              const checked = picked.includes(s.id);
+              const elsewhere = assignedElsewhere(s.id);
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => onToggle(s.id)}
+                  className={cn(
+                    "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-muted",
+                    checked && "bg-mint/15",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "grid h-5 w-5 shrink-0 place-items-center rounded border-2",
+                      checked ? "border-mint bg-mint text-mint-foreground" : "border-foreground/30",
+                    )}
+                  >
+                    {checked && <Check className="h-3 w-3" strokeWidth={4} />}
+                  </span>
+                  <span className="flex-1 font-medium">{s.name}</span>
+                  {elsewhere && (
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                  )}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 

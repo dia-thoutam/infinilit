@@ -16,6 +16,7 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TeacherIndexRouteImport } from './routes/teacher.index'
 import { Route as TeacherNewRouteImport } from './routes/teacher.new'
+import { Route as TeacherClassroomsRouteImport } from './routes/teacher.classrooms'
 import { Route as TeacherIdEditRouteImport } from './routes/teacher.$id.edit'
 
 const TeacherRoute = TeacherRouteImport.update({
@@ -53,6 +54,11 @@ const TeacherNewRoute = TeacherNewRouteImport.update({
   path: '/new',
   getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherClassroomsRoute = TeacherClassroomsRouteImport.update({
+  id: '/classrooms',
+  path: '/classrooms',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const TeacherIdEditRoute = TeacherIdEditRouteImport.update({
   id: '/$id/edit',
   path: '/$id/edit',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
+  '/teacher/classrooms': typeof TeacherClassroomsRoute
   '/teacher/new': typeof TeacherNewRoute
   '/teacher/': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teacher/classrooms': typeof TeacherClassroomsRoute
   '/teacher/new': typeof TeacherNewRoute
   '/teacher': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
+  '/teacher/classrooms': typeof TeacherClassroomsRoute
   '/teacher/new': typeof TeacherNewRoute
   '/teacher/': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/sitemap.xml'
     | '/teacher'
+    | '/teacher/classrooms'
     | '/teacher/new'
     | '/teacher/'
     | '/teacher/$id/edit'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/quiz'
     | '/sitemap.xml'
+    | '/teacher/classrooms'
     | '/teacher/new'
     | '/teacher'
     | '/teacher/$id/edit'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/sitemap.xml'
     | '/teacher'
+    | '/teacher/classrooms'
     | '/teacher/new'
     | '/teacher/'
     | '/teacher/$id/edit'
@@ -180,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherNewRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/classrooms': {
+      id: '/teacher/classrooms'
+      path: '/classrooms'
+      fullPath: '/teacher/classrooms'
+      preLoaderRoute: typeof TeacherClassroomsRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/$id/edit': {
       id: '/teacher/$id/edit'
       path: '/$id/edit'
@@ -191,12 +210,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface TeacherRouteChildren {
+  TeacherClassroomsRoute: typeof TeacherClassroomsRoute
   TeacherNewRoute: typeof TeacherNewRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
   TeacherIdEditRoute: typeof TeacherIdEditRoute
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
+  TeacherClassroomsRoute: TeacherClassroomsRoute,
   TeacherNewRoute: TeacherNewRoute,
   TeacherIndexRoute: TeacherIndexRoute,
   TeacherIdEditRoute: TeacherIdEditRoute,
