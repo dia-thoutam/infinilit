@@ -6,10 +6,32 @@ export interface Student {
   name: string;
 }
 
+export interface StudentSessionStat {
+  studentId: string;
+  correct: number;
+  total: number;
+  sure: number;
+  unsure: number;
+  guessing: number;
+  sureCorrect: number;
+}
+
+export interface ClassroomSession {
+  id: string;
+  date: string; // ISO yyyy-mm-dd
+  quizId: string;
+  quizTitle: string;
+  accuracy: number; // 0-100, class avg
+  xp: number;
+  trackedConfidence: boolean;
+  perStudent: StudentSessionStat[];
+}
+
 export interface Classroom {
   id: string;
   name: string;
   students: Student[];
+  sessions?: ClassroomSession[];
 }
 
 const seed: Classroom[] = [
@@ -36,6 +58,8 @@ interface State {
   addStudent: (classroomId: string, name: string) => void;
   removeStudent: (classroomId: string, studentId: string) => void;
   renameStudent: (classroomId: string, studentId: string, name: string) => void;
+  addSession: (classroomId: string, session: ClassroomSession) => void;
+  resetStats: (classroomId: string) => void;
 }
 
 export const useClassrooms = create<State>()(
@@ -85,7 +109,21 @@ export const useClassrooms = create<State>()(
               : c,
           ),
         })),
+      addSession: (classroomId, session) =>
+        set((s) => ({
+          classrooms: s.classrooms.map((c) =>
+            c.id === classroomId
+              ? { ...c, sessions: [...(c.sessions ?? []), session] }
+              : c,
+          ),
+        })),
+      resetStats: (classroomId) =>
+        set((s) => ({
+          classrooms: s.classrooms.map((c) =>
+            c.id === classroomId ? { ...c, sessions: [] } : c,
+          ),
+        })),
     }),
-    { name: "infinilit-classrooms-v1" },
+    { name: "infinilit-classrooms-v2" },
   ),
 );
