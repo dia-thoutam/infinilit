@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeacherIndexRouteImport } from './routes/teacher.index'
 import { Route as TeacherNewRouteImport } from './routes/teacher.new'
 import { Route as TeacherIdEditRouteImport } from './routes/teacher.$id.edit'
 
@@ -42,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeacherIndexRoute = TeacherIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const TeacherNewRoute = TeacherNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
   '/teacher/new': typeof TeacherNewRoute
+  '/teacher/': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -67,8 +74,8 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/teacher': typeof TeacherRouteWithChildren
   '/teacher/new': typeof TeacherNewRoute
+  '/teacher': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRoutesById {
@@ -79,6 +86,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
   '/teacher/new': typeof TeacherNewRoute
+  '/teacher/': typeof TeacherIndexRoute
   '/teacher/$id/edit': typeof TeacherIdEditRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +98,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teacher'
     | '/teacher/new'
+    | '/teacher/'
     | '/teacher/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -97,8 +106,8 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/quiz'
     | '/sitemap.xml'
-    | '/teacher'
     | '/teacher/new'
+    | '/teacher'
     | '/teacher/$id/edit'
   id:
     | '__root__'
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teacher'
     | '/teacher/new'
+    | '/teacher/'
     | '/teacher/$id/edit'
   fileRoutesById: FileRoutesById
 }
@@ -156,6 +166,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher/': {
+      id: '/teacher/'
+      path: '/'
+      fullPath: '/teacher/'
+      preLoaderRoute: typeof TeacherIndexRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/new': {
       id: '/teacher/new'
       path: '/new'
@@ -175,11 +192,13 @@ declare module '@tanstack/react-router' {
 
 interface TeacherRouteChildren {
   TeacherNewRoute: typeof TeacherNewRoute
+  TeacherIndexRoute: typeof TeacherIndexRoute
   TeacherIdEditRoute: typeof TeacherIdEditRoute
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherNewRoute: TeacherNewRoute,
+  TeacherIndexRoute: TeacherIndexRoute,
   TeacherIdEditRoute: TeacherIdEditRoute,
 }
 
@@ -196,13 +215,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
