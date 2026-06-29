@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Plus, Pencil, Trash2, Trophy, Calendar, Target, Zap, Sparkles } from "lucide-react";
+import { Plus, Pencil, Trash2, Trophy, Calendar, Target, Zap, Sparkles, Users } from "lucide-react";
 import { AppShell, Badge3D } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -36,6 +36,11 @@ function TeacherIndex() {
               Reuse, edit, and remix. Difficulty is set per question — XP awards (20 / 50 / 100) flow automatically.
             </p>
           </div>
+          <Link to="/teacher/classrooms" className="inline-flex">
+            <Button variant="sky" size="lg">
+              <Users className="h-4 w-4" /> Manage classrooms
+            </Button>
+          </Link>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
