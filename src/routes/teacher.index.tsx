@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
 
-export const Route = createFileRoute("/teacher")({
+export const Route = createFileRoute("/teacher/")({
   head: () => ({
     meta: [
       { title: "Create — InFiniLit Teacher Studio" },
