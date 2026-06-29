@@ -21,6 +21,8 @@ const buttonVariants = cva(
         mint: "bg-mint text-mint-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         sky: "bg-sky text-sky-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         badge: "bg-card text-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        gradient: "stat-gradient-violet chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        gradientDark: "stat-gradient-dark badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold border-0",
       },
       size: {
         default: "h-9 px-4 py-2",
