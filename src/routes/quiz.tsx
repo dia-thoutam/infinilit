@@ -853,7 +853,10 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
           </div>
           <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">This session vs last</h2>
         </div>
-        <Button variant="coral" onClick={onDone}>Back to lobby</Button>
+        <div className="flex gap-2">
+          <Link to="/quiz"><Button variant="badge"><Home className="h-4 w-4" /> Home</Button></Link>
+          <Button variant="coral" onClick={onDone}>Back to lobby</Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
