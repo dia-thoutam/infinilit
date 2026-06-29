@@ -425,9 +425,10 @@ function Lobby({
 }: {
   quizzes: ReturnType<typeof useQuizzes.getState>["quizzes"];
   classrooms: Classroom[];
-  onStart: (id: string, classroomId: string | null) => void;
+  onStart: (id: string, classroomId: string | null, trackConfidence: boolean) => void;
 }) {
   const [selectedClassroom, setSelectedClassroom] = useState<string>("solo");
+  const [trackConfidence, setTrackConfidence] = useState(false);
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -463,6 +464,18 @@ function Lobby({
         </div>
       </div>
 
+      {selectedClassroom !== "solo" && (
+        <Card className="flex flex-wrap items-center justify-between gap-3 border-2 border-foreground/10 p-4 stat-gradient-violet text-white badge-shadow">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider opacity-90">Confidence tracking</div>
+            <div className="text-sm">Add sure / unsure / guessing buttons next to each student in the picker.</div>
+          </div>
+          <label className="inline-flex items-center gap-2 text-sm font-semibold">
+            <Switch checked={trackConfidence} onCheckedChange={setTrackConfidence} /> {trackConfidence ? "ON" : "OFF"}
+          </label>
+        </Card>
+      )}
+
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {quizzes.map((q, i) => {
           const colors = ["coral", "sunshine", "mint", "sky"] as const;
@@ -492,7 +505,7 @@ function Lobby({
                     {q.questions.reduce((sum, x) => sum + xpFor(x.difficulty), 0)} XP total
                   </span>
                 </div>
-                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom)}>
+                <Button variant="coral" className="w-full" size="lg" onClick={() => onStart(q.id, selectedClassroom === "solo" ? null : selectedClassroom, trackConfidence)}>
                   Start <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
