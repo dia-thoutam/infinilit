@@ -191,6 +191,40 @@
   box-shadow: 0 6px 0 0 oklch(0.23 0.06 270 / 0.12), 0 12px 24px -8px oklch(0.23 0.06 270 / 0.18);
 }
 
+@utility badge-shadow-pop {
+  box-shadow:
+    0 4px 0 0 oklch(0.23 0.06 270 / 0.28),
+    0 10px 20px -6px oklch(0.23 0.06 270 / 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -6px 12px -6px rgba(0, 0, 0, 0.12);
+}
+
+@utility btn-gradient-coral {
+  background: linear-gradient(160deg, #ffb199 0%, #ff7a5c 45%, #e0524a 100%);
+  color: #fff7ed;
+}
+@utility btn-gradient-sunshine {
+  background: linear-gradient(160deg, #ffe9a8 0%, #ffd25a 50%, #f0a830 100%);
+  color: #2a1f4a;
+}
+@utility btn-gradient-mint {
+  background: linear-gradient(160deg, #b8f5d8 0%, #4ddc9a 50%, #1ea877 100%);
+  color: #07331f;
+}
+@utility btn-gradient-sky {
+  background: linear-gradient(160deg, #bce3ff 0%, #65a8ee 50%, #3060c0 100%);
+  color: #f0f9ff;
+}
+@utility btn-gradient-violet {
+  background: linear-gradient(160deg, #e0c7ff 0%, #b78bff 45%, #7a4ddb 100%);
+  color: #fff8ff;
+}
+@utility btn-gradient-glass {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 235, 220, 0.55) 60%, rgba(230, 200, 220, 0.5) 100%);
+  color: var(--color-foreground);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
 @utility chunky-border {
   border: 2px solid var(--color-ink);
 }
