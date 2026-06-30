@@ -61,7 +61,15 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
           </div>
         </div>
       </header>
-      <main className={cn("relative z-10", bare ? "" : "mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10")}>{children}</main>
+      <main
+        key={pathname}
+        className={cn(
+          "lov-tab-in relative z-10",
+          bare ? "" : "mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10",
+        )}
+      >
+        {children}
+      </main>
     </div>
   );
 }

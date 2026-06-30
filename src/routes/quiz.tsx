@@ -39,6 +39,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { mockVoteDistribution, seedSectionAccuracy, xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
+import { playCorrect, playWrong, playXp, playFanfare } from "@/lib/sfx";
 
 export const Route = createFileRoute("/quiz")({
   head: () => ({
@@ -75,6 +76,7 @@ function QuizPage() {
   const [votes, setVotes] = useState<[number, number, number, number]>([0, 0, 0, 0]);
   const [finalXp, setFinalXp] = useState(0);
   const [finalAccuracy, setFinalAccuracy] = useState(0);
+  const [xpPop, setXpPop] = useState<{ id: number; amount: number } | null>(null);
   const emptyPicks = (): Record<0 | 1 | 2 | 3, string[]> => ({ 0: [], 1: [], 2: [], 3: [] });
   const [studentPicks, setStudentPicks] = useState<Record<0 | 1 | 2 | 3, string[]>>(emptyPicks);
   const [studentConfidence, setStudentConfidence] = useState<Record<string, Confidence>>({});
@@ -84,6 +86,22 @@ function QuizPage() {
   const question = quiz?.questions[qIndex];
   const classroom = useMemo(() => classrooms.find((c) => c.id === classroomId) ?? null, [classrooms, classroomId]);
   const teacherMode = !!classroom;
+
+  // Fire feedback sound + XP pop when reveal phase starts
+  useEffect(() => {
+    if (phase !== "reveal" || !question) return;
+    const correct = picked === question.correct;
+    if (correct) {
+      playCorrect();
+      const amount = xpFor(question.difficulty);
+      setXpPop({ id: Date.now(), amount });
+      window.setTimeout(() => playXp(), 220);
+      const t = window.setTimeout(() => setXpPop(null), 1600);
+      return () => window.clearTimeout(t);
+    } else if (picked !== null && picked !== -1) {
+      playWrong();
+    }
+  }, [phase, picked, question]);
 
   // Question timer
   useEffect(() => {
@@ -269,6 +287,13 @@ function QuizPage() {
 
   return (
     <AppShell bare>
+      {xpPop && (
+        <div className="lov-xp-pop">
+          <div className="rounded-full btn-gradient-sunshine chunky-border badge-shadow-pop px-6 py-3 font-display text-3xl font-black text-foreground">
+            +{xpPop.amount} XP
+          </div>
+        </div>
+      )}
       {phase === "confidence" ? (
         <ConfidenceScreen onPick={(c) => { setConfidence(c); setPhase("reveal"); setVotes(mockVoteDistribution(question.correct)); }} />
       ) : (
@@ -360,6 +385,8 @@ function QuizPage() {
                       isWrongPick && "border-coral bg-coral/10",
                       dim && !isCorrect && "opacity-50",
                       picked === i && phase !== "reveal" && "border-coral",
+                      isCorrect && "lov-correct",
+                      isWrongPick && "lov-wrong",
                     )}
                   >
                     <div
@@ -860,6 +887,10 @@ function PodiumScreen({
   myXp: number;
   onContinue: () => void;
 }) {
+  useEffect(() => {
+    const t = window.setTimeout(() => playFanfare(), 250);
+    return () => window.clearTimeout(t);
+  }, []);
   // Build ranking. If classroom + tally, rank real students by accuracy then correct.
   // Else fall back to a friendly default trio so solo runs still get a podium.
   let ranked: { name: string; xp: number; acc: number }[] = [];
