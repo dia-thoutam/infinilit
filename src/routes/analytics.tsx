@@ -109,7 +109,7 @@ function AnalyticsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-8 rounded-3xl bg-[oklch(0.96_0.02_75)/0.7] dark:bg-[oklch(0.28_0.04_35)/0.7] p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 shadow-2xl">
+      <div className="space-y-8 rounded-3xl bg-[oklch(0.96_0.02_75)/0.7] dark:bg-[oklch(0.22_0.035_30)/0.65] p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 dark:border-white/10 shadow-2xl">
         <div>
           <div className="section-pill inline-flex items-center gap-2 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white" style={{ background: "linear-gradient(180deg, #9fc8ff 0%, #5a9cff 55%, #2b6fe0 100%)" }}>
             <BarChart3 className="h-3.5 w-3.5 drop-shadow-[0_1px_0_rgba(0,0,0,0.25)]" strokeWidth={3.5} /> Class Analytics
@@ -121,7 +121,7 @@ function AnalyticsPage() {
         </div>
 
         {/* Hero metric */}
-        <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] dark:[&_.text-foreground]:!text-[#1a1830]">
+        <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] dark:from-[#3a2418] dark:via-[#4a2a18] dark:to-[#5a3320] dark:border-white/15">
           <div className="relative grid items-center gap-8 p-8 sm:grid-cols-[1fr_auto]">
             <div>
               <div className="section-pill-soft inline-flex items-center gap-2 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em]" style={{ background: "linear-gradient(180deg, #1a1830 0%, #0d0b20 100%)", color: "#ffd98a" }}>
@@ -192,7 +192,7 @@ function AnalyticsPage() {
 
         {/* Confidence calibration + Misconceptions */}
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="sky" size={40}>
                 <Brain className="h-5 w-5" strokeWidth={2.5} />
@@ -227,7 +227,7 @@ function AnalyticsPage() {
             </p>
           </Card>
 
-          <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
+          <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="coral" size={40}>
                 <Flame className="h-5 w-5" strokeWidth={2.5} />
@@ -239,7 +239,7 @@ function AnalyticsPage() {
             </div>
             <div className="mt-4 space-y-2">
               {misconceptions.map((m) => (
-                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)] p-3">
+                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)] p-3">
                   <div className="flex-1">
                     <div className="text-sm font-black text-foreground">{m.question}</div>
                     <div className="text-[10px] font-black uppercase tracking-wider text-foreground">{m.section} · {m.sessions} sessions</div>
@@ -257,7 +257,7 @@ function AnalyticsPage() {
         </div>
 
         {/* Individual progress */}
-        <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
+        <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <HexBadge tone="mint" size={40}>
@@ -305,7 +305,7 @@ function AnalyticsPage() {
 
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {studentScores.map((v, i) => (
-              <div key={i} className="rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)] p-3 text-center shadow-sm">
+              <div key={i} className="rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)] p-3 text-center shadow-sm">
                 <div className="text-[10px] font-black uppercase tracking-wider text-foreground">S{i + 1}</div>
                 <div className="font-display text-xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{v}</div>
               </div>
@@ -315,7 +315,7 @@ function AnalyticsPage() {
 
         {/* Class-wide improvement */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="mint" size={40}>
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
@@ -409,7 +409,7 @@ function AnalyticsPage() {
             </div>
           </Card>
 
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="mint" size={40}>
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
@@ -477,14 +477,21 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
   const starPath =
     "M0,-7 L1.8,-2.2 L7,-2.2 L2.8,1 L4.3,6 L0,3 L-4.3,6 L-2.8,1 L-7,-2.2 L-1.8,-2.2 Z";
 
-  // Shooting stars radiating outward from the top of the bar, each with a trailing streak.
-  const trails = [
-    { dx: -70, dy: -40, delay: "0s", dur: "1.8s" },
-    { dx: -40, dy: -75, delay: "0.35s", dur: "1.9s" },
-    { dx: 0, dy: -90, delay: "0.7s", dur: "2s" },
-    { dx: 45, dy: -75, delay: "1.05s", dur: "1.9s" },
-    { dx: 75, dy: -40, delay: "1.4s", dur: "1.8s" },
-  ];
+  // Shooting stars radiating evenly outward in a fan above the bar.
+  // Longer travel + staggered delays for a smooth, continuous shower.
+  const RAY_COUNT = 7;
+  const RADIUS = 140;
+  const DUR = 2.2; // seconds per star
+  const trails = Array.from({ length: RAY_COUNT }, (_, i) => {
+    // Spread across a 180° arc above the bar: from -90° (left) to +90° (right).
+    const angle = (-Math.PI / 2) + (i / (RAY_COUNT - 1) - 0.5) * Math.PI;
+    return {
+      dx: Math.cos(angle) * RADIUS,
+      dy: Math.sin(angle) * RADIUS,
+      delay: `${(i * DUR) / RAY_COUNT}s`,
+      dur: `${DUR}s`,
+    };
+  });
 
   // Stationary twinkles around the bar top
   const twinkles = [
@@ -496,9 +503,26 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
 
   return (
     <g pointerEvents="none">
+      <defs>
+        <radialGradient id="starHalo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(255,225,140,0.85)" />
+          <stop offset="60%" stopColor="rgba(255,190,90,0.35)" />
+          <stop offset="100%" stopColor="rgba(255,190,90,0)" />
+        </radialGradient>
+        <linearGradient id="trailGradient" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#fffbe8" stopOpacity="0" />
+          <stop offset="35%" stopColor="#ffd66b" stopOpacity="0.6" />
+          <stop offset="85%" stopColor="#fff4c2" stopOpacity="1" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+        </linearGradient>
+        <filter id="starBlur" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.2" />
+        </filter>
+      </defs>
+
       {/* Soft halo behind top of bar */}
-      <ellipse cx={cx} cy={top} rx={width * 0.9} ry={10} fill="rgba(255,210,120,0.45)">
-        <animate attributeName="opacity" values="0.35;0.75;0.35" dur="2.4s" repeatCount="indefinite" />
+      <ellipse cx={cx} cy={top} rx={width * 1.1} ry={14} fill="url(#starHalo)">
+        <animate attributeName="opacity" values="0.45;0.95;0.45" dur="2.4s" repeatCount="indefinite" />
       </ellipse>
 
       {/* Twinkling stars */}
@@ -525,61 +549,61 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
         const oy = top - 2;
         const ex = cx + t.dx;
         const ey = top - 2 + t.dy;
-        // Trail starts as a zero-length segment at the origin, grows to follow the star,
-        // then fades. Star translates from origin to endpoint along the same vector.
+        // Trail length: short tail that follows the star, computed as a fraction of the path.
+        const TRAIL_FRAC = 0.45;
+        // Star moves origin -> endpoint over t.dur.
+        // Trail's "tail" (x1,y1) lags behind the "head" (x2,y2) by TRAIL_FRAC of the journey.
+        const trailLagX = (ex - ox) * TRAIL_FRAC;
+        const trailLagY = (ey - oy) * TRAIL_FRAC;
+        // angle (deg) of motion for gradient orientation on the trail
+        const angleDeg = (Math.atan2(ey - oy, ex - ox) * 180) / Math.PI;
         return (
           <g key={`sh-${i}`}>
-            {/* comet trail */}
+            {/* soft outer glow trail (wide, blurred, behind everything) */}
             <line
               x1={ox}
               y1={oy}
               x2={ox}
               y2={oy}
-              stroke="#ffd66b"
-              strokeWidth={2.5}
+              stroke="#fff4c2"
+              strokeWidth={9}
               strokeLinecap="round"
+              filter="url(#starBlur)"
               opacity={0}
+              transform={`rotate(${angleDeg} ${ox} ${oy})`}
             >
-              <animate
-                attributeName="x2"
-                values={`${ox};${ex}`}
-                dur={t.dur}
-                begin={t.delay}
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="y2"
-                values={`${oy};${ey}`}
-                dur={t.dur}
-                begin={t.delay}
-                repeatCount="indefinite"
-              />
+              <animate attributeName="x1" values={`${ox};${ex - trailLagX}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate attributeName="y1" values={`${oy};${ey - trailLagY}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate attributeName="x2" values={`${ox};${ex}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate attributeName="y2" values={`${oy};${ey}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
               <animate
                 attributeName="opacity"
-                values="0;1;0.9;0"
-                keyTimes="0;0.15;0.7;1"
+                values="0;0.55;0.5;0"
+                keyTimes="0;0.2;0.75;1"
                 dur={t.dur}
                 begin={t.delay}
                 repeatCount="indefinite"
               />
             </line>
-            {/* soft glow trail */}
+            {/* bright core comet trail with gradient (fades from tail to head) */}
             <line
               x1={ox}
               y1={oy}
               x2={ox}
               y2={oy}
-              stroke="#fffbe8"
-              strokeWidth={5}
+              stroke="#ffe28a"
+              strokeWidth={2.4}
               strokeLinecap="round"
               opacity={0}
             >
+              <animate attributeName="x1" values={`${ox};${ex - trailLagX}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate attributeName="y1" values={`${oy};${ey - trailLagY}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
               <animate attributeName="x2" values={`${ox};${ex}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
               <animate attributeName="y2" values={`${oy};${ey}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
               <animate
                 attributeName="opacity"
-                values="0;0.45;0.35;0"
-                keyTimes="0;0.2;0.7;1"
+                values="0;1;0.85;0"
+                keyTimes="0;0.15;0.75;1"
                 dur={t.dur}
                 begin={t.delay}
                 repeatCount="indefinite"
@@ -603,7 +627,9 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
                 begin={t.delay}
                 repeatCount="indefinite"
               />
-              <path d={starPath} fill="#ffd66b" stroke="#0b1730" strokeWidth={1} transform="scale(0.85)" />
+              {/* glow halo around the star head */}
+              <circle r={7} fill="url(#starHalo)" />
+              <path d={starPath} fill="#fff4c2" stroke="#0b1730" strokeWidth={1} transform="scale(0.95)" />
             </g>
           </g>
         );
