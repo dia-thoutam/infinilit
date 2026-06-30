@@ -81,10 +81,10 @@ export function HexBadge({
         />
       </svg>
       <div
-        className={cn("absolute inset-0 grid place-items-center text-[color:var(--color-ink)] drop-shadow-[0_2px_0_rgba(255,255,255,0.4)]", iconWrap[tone])}
+        className={cn("absolute inset-0 grid place-items-center text-[color:var(--color-ink)] drop-shadow-[0_2px_0_rgba(255,255,255,0.45)]")}
         style={{ paddingBottom: Math.round(size * 0.02) }}
       >
-        <div style={{ width: iconSize, height: iconSize }} className="grid place-items-center">
+        <div style={{ width: iconSize, height: iconSize }} className="grid place-items-center [&_svg]:h-full [&_svg]:w-full [&_svg]:stroke-[2.75]">
           {children}
         </div>
       </div>
