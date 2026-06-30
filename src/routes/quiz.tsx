@@ -904,6 +904,36 @@ function PodiumScreen({
           />
         ))}
       </div>
+      {/* Animated falling confetti */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {Array.from({ length: 60 }).map((_, i) => {
+          const colors = ["#FFD25A", "#FF7A5C", "#4DDC9A", "#65A8EE", "#B78BFF", "#FFFFFF"];
+          const c = colors[i % colors.length];
+          const left = (i * 17 + 7) % 100;
+          const w = 6 + ((i * 3) % 8);
+          const h = 10 + ((i * 5) % 10);
+          const dur = 3.5 + ((i * 13) % 30) / 10;
+          const delay = ((i * 7) % 40) / 10;
+          const drift = ((i % 7) - 3) * 30;
+          const spin = 360 + ((i * 47) % 720);
+          return (
+            <span
+              key={`c-${i}`}
+              className="lov-confetti-piece"
+              style={{
+                left: `${left}%`,
+                width: w,
+                height: h,
+                background: c,
+                animationDuration: `${dur}s`,
+                animationDelay: `${delay}s`,
+                ["--lov-drift" as never]: `${drift}px`,
+                ["--lov-spin" as never]: `${spin}deg`,
+              }}
+            />
+          );
+        })}
+      </div>
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
         <div className="flex items-center justify-between">
           <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
@@ -927,12 +957,17 @@ function PodiumScreen({
             const Icon = icons[rank];
             const heights = ["h-44", "h-64", "h-36"];
             const visualSlot = rank === 0 ? 1 : rank === 1 ? 0 : 2;
+            const popDelay = visualSlot * 200;
             return (
-              <div key={rank} className="flex flex-1 max-w-[220px] flex-col items-center">
+              <div
+                key={rank}
+                className="lov-pop-in flex flex-1 max-w-[220px] flex-col items-center"
+                style={{ animationDelay: `${popDelay}ms` }}
+              >
                 <div className="mb-3 inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider backdrop-blur">
                   {labels[rank]}
                 </div>
-                <HexBadge tone={tones[rank]} size={sizes[rank]} className="bg-white/95">
+                <HexBadge tone={tones[rank]} size={sizes[rank]} className="lov-badge-float bg-white/95">
                   <Icon className="h-full w-full" strokeWidth={2.5} />
                 </HexBadge>
                 <div className="mt-4 text-center font-display text-2xl font-bold drop-shadow">
