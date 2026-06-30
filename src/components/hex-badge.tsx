@@ -19,14 +19,6 @@ const hexFill: Record<HexTone, string> = {
   violet: "fill-violet",
 };
 
-const iconWrap: Record<HexTone, string> = {
-  coral: "text-coral-foreground",
-  sunshine: "text-sunshine-foreground",
-  mint: "text-mint-foreground",
-  sky: "text-sky-foreground",
-  violet: "text-violet-foreground",
-};
-
 /**
  * Hexagonal reward badge in the style of motivational achievement icons.
  * Soft pastel rounded tile with a saturated hexagon and an icon centered inside.
