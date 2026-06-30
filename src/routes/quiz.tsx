@@ -887,6 +887,10 @@ function PodiumScreen({
   myXp: number;
   onContinue: () => void;
 }) {
+  useEffect(() => {
+    const t = window.setTimeout(() => playFanfare(), 250);
+    return () => window.clearTimeout(t);
+  }, []);
   // Build ranking. If classroom + tally, rank real students by accuracy then correct.
   // Else fall back to a friendly default trio so solo runs still get a podium.
   let ranked: { name: string; xp: number; acc: number }[] = [];
