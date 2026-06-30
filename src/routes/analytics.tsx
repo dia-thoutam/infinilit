@@ -287,10 +287,14 @@ function AnalyticsPage() {
 
           <div className="mt-6 h-64">
             <ResponsiveContainer>
-              <LineChart data={perStudentSeries}>
+              <LineChart data={perStudentSeries} margin={{ top: 10, right: 24, left: 16, bottom: 28 }}>
                 <ChartGrid />
-                <ChartXAxis dataKey="session" />
-                <ChartYAxis domain={[0, 100]} />
+                <ChartXAxis dataKey="session">
+                  <Label value="Session" position="insideBottom" offset={-14} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12 }} />
+                </ChartXAxis>
+                <ChartYAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]}>
+                  <Label value="Score (%)" angle={-90} position="insideLeft" offset={6} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12, textAnchor: "middle" }} />
+                </ChartYAxis>
                 <ChartTooltip />
                 <Line
                   type="monotone"
@@ -328,7 +332,7 @@ function AnalyticsPage() {
             </div>
             <div className="mt-6 h-72 chart-overflow-visible overflow-visible">
               <ResponsiveContainer>
-                <BarChart data={improvementByStudent}>
+                <BarChart data={improvementByStudent} margin={{ top: 30, right: 24, left: 16, bottom: 70 }}>
                   <defs>
                     <linearGradient id="positiveGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#4ddc9a" />
@@ -381,8 +385,20 @@ function AnalyticsPage() {
                     </filter>
                   </defs>
                   <ChartGrid />
-                  <ChartXAxis dataKey="student" tick={chartTokens.tickSmall} interval={0} angle={-25} textAnchor="end" height={50} />
-                  <ChartYAxis />
+                  <ChartXAxis
+                    dataKey="student"
+                    tick={chartTokens.tickSmall}
+                    interval={0}
+                    angle={-35}
+                    textAnchor="end"
+                    height={80}
+                    tickMargin={12}
+                  >
+                    <Label value="Student" position="insideBottom" offset={-60} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12 }} />
+                  </ChartXAxis>
+                  <ChartYAxis>
+                    <Label value="Improvement (%)" angle={-90} position="insideLeft" offset={6} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12, textAnchor: "middle" }} />
+                  </ChartYAxis>
                   <ChartTooltip />
                   <Bar dataKey="improvement" radius={chartTokens.barRadius}>
                     {improvementByStudent.map((entry, i) => {
@@ -422,10 +438,14 @@ function AnalyticsPage() {
             </div>
             <div className="mt-6 h-72">
               <ResponsiveContainer>
-                <LineChart data={classAvg}>
+                <LineChart data={classAvg} margin={{ top: 10, right: 24, left: 16, bottom: 30 }}>
                   <ChartGrid />
-                  <ChartXAxis dataKey="session" />
-                  <ChartYAxis domain={[0, 100]} />
+                  <ChartXAxis dataKey="session">
+                    <Label value="Session" position="insideBottom" offset={-14} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12 }} />
+                  </ChartXAxis>
+                  <ChartYAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]}>
+                    <Label value="Class avg score (%)" angle={-90} position="insideLeft" offset={6} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12, textAnchor: "middle" }} />
+                  </ChartYAxis>
                   <ChartTooltip />
                   <Legend wrapperStyle={chartTokens.legend} />
                   <Line
