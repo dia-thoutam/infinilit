@@ -69,13 +69,13 @@ function TeacherIndex() {
                   {q.lastAttempt && (
                     <div className="rounded-2xl border-2 border-foreground/10 bg-background p-2 text-right text-[10px] font-semibold leading-tight">
                       <div className="flex items-center justify-end gap-1 text-mint">
-                        <Target className="h-3 w-3" strokeWidth={3} /> {q.lastAttempt.accuracy}%
+                        <Target className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.accuracy}%
                       </div>
                       <div className="flex items-center justify-end gap-1 text-foreground/70">
-                        <Zap className="h-3 w-3" strokeWidth={3} /> {q.lastAttempt.xp} XP
+                        <Zap className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.xp} XP
                       </div>
                       <div className="flex items-center justify-end gap-1 text-muted-foreground">
-                        <Calendar className="h-3 w-3" /> {q.lastAttempt.date}
+                        <Calendar className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.date}
                       </div>
                     </div>
                   )}
