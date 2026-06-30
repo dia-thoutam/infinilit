@@ -139,6 +139,15 @@ function AnalyticsPage() {
                 "linear-gradient(135deg, oklch(0.96 0.08 85) 0%, oklch(0.88 0.14 60) 45%, oklch(0.78 0.18 30) 100%)",
             }}
           >
+            {/* Contrast vignette behind the big number */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 opacity-60 blur-2xl"
+              style={{
+                background:
+                  "radial-gradient(70% 60% at 20% 50%, rgba(40, 20, 10, 0.35) 0%, transparent 70%)",
+              }}
+            />
             {/* Sheen highlight */}
             <div
               aria-hidden
@@ -159,15 +168,17 @@ function AnalyticsPage() {
                   <span
                     className="font-display text-[5.5rem] font-black leading-none sm:text-[8rem]"
                     style={{
-                      background: "linear-gradient(180deg, #fff8e6 0%, #ffd166 55%, #ef7a3a 100%)",
+                      background: "linear-gradient(180deg, #fffbe8 0%, #ffe7a3 40%, #ffc95c 70%, #e85d2b 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
+                      WebkitTextStroke: "2px rgba(60,25,10,0.28)",
+                      textShadow: "0 3px 0 rgba(60,25,10,0.25), 0 6px 14px rgba(60,25,10,0.35), 0 0 40px rgba(255,250,230,0.5)",
                       filter: "drop-shadow(0 4px 0 rgba(40,20,10,0.25))",
                     }}
                   >
                     +{classImprovement}%
                   </span>
-                  <span className="font-display text-3xl font-black sm:text-4xl">class improvement</span>
+                  <span className="font-display text-3xl font-black sm:text-4xl" style={{ textShadow: "0 2px 12px rgba(255,250,230,0.55)" }}>class improvement</span>
                 </div>
                 <p className="mt-4 max-w-md text-sm font-medium text-foreground/80">
                   Class average has climbed from <span className="font-bold">{classAvg[0].avg}</span> to <span className="font-bold">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
