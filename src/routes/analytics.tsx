@@ -122,81 +122,27 @@ function AnalyticsPage() {
         </div>
 
         {/* Hero metric */}
-        <div className="relative">
-          {/* Outer glow */}
-          <div
-            aria-hidden
-            className="absolute -inset-3 rounded-[2rem] opacity-70 blur-2xl"
-            style={{
-              background:
-                "radial-gradient(60% 80% at 20% 30%, oklch(0.78 0.19 60 / 0.9), transparent 70%), radial-gradient(60% 80% at 80% 70%, oklch(0.7 0.22 25 / 0.8), transparent 70%)",
-            }}
-          />
-          <Card
-            className="relative overflow-hidden border-[3px] border-foreground p-0 text-foreground badge-shadow-pop"
-            style={{
-              background:
-                "linear-gradient(135deg, oklch(0.96 0.08 85) 0%, oklch(0.88 0.14 60) 45%, oklch(0.78 0.18 30) 100%)",
-            }}
-          >
-            {/* Contrast vignette behind the big number */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -inset-6 opacity-60 blur-2xl"
-              style={{
-                background:
-                  "radial-gradient(70% 60% at 20% 50%, rgba(40, 20, 10, 0.35) 0%, transparent 70%)",
-              }}
-            />
-            {/* Sheen highlight */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-1/2 opacity-60"
-              style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.55), transparent)" }}
-            />
-            {/* Floating sparkles */}
-            <Sparkles className="pointer-events-none absolute right-10 top-6 h-6 w-6 text-foreground/70 animate-pulse" strokeWidth={2.5} />
-            <Sparkles className="pointer-events-none absolute left-12 bottom-8 h-4 w-4 text-foreground/50 animate-pulse" strokeWidth={2.5} style={{ animationDelay: "0.6s" }} />
-            <Sparkles className="pointer-events-none absolute right-1/3 bottom-10 h-5 w-5 text-foreground/60 animate-pulse" strokeWidth={2.5} style={{ animationDelay: "1.1s" }} />
-
-            <div className="relative grid items-center gap-6 p-10 sm:grid-cols-[1fr_auto]">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-sunshine">
-                  <Flame className="h-3.5 w-3.5" strokeWidth={3} /> Since Session 1
-                </div>
-                <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                  <span
-                    className="font-display text-[5.5rem] font-black leading-none sm:text-[8rem]"
-                    style={{
-                      background: "linear-gradient(180deg, #fffbe8 0%, #ffe7a3 40%, #ffc95c 70%, #e85d2b 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      WebkitTextStroke: "2px rgba(60,25,10,0.28)",
-                      textShadow: "0 3px 0 rgba(60,25,10,0.25), 0 6px 14px rgba(60,25,10,0.35), 0 0 40px rgba(255,250,230,0.5)",
-                      filter: "drop-shadow(0 4px 0 rgba(40,20,10,0.25))",
-                    }}
-                  >
-                    +{classImprovement}%
-                  </span>
-                  <span className="font-display text-3xl font-black sm:text-4xl" style={{ textShadow: "0 2px 12px rgba(255,250,230,0.55)" }}>class improvement</span>
-                </div>
-                <p className="mt-4 max-w-md text-sm font-medium text-foreground/80">
-                  Class average has climbed from <span className="font-bold">{classAvg[0].avg}</span> to <span className="font-bold">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
-                </p>
+        <Card className="relative overflow-hidden border-2 border-foreground/10 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa]">
+          <div className="relative grid items-center gap-8 p-8 sm:grid-cols-[1fr_auto]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border-2 border-foreground/10 bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-background">
+                <Flame className="h-3.5 w-3.5 text-sunshine" strokeWidth={3} /> Since Session 1
               </div>
-              <div className="relative">
-                <div
-                  aria-hidden
-                  className="absolute -inset-4 rounded-full opacity-80 blur-xl"
-                  style={{ background: "radial-gradient(circle, oklch(0.85 0.2 85 / 0.9), transparent 70%)" }}
-                />
-                <Badge3D color="sunshine" className="relative h-40 w-40">
-                  <TrendingUp className="h-20 w-20" strokeWidth={2.5} />
-                </Badge3D>
+              <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                <span className="font-display text-[5rem] font-black leading-none tracking-tight text-foreground sm:text-[7rem]">
+                  +{classImprovement}%
+                </span>
+                <span className="font-display text-2xl font-bold text-foreground/90 sm:text-3xl">class improvement</span>
               </div>
+              <p className="mt-4 max-w-md text-sm font-medium text-foreground/70">
+                Class average climbed from <span className="font-bold text-foreground">{classAvg[0].avg}</span> to <span className="font-bold text-foreground">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
+              </p>
             </div>
-          </Card>
-        </div>
+            <div className="relative hidden sm:grid h-28 w-28 shrink-0 place-items-center rounded-full bg-sunshine/90 border-2 border-foreground/10 shadow-lg">
+              <TrendingUp className="h-14 w-14 text-foreground" strokeWidth={2.5} />
+            </div>
+          </div>
+        </Card>
 
         {/* KPI row */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
