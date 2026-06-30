@@ -13,8 +13,16 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="min-h-screen bg-warm-gradient text-foreground">
-      <header className="sticky top-0 z-40 border-b border-white/20 bg-white/15 backdrop-blur-lg">
+    <div className="relative min-h-screen bg-warm-gradient text-foreground">
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 bg-glass-noise opacity-40 mix-blend-overlay"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(255,245,230,0.25),transparent_60%)]"
+      />
+      <header className="sticky top-0 z-40 border-b border-white/25 bg-white/10 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link to="/quiz" className="flex items-center gap-2">
             <div className="grid h-10 w-10 place-items-center rounded-2xl bg-coral/95 chunky-border badge-shadow backdrop-blur-sm">
@@ -53,7 +61,7 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
           </div>
         </div>
       </header>
-      <main className={cn(bare ? "" : "mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10")}>{children}</main>
+      <main className={cn("relative z-10", bare ? "" : "mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10")}>{children}</main>
     </div>
   );
 }
