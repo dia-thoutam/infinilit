@@ -27,7 +27,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AppShell, Badge3D } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { HexBadge } from "@/components/hex-badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -1082,9 +1083,9 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
             const Icon = s.icon;
             return (
               <Card key={s.label} className="flex items-center gap-4 border-2 border-foreground/10 p-5 badge-shadow">
-                <Badge3D color={s.color} className="h-16 w-16">
-                  <Icon className="h-7 w-7" strokeWidth={2.5} />
-                </Badge3D>
+                <HexBadge tone={s.color} size={68}>
+                  <Icon strokeWidth={3} />
+                </HexBadge>
                 <div className="flex-1">
                   <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{s.label}</div>
                   <div className="font-display text-2xl font-bold">{s.name}</div>
