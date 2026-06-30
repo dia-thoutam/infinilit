@@ -123,7 +123,7 @@ function AnalyticsPage() {
         </div>
 
         {/* Hero metric */}
-        <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa]">
+        <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] dark:[&_.text-foreground]:!text-[#1a1830]">
           <div className="relative grid items-center gap-8 p-8 sm:grid-cols-[1fr_auto]">
             <div>
               <div className="section-pill-soft inline-flex items-center gap-2 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em]" style={{ background: "linear-gradient(180deg, #1a1830 0%, #0d0b20 100%)", color: "#ffd98a" }}>
