@@ -38,7 +38,7 @@ function TeacherIndex() {
           </div>
           <Link to="/teacher/classrooms" className="inline-flex">
             <Button variant="sky" size="lg">
-              <Users className="h-4 w-4" /> Manage classrooms
+              <Users className="h-4 w-4 drop-shadow-sm" strokeWidth={3.5} /> Manage classrooms
             </Button>
           </Link>
         </div>
