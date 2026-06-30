@@ -316,23 +316,23 @@ function AnalyticsPage() {
 
         {/* Class-wide improvement */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-2 border-foreground/10 p-6 badge-shadow">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
             <div className="flex items-center gap-3">
               <Badge3D color="coral" className="h-10 w-10">
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold">Individual improvement %</div>
-                <div className="text-xs text-muted-foreground">First session vs latest.</div>
+                <div className="font-display text-lg font-bold text-foreground">Individual improvement %</div>
+                <div className="text-xs font-semibold text-foreground/75">First session vs latest.</div>
               </div>
             </div>
             <div className="mt-6 h-72">
               <ResponsiveContainer>
                 <BarChart data={improvementByStudent}>
-                  <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="student" tickLine={false} axisLine={false} fontSize={11} interval={0} angle={-25} textAnchor="end" height={50} />
-                  <YAxis tickLine={false} axisLine={false} fontSize={12} />
-                  <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)" }} />
+                  <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="student" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 11, fontWeight: 700 }} interval={0} angle={-25} textAnchor="end" height={50} />
+                  <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
                   <Bar dataKey="improvement" radius={[8, 8, 0, 0]}>
                     {improvementByStudent.map((_, i) => (
                       <Cell
