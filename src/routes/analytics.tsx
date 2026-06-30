@@ -15,7 +15,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AppShell, Badge3D } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { HexBadge } from "@/components/hex-badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -174,9 +175,9 @@ function AnalyticsPage() {
                 )}
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-black uppercase tracking-wider text-foreground">{s.section}</div>
-                  <Badge3D color={colors[i]} className="h-9 w-9">
+                  <HexBadge tone={colors[i]} size={36}>
                     <Target className="h-4 w-4" strokeWidth={2.5} />
-                  </Badge3D>
+                  </HexBadge>
                 </div>
                 <div className="mt-3 flex items-baseline gap-2">
                   <span className="font-display text-4xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{s.current}%</span>
@@ -195,9 +196,9 @@ function AnalyticsPage() {
         <div className="grid gap-6 lg:grid-cols-3">
           <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
             <div className="flex items-center gap-3">
-              <Badge3D color="sky" className="h-10 w-10">
+              <HexBadge tone="sky" size={40}>
                 <Brain className="h-5 w-5" strokeWidth={2.5} />
-              </Badge3D>
+              </HexBadge>
               <div className="font-display text-lg font-black text-foreground">Confidence calibration</div>
             </div>
             <div className="mt-5 grid place-items-center">
@@ -230,9 +231,9 @@ function AnalyticsPage() {
 
           <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-white">
             <div className="flex items-center gap-3">
-              <Badge3D color="coral" className="h-10 w-10">
+              <HexBadge tone="coral" size={40}>
                 <Flame className="h-5 w-5" strokeWidth={2.5} />
-              </Badge3D>
+              </HexBadge>
               <div>
                 <div className="font-display text-lg font-black text-foreground">Misconception tracker</div>
                 <div className="text-xs font-semibold text-foreground">Questions where the majority went wrong, across sessions.</div>
@@ -261,9 +262,9 @@ function AnalyticsPage() {
         <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <Badge3D color="mint" className="h-10 w-10">
+              <HexBadge tone="mint" size={40}>
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
-              </Badge3D>
+              </HexBadge>
               <div>
                 <div className="font-display text-lg font-black text-foreground">Individual improvement</div>
                 <div className="text-xs font-semibold text-foreground">Per-student growth across sessions.</div>
@@ -318,9 +319,9 @@ function AnalyticsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
             <div className="flex items-center gap-3">
-              <Badge3D color="coral" className="h-10 w-10">
+              <HexBadge tone="coral" size={40}>
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
-              </Badge3D>
+              </HexBadge>
               <div>
                 <div className="font-display text-lg font-black text-foreground">Individual improvement %</div>
                 <div className="text-xs font-semibold text-foreground">First session vs latest.</div>
@@ -350,9 +351,9 @@ function AnalyticsPage() {
 
           <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
             <div className="flex items-center gap-3">
-              <Badge3D color="mint" className="h-10 w-10">
+              <HexBadge tone="mint" size={40}>
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
-              </Badge3D>
+              </HexBadge>
               <div>
                 <div className="font-display text-lg font-black text-foreground">Class average over time</div>
                 <div className="text-xs font-semibold text-foreground">Average score per session.</div>
