@@ -4,20 +4,17 @@ import { ArrowDown, ArrowUp, BarChart3, Brain, Flame, Target, TrendingUp, Zap } 
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Cell,
   Legend,
   Line,
   LineChart,
   ReferenceDot,
   ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
 } from "recharts";
 import { AppShell } from "@/components/app-shell";
 import { HexBadge } from "@/components/hex-badge";
 import { Card } from "@/components/ui/card";
+import { ChartGrid, ChartTooltip, ChartXAxis, ChartYAxis, chartTokens } from "@/components/chart-style";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { seedSectionAccuracy, seedSessionScores, seedStudents } from "@/data/seed";
@@ -289,17 +286,17 @@ function AnalyticsPage() {
           <div className="mt-6 h-64">
             <ResponsiveContainer>
               <LineChart data={perStudentSeries}>
-                <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="session" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
-                <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} domain={[0, 100]} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
+                <ChartGrid />
+                <ChartXAxis dataKey="session" />
+                <ChartYAxis domain={[0, 100]} />
+                <ChartTooltip />
                 <Line
                   type="monotone"
                   dataKey={student}
                   stroke={trendColor}
-                  strokeWidth={3}
-                  dot={{ r: 5, strokeWidth: 2, fill: "white" }}
-                  activeDot={{ r: 7 }}
+                  strokeWidth={chartTokens.line.strokeWidth}
+                  dot={chartTokens.line.dot}
+                  activeDot={chartTokens.line.activeDot}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -369,11 +366,11 @@ function AnalyticsPage() {
                       </feMerge>
                     </filter>
                   </defs>
-                  <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="student" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 11, fontWeight: 700 }} interval={0} angle={-25} textAnchor="end" height={50} />
-                  <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
-                  <Tooltip cursor={{ fill: "var(--color-foreground)", fillOpacity: 0.06 }} contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
-                  <Bar dataKey="improvement" radius={[8, 8, 0, 0]}>
+                  <ChartGrid />
+                  <ChartXAxis dataKey="student" tick={chartTokens.tickSmall} interval={0} angle={-25} textAnchor="end" height={50} />
+                  <ChartYAxis />
+                  <ChartTooltip />
+                  <Bar dataKey="improvement" radius={chartTokens.barRadius}>
                     {improvementByStudent.map((entry, i) => {
                       const isTop = i === topImproverIdx;
                       const isPositive = entry.improvement >= 0;
@@ -407,19 +404,19 @@ function AnalyticsPage() {
             <div className="mt-6 h-72">
               <ResponsiveContainer>
                 <LineChart data={classAvg}>
-                  <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="session" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
-                  <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} domain={[0, 100]} />
-                  <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
-                  <Legend wrapperStyle={{ fontSize: 12, color: "var(--color-foreground)", fontWeight: 700 }} />
+                  <ChartGrid />
+                  <ChartXAxis dataKey="session" />
+                  <ChartYAxis domain={[0, 100]} />
+                  <ChartTooltip />
+                  <Legend wrapperStyle={chartTokens.legend} />
                   <Line
                     type="monotone"
                     name="Class avg"
                     dataKey="avg"
-                    stroke="var(--color-mint)"
-                    strokeWidth={5}
-                    dot={{ r: 5, strokeWidth: 2, fill: "white" }}
-                    activeDot={{ r: 8 }}
+                    stroke={chartTokens.palette.accent}
+                    strokeWidth={chartTokens.line.strokeWidth}
+                    dot={chartTokens.line.dot}
+                    activeDot={chartTokens.line.activeDot}
                   />
                   {Number.isFinite(biggestJump.delta) && (
                     <ReferenceDot
