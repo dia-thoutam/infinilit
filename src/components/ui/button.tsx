@@ -9,18 +9,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        default: "bg-primary/95 text-primary-foreground shadow hover:bg-primary/80 backdrop-blur-sm",
+        destructive: "bg-destructive/95 text-destructive-foreground shadow-sm hover:bg-destructive/80 backdrop-blur-sm",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "border border-white/40 bg-white/50 text-foreground shadow-sm backdrop-blur-sm hover:bg-white/75 hover:text-foreground",
+        secondary: "bg-white/50 text-foreground shadow-sm backdrop-blur-sm hover:bg-white/75",
+        ghost: "hover:bg-white/30 hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        coral: "bg-coral text-coral-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sunshine: "bg-sunshine text-sunshine-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        mint: "bg-mint text-mint-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sky: "bg-sky text-sky-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        badge: "bg-card text-foreground chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        coral: "bg-coral/95 text-coral-foreground chunky-border badge-shadow hover:bg-coral/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        sunshine: "bg-sunshine/95 text-sunshine-foreground chunky-border badge-shadow hover:bg-sunshine/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        mint: "bg-mint/95 text-mint-foreground chunky-border badge-shadow hover:bg-mint/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        sky: "bg-sky/95 text-sky-foreground chunky-border badge-shadow hover:bg-sky/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        badge: "bg-white/55 text-foreground border-2 border-white/40 chunky-border badge-shadow backdrop-blur-sm hover:bg-white/75 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         gradient: "stat-gradient-violet chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         gradientDark: "stat-gradient-dark badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold border-0",
       },
