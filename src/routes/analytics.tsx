@@ -352,6 +352,22 @@ function AnalyticsPage() {
                       <stop offset="70%" stopColor="#ffc95c" />
                       <stop offset="100%" stopColor="#e85d2b" />
                     </linearGradient>
+                    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 0.78 0 0 0 0 0.2 0 0 0 1 0" result="glow" />
+                      <feMerge>
+                        <feMergeNode in="glow" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                    <filter id="greenGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.3 0 0 0 0 0.86 0 0 0 0 0.6 0 0 0 0.6 0" result="glow" />
+                      <feMerge>
+                        <feMergeNode in="glow" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
                   </defs>
                   <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="student" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 11, fontWeight: 700 }} interval={0} angle={-25} textAnchor="end" height={50} />
