@@ -110,7 +110,7 @@ function AnalyticsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-8">
+      <div className="space-y-8 rounded-3xl bg-white/55 p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 shadow-2xl">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full bg-sky px-3 py-1 text-xs font-bold uppercase tracking-wider text-sky-foreground chunky-border">
             <BarChart3 className="h-3 w-3" strokeWidth={3} /> Class Analytics
@@ -122,7 +122,7 @@ function AnalyticsPage() {
         </div>
 
         {/* Hero metric */}
-        <Card className="relative overflow-hidden border-2 border-foreground/10 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa]">
+        <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa]">
           <div className="relative grid items-center gap-8 p-8 sm:grid-cols-[1fr_auto]">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border-2 border-foreground/10 bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-background">
@@ -142,7 +142,7 @@ function AnalyticsPage() {
                   </span>
                   <span className="font-display text-2xl font-bold text-foreground/90 sm:text-3xl">class improvement</span>
                 </div>
-              <p className="mt-4 max-w-md text-sm font-medium text-foreground/70">
+              <p className="mt-4 max-w-md text-sm font-semibold text-foreground/85">
                 Class average climbed from <span className="font-bold text-foreground">{classAvg[0].avg}</span> to <span className="font-bold text-foreground">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
               </p>
             </div>
@@ -163,7 +163,7 @@ function AnalyticsPage() {
               <Card
                 key={s.section}
                 className={cn(
-                  "border-2 border-foreground/10 p-5 badge-shadow relative",
+                  "border-2 border-foreground/20 p-5 badge-shadow relative",
                   isBest && "border-sunshine ring-4 ring-sunshine/40",
                 )}
               >
@@ -173,19 +173,19 @@ function AnalyticsPage() {
                   </span>
                 )}
                 <div className="flex items-center justify-between">
-                  <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{s.section}</div>
+                  <div className="text-xs font-extrabold uppercase tracking-wider text-foreground/80">{s.section}</div>
                   <Badge3D color={colors[i]} className="h-9 w-9">
                     <Target className="h-4 w-4" strokeWidth={2.5} />
                   </Badge3D>
                 </div>
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="font-display text-4xl font-bold">{s.current}%</span>
+                  <span className="font-display text-4xl font-bold text-foreground">{s.current}%</span>
                   <span className={cn("inline-flex items-center text-sm font-bold", up ? "text-mint-foreground" : "text-coral")}>
                     {up ? <ArrowUp className="h-4 w-4" strokeWidth={3} /> : <ArrowDown className="h-4 w-4" strokeWidth={3} />}
                     {Math.abs(delta)}
                   </span>
                 </div>
-                <div className="mt-1 text-xs text-muted-foreground">vs last session ({s.last}%)</div>
+                <div className="mt-1 text-xs font-semibold text-foreground/70">vs last session ({s.last}%)</div>
               </Card>
             );
           })}
@@ -193,24 +193,24 @@ function AnalyticsPage() {
 
         {/* Confidence calibration + Misconceptions */}
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="border-2 border-foreground/10 p-6 badge-shadow">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
             <div className="flex items-center gap-3">
               <Badge3D color="sky" className="h-10 w-10">
                 <Brain className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
-              <div className="font-display text-lg font-bold">Confidence calibration</div>
+              <div className="font-display text-lg font-bold text-foreground">Confidence calibration</div>
             </div>
             <div className="mt-5 grid place-items-center">
               <div className="relative grid h-40 w-40 place-items-center">
                 <svg viewBox="0 0 100 100" className="absolute inset-0">
-                  <circle cx="50" cy="50" r="42" fill="none" stroke="var(--color-muted)" strokeWidth="10" />
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="var(--color-border)" strokeWidth="12" />
                   <circle
                     cx="50"
                     cy="50"
                     r="42"
                     fill="none"
                     stroke="var(--color-mint)"
-                    strokeWidth="10"
+                    strokeWidth="12"
                     strokeLinecap="round"
                     strokeDasharray={2 * Math.PI * 42}
                     strokeDashoffset={2 * Math.PI * 42 * (1 - confidenceCalibration / 100)}
@@ -218,32 +218,32 @@ function AnalyticsPage() {
                   />
                 </svg>
                 <div className="text-center">
-                  <div className="font-display text-4xl font-bold">{confidenceCalibration}%</div>
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Sure & correct</div>
+                  <div className="font-display text-4xl font-bold text-foreground">{confidenceCalibration}%</div>
+                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">Sure & correct</div>
                 </div>
               </div>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
+            <p className="mt-4 text-xs font-semibold text-foreground/75">
               Of students who said &quot;Sure&quot;, {confidenceCalibration}% were right. The honest measure of real understanding.
             </p>
           </Card>
 
-          <Card className="border-2 border-foreground/10 p-6 lg:col-span-2 badge-shadow">
+          <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-white">
             <div className="flex items-center gap-3">
               <Badge3D color="coral" className="h-10 w-10">
                 <Flame className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold">Misconception tracker</div>
-                <div className="text-xs text-muted-foreground">Questions where the majority went wrong, across sessions.</div>
+                <div className="font-display text-lg font-bold text-foreground">Misconception tracker</div>
+                <div className="text-xs font-semibold text-foreground/75">Questions where the majority went wrong, across sessions.</div>
               </div>
             </div>
             <div className="mt-4 space-y-2">
               {misconceptions.map((m) => (
-                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/5 bg-background p-3">
+                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-white p-3">
                   <div className="flex-1">
-                    <div className="text-sm font-semibold">{m.question}</div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{m.section} · {m.sessions} sessions</div>
+                    <div className="text-sm font-bold text-foreground">{m.question}</div>
+                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">{m.section} · {m.sessions} sessions</div>
                   </div>
                   <div className="w-32 shrink-0">
                     <div className="h-2 overflow-hidden rounded-full bg-muted">
