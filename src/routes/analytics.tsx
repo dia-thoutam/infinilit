@@ -258,15 +258,15 @@ function AnalyticsPage() {
         </div>
 
         {/* Individual progress */}
-        <Card className="border-2 border-foreground/10 p-6 badge-shadow">
+        <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <Badge3D color="mint" className="h-10 w-10">
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold">Individual improvement</div>
-                <div className="text-xs text-muted-foreground">Per-student growth across sessions.</div>
+                <div className="font-display text-lg font-bold text-foreground">Individual improvement</div>
+                <div className="text-xs font-semibold text-foreground/75">Per-student growth across sessions.</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
