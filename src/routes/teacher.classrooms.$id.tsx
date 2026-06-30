@@ -3,6 +3,7 @@ import { ArrowLeft, BarChart3, Brain, RotateCcw, Trophy, TrendingUp, Zap } from 
 import {
   Bar,
   BarChart,
+  Label,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -149,10 +150,14 @@ function ClassroomStatsPage() {
               </div>
               <div className="h-72">
                 <ResponsiveContainer>
-                  <LineChart data={sessionSeries}>
+                  <LineChart data={sessionSeries} margin={{ top: 10, right: 24, left: 16, bottom: 30 }}>
                     <ChartGrid />
-                    <ChartXAxis dataKey="label" />
-                    <ChartYAxis />
+                    <ChartXAxis dataKey="label">
+                      <Label value="Session" position="insideBottom" offset={-14} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12 }} />
+                    </ChartXAxis>
+                    <ChartYAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]}>
+                      <Label value="Accuracy (%)" angle={-90} position="insideLeft" offset={6} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12, textAnchor: "middle" }} />
+                    </ChartYAxis>
                     <ChartTooltip />
                     <Line type="monotone" dataKey="accuracy" stroke={chartTokens.palette.primary} strokeWidth={chartTokens.line.strokeWidth} dot={chartTokens.line.dot} activeDot={chartTokens.line.activeDot} />
                   </LineChart>
@@ -166,10 +171,22 @@ function ClassroomStatsPage() {
               </div>
               <div className="h-72">
                 <ResponsiveContainer>
-                  <BarChart data={perStudent}>
+                  <BarChart data={perStudent} margin={{ top: 10, right: 24, left: 16, bottom: 70 }}>
                     <ChartGrid />
-                    <ChartXAxis dataKey="student" tick={chartTokens.tickSmall} interval={0} angle={-25} textAnchor="end" height={50} />
-                    <ChartYAxis />
+                    <ChartXAxis
+                      dataKey="student"
+                      tick={chartTokens.tickSmall}
+                      interval={0}
+                      angle={-35}
+                      textAnchor="end"
+                      height={80}
+                      tickMargin={12}
+                    >
+                      <Label value="Student" position="insideBottom" offset={-60} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12 }} />
+                    </ChartXAxis>
+                    <ChartYAxis domain={[0, 100]} ticks={[0, 25, 50, 75, 100]}>
+                      <Label value="Accuracy (%)" angle={-90} position="insideLeft" offset={6} style={{ fill: "var(--color-foreground)", fontWeight: 800, fontSize: 12, textAnchor: "middle" }} />
+                    </ChartYAxis>
                     <ChartTooltip />
                     <Bar dataKey="accuracy" radius={chartTokens.barRadius} fill={chartTokens.palette.accent} />
                   </BarChart>
