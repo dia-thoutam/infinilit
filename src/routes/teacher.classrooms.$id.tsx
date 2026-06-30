@@ -3,6 +3,7 @@ import { ArrowLeft, BarChart3, Brain, RotateCcw, Trophy, TrendingUp, Zap } from 
 import {
   Bar,
   BarChart,
+  Label,
   Line,
   LineChart,
   ResponsiveContainer,
