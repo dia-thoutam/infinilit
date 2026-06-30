@@ -139,6 +139,15 @@ function AnalyticsPage() {
                 "linear-gradient(135deg, oklch(0.96 0.08 85) 0%, oklch(0.88 0.14 60) 45%, oklch(0.78 0.18 30) 100%)",
             }}
           >
+            {/* Contrast vignette behind the big number */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 opacity-60 blur-2xl"
+              style={{
+                background:
+                  "radial-gradient(70% 60% at 20% 50%, rgba(40, 20, 10, 0.35) 0%, transparent 70%)",
+              }}
+            />
             {/* Sheen highlight */}
             <div
               aria-hidden
