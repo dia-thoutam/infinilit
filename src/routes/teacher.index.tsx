@@ -33,7 +33,7 @@ function TeacherIndex() {
               <Sparkles className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> Teacher Studio
             </div>
             <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Your quiz library</h1>
-            <p className="mt-2 max-w-xl text-muted-foreground">
+            <p className="mt-2 max-w-xl text-foreground/90 font-medium">
               Reuse, edit, and remix. Difficulty is set per question — XP awards (20 / 50 / 100) flow automatically.
             </p>
           </div>
@@ -51,7 +51,7 @@ function TeacherIndex() {
                 <Plus strokeWidth={3.5} />
               </HexBadge>
               <div className="font-display text-xl font-bold">New quiz</div>
-              <p className="max-w-[200px] text-xs text-muted-foreground">
+              <p className="max-w-[200px] text-xs text-foreground/90 font-medium">
                 Start from scratch. Add questions, set difficulty, write explanations.
               </p>
             </Card>
@@ -72,10 +72,10 @@ function TeacherIndex() {
                       <div className="flex items-center justify-end gap-1 text-mint">
                         <Target className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.accuracy}%
                       </div>
-                      <div className="flex items-center justify-end gap-1 text-foreground/70">
+                      <div className="flex items-center justify-end gap-1 text-foreground/90">
                         <Zap className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.xp} XP
                       </div>
-                      <div className="flex items-center justify-end gap-1 text-muted-foreground">
+                      <div className="flex items-center justify-end gap-1 text-foreground/90 font-medium">
                         <Calendar className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.date}
                       </div>
                     </div>
@@ -83,7 +83,7 @@ function TeacherIndex() {
                 </div>
                 <div className="flex-1">
                   <div className="font-display text-xl font-bold leading-snug">{q.title}</div>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{q.description}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-foreground/90 font-medium">{q.description}</p>
                 </div>
                 <div className="flex flex-wrap gap-2 text-xs">
                   <span className="rounded-full bg-muted px-2 py-1 font-semibold">{q.questions.length} questions</span>

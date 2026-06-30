@@ -31,7 +31,7 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
             </HexBadge>
             <div className="leading-tight">
               <div className="font-display text-lg font-bold text-foreground">InFiniLit</div>
-              <div className="text-[10px] uppercase tracking-widest text-foreground/70">Financial Literacy</div>
+              <div className="text-[10px] uppercase tracking-widest text-foreground/90">Financial Literacy</div>
             </div>
           </Link>
           <nav className="flex items-center gap-1 rounded-2xl border border-white/25 bg-white/20 p-1 backdrop-blur-md">
@@ -46,7 +46,7 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
                     "inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors sm:px-4",
                     active
                       ? "bg-foreground/90 text-background shadow-sm"
-                      : "text-foreground/80 hover:bg-white/25 hover:text-foreground",
+                      : "text-foreground/90 hover:bg-white/25 hover:text-foreground",
                   )}
                 >
                   <Icon className="h-4 w-4" strokeWidth={2.5} />

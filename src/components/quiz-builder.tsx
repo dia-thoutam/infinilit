@@ -68,7 +68,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
           </h1>
           <div className="grid gap-4">
             <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Quiz title</label>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">Quiz title</label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -77,7 +77,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</label>
+              <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">Description</label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -107,7 +107,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
 
               <div className="grid gap-4 sm:grid-cols-[2fr_1fr_1fr]">
                 <div>
-                  <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Section</label>
+                  <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Section</label>
                   <Input
                     value={q.section}
                     onChange={(e) => updateQ(i, { section: e.target.value })}
@@ -115,7 +115,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Difficulty</label>
+                  <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Difficulty</label>
                   <Select value={q.difficulty} onValueChange={(v) => updateQ(i, { difficulty: v as Difficulty })}>
                     <SelectTrigger className="h-10 rounded-xl border-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -126,7 +126,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
                   </Select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Correct</label>
+                  <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Correct</label>
                   <Select value={String(q.correct)} onValueChange={(v) => updateQ(i, { correct: Number(v) as 0 | 1 | 2 | 3 })}>
                     <SelectTrigger className="h-10 rounded-xl border-2"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -140,7 +140,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Question</label>
+                <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Question</label>
                 <Textarea
                   value={q.text}
                   onChange={(e) => updateQ(i, { text: e.target.value })}
@@ -184,7 +184,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Explanation</label>
+                <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Explanation</label>
                 <Textarea
                   value={q.explanation}
                   onChange={(e) => updateQ(i, { explanation: e.target.value })}
@@ -194,7 +194,7 @@ export function QuizBuilder({ existing }: { existing?: Quiz }) {
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Common misconception (optional)</label>
+                <label className="mb-1 block text-xs font-bold uppercase text-foreground/90 font-medium">Common misconception (optional)</label>
                 <Textarea
                   value={q.misconception ?? ""}
                   onChange={(e) => updateQ(i, { misconception: e.target.value })}
