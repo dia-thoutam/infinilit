@@ -81,7 +81,7 @@
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
   /* Brand */
-  --background: oklch(0.982 0.022 85);          /* warm cream #FFF8EC */
+  --background: oklch(0.92 0.02 85);          /* warm sand, darker than cream */
   --foreground: oklch(0.23 0.06 270);           /* deep navy #1A1F3A */
   --ink: oklch(0.23 0.06 270);
   --card: oklch(1 0 0);
