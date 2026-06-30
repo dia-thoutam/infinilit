@@ -14,18 +14,18 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
 
   return (
     <div className="min-h-screen bg-warm-gradient text-foreground">
-      <header className="sticky top-0 z-40 border-b-2 border-foreground/10 bg-background/80 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-white/20 bg-white/15 backdrop-blur-lg">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link to="/quiz" className="flex items-center gap-2">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-coral chunky-border badge-shadow">
+            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-coral/95 chunky-border badge-shadow backdrop-blur-sm">
               <Trophy className="h-5 w-5 text-coral-foreground" strokeWidth={2.5} />
             </div>
             <div className="leading-tight">
-              <div className="font-display text-lg font-bold">InFiniLit</div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Financial Literacy</div>
+              <div className="font-display text-lg font-bold text-foreground">InFiniLit</div>
+              <div className="text-[10px] uppercase tracking-widest text-foreground/70">Financial Literacy</div>
             </div>
           </Link>
-          <nav className="flex items-center gap-1 rounded-2xl border-2 border-foreground/10 bg-card p-1">
+          <nav className="flex items-center gap-1 rounded-2xl border border-white/25 bg-white/20 p-1 backdrop-blur-md">
             {tabs.map((t) => {
               const active = pathname.startsWith(t.to);
               const Icon = t.icon;
@@ -36,8 +36,8 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
                   className={cn(
                     "inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors sm:px-4",
                     active
-                      ? "bg-foreground text-background"
-                      : "text-foreground/70 hover:bg-muted",
+                      ? "bg-foreground/90 text-background shadow-sm"
+                      : "text-foreground/80 hover:bg-white/25 hover:text-foreground",
                   )}
                 >
                   <Icon className="h-4 w-4" strokeWidth={2.5} />
@@ -47,7 +47,7 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
             })}
           </nav>
           <div className="hidden items-center gap-2 md:flex">
-            <div className="rounded-full bg-sunshine px-3 py-1 text-xs font-bold text-sunshine-foreground chunky-border">
+            <div className="rounded-full bg-sunshine/90 px-3 py-1 text-xs font-bold text-sunshine-foreground chunky-border backdrop-blur-sm">
               Dia &amp; Joshitha
             </div>
           </div>
