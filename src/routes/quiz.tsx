@@ -528,16 +528,16 @@ function Lobby({
                     <Trophy className="h-full w-full" strokeWidth={2.5} />
                   </HexBadge>
                   {q.lastAttempt && (
-                    <div className="rounded-2xl border-2 border-foreground/15 bg-background/95 px-3 py-2 text-right text-xs font-bold leading-tight text-foreground shadow-[0_2px_0_rgba(0,0,0,0.08)]">
+                    <div className="rounded-2xl border border-foreground/15 bg-background/95 px-3 py-2 text-right text-xs font-bold leading-tight text-foreground shadow-[0_2px_0_rgba(0,0,0,0.08)]">
                       <div className="flex items-center justify-end gap-1.5">
-                        <span className="grid h-5 w-5 place-items-center rounded-full bg-mint text-mint-foreground">
-                          <Target className="h-3 w-3" strokeWidth={3.5} />
+                        <span className="grid h-6 w-6 place-items-center rounded-full bg-mint/90 text-mint-foreground">
+                          <Target className="h-4 w-4" strokeWidth={2} />
                         </span>
                         <span className="tabular-nums">{q.lastAttempt.accuracy}%</span>
                       </div>
                       <div className="mt-1 flex items-center justify-end gap-1.5">
-                        <span className="grid h-5 w-5 place-items-center rounded-full bg-sunshine text-sunshine-foreground">
-                          <Zap className="h-3 w-3" strokeWidth={3.5} />
+                        <span className="grid h-6 w-6 place-items-center rounded-full bg-sunshine/90 text-sunshine-foreground">
+                          <Zap className="h-4 w-4" strokeWidth={2} />
                         </span>
                         <span className="tabular-nums">{q.lastAttempt.xp} XP</span>
                       </div>
