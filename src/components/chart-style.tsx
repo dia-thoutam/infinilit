@@ -16,12 +16,13 @@ import {
 export const chartTokens = {
   grid: {
     stroke: "var(--color-foreground)",
-    strokeOpacity: 0.14,
+    strokeOpacity: 0.28,
     strokeDasharray: "4 4",
   },
-  axisLine: { stroke: "var(--color-foreground)", strokeOpacity: 0.35 },
-  tick: { fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 },
-  tickSmall: { fill: "var(--color-foreground)", fontSize: 11, fontWeight: 700 },
+  axisLine: { stroke: "var(--color-foreground)", strokeOpacity: 1, strokeWidth: 2 },
+  tickLine: { stroke: "var(--color-foreground)", strokeOpacity: 0.85, strokeWidth: 1.5 },
+  tick: { fill: "var(--color-foreground)", fontSize: 12, fontWeight: 800 },
+  tickSmall: { fill: "var(--color-foreground)", fontSize: 11, fontWeight: 800 },
   tooltip: {
     borderRadius: 14,
     border: "2px solid var(--color-foreground)",
@@ -53,9 +54,11 @@ export function ChartGrid(props: Partial<CartesianGridProps>) {
 export function ChartXAxis(props: XAxisProps) {
   return (
     <RCXAxis
-      tickLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.45 }}
+      tickLine={chartTokens.tickLine}
       axisLine={chartTokens.axisLine}
       tick={chartTokens.tick}
+      interval={0}
+      tickMargin={8}
       {...props}
     />
   );
@@ -64,9 +67,11 @@ export function ChartXAxis(props: XAxisProps) {
 export function ChartYAxis(props: YAxisProps) {
   return (
     <RCYAxis
-      tickLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.45 }}
+      tickLine={chartTokens.tickLine}
       axisLine={chartTokens.axisLine}
       tick={chartTokens.tick}
+      tickMargin={6}
+      width={44}
       {...props}
     />
   );
