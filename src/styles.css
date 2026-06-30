@@ -211,6 +211,14 @@
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
+
+  /* Standardize all Lucide icons: unified stroke weight + rounded caps/joins
+     so every icon across the app reads with the same visual rhythm. */
+  svg.lucide {
+    stroke-width: 2.25 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+  }
 }
 
 @utility badge-shadow {
