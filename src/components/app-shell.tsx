@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Sparkles, GraduationCap, BarChart3, Trophy } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { HexBadge } from "@/components/hex-badge";
 
 const tabs = [
   { to: "/quiz", label: "Play", icon: Sparkles },
@@ -24,10 +25,10 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
       />
       <header className="sticky top-0 z-40 border-b border-white/25 bg-white/10 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/quiz" className="flex items-center gap-2">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-coral/95 chunky-border badge-shadow backdrop-blur-sm">
-              <Trophy className="h-5 w-5 text-coral-foreground" strokeWidth={2.5} />
-            </div>
+          <Link to="/quiz" className="flex items-center gap-2 transition-transform hover:-translate-y-0.5">
+            <HexBadge tone="sunshine" size={44}>
+              <Trophy strokeWidth={3} />
+            </HexBadge>
             <div className="leading-tight">
               <div className="font-display text-lg font-bold text-foreground">InFiniLit</div>
               <div className="text-[10px] uppercase tracking-widest text-foreground/70">Financial Literacy</div>
