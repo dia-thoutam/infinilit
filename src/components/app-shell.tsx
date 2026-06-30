@@ -16,11 +16,11 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
     <div className="relative min-h-screen bg-warm-gradient text-foreground">
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 bg-glass-noise opacity-40 mix-blend-overlay"
+        className="pointer-events-none fixed inset-0 z-0 bg-glass-noise opacity-25 mix-blend-soft-light"
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(255,245,230,0.25),transparent_60%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(255,255,255,0.45),transparent_60%)]"
       />
       <header className="sticky top-0 z-40 border-b border-white/25 bg-white/10 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">

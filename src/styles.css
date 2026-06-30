@@ -381,15 +381,15 @@
 
 @utility bg-warm-gradient {
   background:
-    radial-gradient(circle at 18% 22%, rgba(255, 220, 188, 0.85) 0%, transparent 38%),
-    radial-gradient(circle at 82% 14%, rgba(244, 198, 162, 0.75) 0%, transparent 36%),
-    radial-gradient(circle at 62% 38%, rgba(255, 150, 92, 0.7) 0%, transparent 40%),
-    radial-gradient(circle at 22% 58%, rgba(232, 118, 96, 0.65) 0%, transparent 42%),
-    radial-gradient(circle at 78% 62%, rgba(168, 110, 150, 0.7) 0%, transparent 44%),
-    radial-gradient(circle at 40% 82%, rgba(110, 88, 168, 0.75) 0%, transparent 46%),
-    radial-gradient(circle at 88% 92%, rgba(70, 56, 130, 0.8) 0%, transparent 50%),
-    radial-gradient(circle at 8% 92%, rgba(92, 70, 128, 0.7) 0%, transparent 48%),
-    linear-gradient(160deg, #f0c9a4 0%, #e89668 32%, #c47878 55%, #8a6a96 78%, #4a3f7a 100%);
+    radial-gradient(circle at 18% 22%, rgba(255, 230, 200, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 82% 14%, rgba(255, 210, 160, 0.9) 0%, transparent 38%),
+    radial-gradient(circle at 62% 38%, rgba(255, 160, 100, 0.85) 0%, transparent 42%),
+    radial-gradient(circle at 22% 58%, rgba(255, 130, 110, 0.75) 0%, transparent 44%),
+    radial-gradient(circle at 78% 62%, rgba(255, 150, 150, 0.7) 0%, transparent 46%),
+    radial-gradient(circle at 40% 82%, rgba(255, 170, 170, 0.7) 0%, transparent 48%),
+    radial-gradient(circle at 88% 92%, rgba(255, 190, 190, 0.75) 0%, transparent 50%),
+    radial-gradient(circle at 8% 92%, rgba(255, 200, 180, 0.7) 0%, transparent 48%),
+    linear-gradient(165deg, #fff2d9 0%, #ffd8b8 22%, #ffb088 45%, #ff9a8a 68%, #f8b4c0 100%);
   background-attachment: fixed;
 }
 
@@ -402,8 +402,8 @@
 
 @utility bg-glass-noise {
   background-image:
-    radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    radial-gradient(rgba(60, 30, 20, 0.05) 1px, transparent 1px);
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 3px 3px, 5px 5px;
   background-position: 0 0, 1px 2px;
 }
