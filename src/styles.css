@@ -268,6 +268,51 @@
   border: 2px solid var(--color-ink);
 }
 
+/* ---------- Animations ---------- */
+@keyframes lov-confetti-fall {
+  0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate3d(var(--lov-drift, 0px), 110vh, 0) rotate(var(--lov-spin, 720deg)); opacity: 1; }
+}
+@keyframes lov-pop-in {
+  0% { transform: scale(0.5) translateY(20px); opacity: 0; }
+  60% { transform: scale(1.08) translateY(-4px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes lov-shine-sweep {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%) skewX(-20deg); }
+}
+@keyframes lov-badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.lov-confetti-piece {
+  position: absolute;
+  top: -5vh;
+  border-radius: 2px;
+  animation: lov-confetti-fall linear infinite;
+}
+.lov-pop-in { animation: lov-pop-in 600ms cubic-bezier(.2,.8,.2,1) both; }
+.lov-badge-float { animation: lov-badge-float 3s ease-in-out infinite; }
+
+@utility btn-shine {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 35%; height: 100%;
+    background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%);
+    transform: translateX(-120%) skewX(-20deg);
+    pointer-events: none;
+    z-index: 3;
+  }
+  &:hover::before {
+    animation: lov-shine-sweep 700ms ease-out;
+  }
+}
+
 @utility stat-gradient-violet {
   background: radial-gradient(120% 120% at 20% 10%, #c4b5fd 0%, #a78bfa 40%, #f0abfc 80%, #fdba74 100%);
   color: #0f0a1f;
