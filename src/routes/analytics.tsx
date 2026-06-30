@@ -115,8 +115,8 @@ function AnalyticsPage() {
           <div className="inline-flex items-center gap-2 rounded-full bg-sky px-3 py-1 text-xs font-bold uppercase tracking-wider text-sky-foreground chunky-border">
             <BarChart3 className="h-3 w-3" strokeWidth={3} /> Class Analytics
           </div>
-          <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Progress, in numbers.</h1>
-          <p className="mt-2 max-w-2xl font-medium text-foreground/85">
+          <h1 className="mt-3 font-display text-4xl font-black text-foreground sm:text-5xl [text-shadow:0_1px_0_rgba(255,255,255,0.6)]">Progress, in numbers.</h1>
+          <p className="mt-2 max-w-2xl font-semibold text-foreground">
             Honest measures of learning — accuracy, calibration, and where the class is still tripping up.
           </p>
         </div>
@@ -140,10 +140,10 @@ function AnalyticsPage() {
                   >
                     +{classImprovement}%
                   </span>
-                  <span className="font-display text-2xl font-bold text-foreground/90 sm:text-3xl">class improvement</span>
+                  <span className="font-display text-2xl font-black text-foreground sm:text-3xl">class improvement</span>
                 </div>
-              <p className="mt-4 max-w-md text-sm font-semibold text-foreground/85">
-                Class average climbed from <span className="font-bold text-foreground">{classAvg[0].avg}</span> to <span className="font-bold text-foreground">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
+              <p className="mt-4 max-w-md text-sm font-semibold text-foreground">
+                Class average climbed from <span className="font-black text-foreground">{classAvg[0].avg}</span> to <span className="font-black text-foreground">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
               </p>
             </div>
             <div className="relative hidden sm:grid h-28 w-28 shrink-0 place-items-center rounded-full bg-sunshine/90 border-2 border-foreground/10 shadow-lg">
@@ -173,19 +173,19 @@ function AnalyticsPage() {
                   </span>
                 )}
                 <div className="flex items-center justify-between">
-                  <div className="text-xs font-extrabold uppercase tracking-wider text-foreground/80">{s.section}</div>
+                  <div className="text-xs font-black uppercase tracking-wider text-foreground">{s.section}</div>
                   <Badge3D color={colors[i]} className="h-9 w-9">
                     <Target className="h-4 w-4" strokeWidth={2.5} />
                   </Badge3D>
                 </div>
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="font-display text-4xl font-bold text-foreground">{s.current}%</span>
-                  <span className={cn("inline-flex items-center text-sm font-bold", up ? "text-mint-foreground" : "text-coral")}>
+                  <span className="font-display text-4xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{s.current}%</span>
+                  <span className={cn("inline-flex items-center text-sm font-black", up ? "text-mint-foreground" : "text-coral")}>
                     {up ? <ArrowUp className="h-4 w-4" strokeWidth={3} /> : <ArrowDown className="h-4 w-4" strokeWidth={3} />}
                     {Math.abs(delta)}
                   </span>
                 </div>
-                <div className="mt-1 text-xs font-semibold text-foreground/70">vs last session ({s.last}%)</div>
+                <div className="mt-1 text-xs font-bold text-foreground">vs last session ({s.last}%)</div>
               </Card>
             );
           })}
@@ -198,7 +198,7 @@ function AnalyticsPage() {
               <Badge3D color="sky" className="h-10 w-10">
                 <Brain className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
-              <div className="font-display text-lg font-bold text-foreground">Confidence calibration</div>
+              <div className="font-display text-lg font-black text-foreground">Confidence calibration</div>
             </div>
             <div className="mt-5 grid place-items-center">
               <div className="relative grid h-40 w-40 place-items-center">
@@ -218,12 +218,12 @@ function AnalyticsPage() {
                   />
                 </svg>
                 <div className="text-center">
-                  <div className="font-display text-4xl font-bold text-foreground">{confidenceCalibration}%</div>
-                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">Sure & correct</div>
+                  <div className="font-display text-4xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{confidenceCalibration}%</div>
+                  <div className="text-[10px] font-black uppercase tracking-wider text-foreground">Sure & correct</div>
                 </div>
               </div>
             </div>
-            <p className="mt-4 text-xs font-semibold text-foreground/75">
+            <p className="mt-4 text-xs font-semibold text-foreground">
               Of students who said &quot;Sure&quot;, {confidenceCalibration}% were right. The honest measure of real understanding.
             </p>
           </Card>
@@ -234,23 +234,23 @@ function AnalyticsPage() {
                 <Flame className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold text-foreground">Misconception tracker</div>
-                <div className="text-xs font-semibold text-foreground/75">Questions where the majority went wrong, across sessions.</div>
+                <div className="font-display text-lg font-black text-foreground">Misconception tracker</div>
+                <div className="text-xs font-semibold text-foreground">Questions where the majority went wrong, across sessions.</div>
               </div>
             </div>
             <div className="mt-4 space-y-2">
               {misconceptions.map((m) => (
                 <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-white p-3">
                   <div className="flex-1">
-                    <div className="text-sm font-bold text-foreground">{m.question}</div>
-                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">{m.section} · {m.sessions} sessions</div>
+                    <div className="text-sm font-black text-foreground">{m.question}</div>
+                    <div className="text-[10px] font-black uppercase tracking-wider text-foreground">{m.section} · {m.sessions} sessions</div>
                   </div>
                   <div className="w-32 shrink-0">
                     <div className="h-2 overflow-hidden rounded-full bg-muted">
                       <div className="h-full bg-coral" style={{ width: `${m.wrongPct}%` }} />
                     </div>
                   </div>
-                  <div className="w-12 text-right font-bold text-coral">{m.wrongPct}%</div>
+                  <div className="w-12 text-right font-black text-coral [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{m.wrongPct}%</div>
                 </div>
               ))}
             </div>
@@ -265,8 +265,8 @@ function AnalyticsPage() {
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold text-foreground">Individual improvement</div>
-                <div className="text-xs font-semibold text-foreground/75">Per-student growth across sessions.</div>
+                <div className="font-display text-lg font-black text-foreground">Individual improvement</div>
+                <div className="text-xs font-semibold text-foreground">Per-student growth across sessions.</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -277,8 +277,8 @@ function AnalyticsPage() {
                 </SelectContent>
               </Select>
               <span
-                className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold"
-                style={{ backgroundColor: trendColor, color: "white" }}
+                className="inline-flex items-center gap-1 rounded-full border-2 border-foreground/20 px-3 py-1 text-xs font-black text-white [text-shadow:0_1px_0_rgba(0,0,0,0.35)]"
+                style={{ backgroundColor: trendColor }}
               >
                 {trendLabel}
               </span>
@@ -307,8 +307,8 @@ function AnalyticsPage() {
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {studentScores.map((v, i) => (
               <div key={i} className="rounded-xl border-2 border-foreground/15 bg-white p-3 text-center shadow-sm">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">S{i + 1}</div>
-                <div className="font-display text-xl font-bold text-foreground">{v}</div>
+                <div className="text-[10px] font-black uppercase tracking-wider text-foreground">S{i + 1}</div>
+                <div className="font-display text-xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{v}</div>
               </div>
             ))}
           </div>
@@ -322,8 +322,8 @@ function AnalyticsPage() {
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold text-foreground">Individual improvement %</div>
-                <div className="text-xs font-semibold text-foreground/75">First session vs latest.</div>
+                <div className="font-display text-lg font-black text-foreground">Individual improvement %</div>
+                <div className="text-xs font-semibold text-foreground">First session vs latest.</div>
               </div>
             </div>
             <div className="mt-6 h-72">
@@ -354,8 +354,8 @@ function AnalyticsPage() {
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
               </Badge3D>
               <div>
-                <div className="font-display text-lg font-bold text-foreground">Class average over time</div>
-                <div className="text-xs font-semibold text-foreground/75">Average score per session.</div>
+                <div className="font-display text-lg font-black text-foreground">Class average over time</div>
+                <div className="text-xs font-semibold text-foreground">Average score per session.</div>
               </div>
             </div>
             <div className="mt-6 h-72">
