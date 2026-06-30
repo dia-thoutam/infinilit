@@ -3,6 +3,7 @@ import { Sparkles, GraduationCap, BarChart3, Trophy } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { HexBadge } from "@/components/hex-badge";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const tabs = [
   { to: "/quiz", label: "Play", icon: Sparkles },
@@ -55,8 +56,9 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
               );
             })}
           </nav>
-          <div className="hidden items-center gap-2 md:flex">
-            <div className="rounded-full bg-sunshine/90 px-3 py-1 text-xs font-bold text-sunshine-foreground chunky-border backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <div className="hidden rounded-full bg-sunshine/90 px-3 py-1 text-xs font-bold text-sunshine-foreground chunky-border backdrop-blur-sm md:block">
               Dia &amp; Joshitha
             </div>
           </div>
