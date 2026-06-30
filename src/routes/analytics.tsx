@@ -5,6 +5,7 @@ import {
   Bar,
   BarChart,
   Cell,
+  Customized,
   Legend,
   Line,
   LineChart,
@@ -349,6 +350,18 @@ function AnalyticsPage() {
                       <stop offset="70%" stopColor="#ffc95c" />
                       <stop offset="100%" stopColor="#e85d2b" />
                     </linearGradient>
+                    <linearGradient id="coralGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ff8a6b" />
+                      <stop offset="100%" stopColor="#c2371b" />
+                    </linearGradient>
+                    <filter id="coralGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.35 0 0 0 0 0.2 0 0 0 0.6 0" result="glow" />
+                      <feMerge>
+                        <feMergeNode in="glow" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
                     <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
                       <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 0.78 0 0 0 0 0.2 0 0 0 1 0" result="glow" />
@@ -374,18 +387,23 @@ function AnalyticsPage() {
                     {improvementByStudent.map((entry, i) => {
                       const isTop = i === topImproverIdx;
                       const isPositive = entry.improvement >= 0;
-                      const fill = isTop ? "url(#goldTopGradient)" : isPositive ? "url(#positiveGradient)" : "var(--color-coral)";
+                      const fill = isTop
+                        ? "url(#goldTopGradient)"
+                        : isPositive
+                          ? "url(#positiveGradient)"
+                          : "url(#coralGradient)";
                       return (
                         <Cell
                           key={i}
                           fill={fill}
-                          stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "none"}
-                          strokeWidth={isTop ? 2.5 : isPositive ? 1.5 : 0}
-                          filter={isTop ? "url(#goldGlow)" : isPositive ? "url(#greenGlow)" : undefined}
+                          stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "#7a1f0d"}
+                          strokeWidth={isTop ? 2.5 : 1.5}
+                          filter={isTop ? "url(#goldGlow)" : isPositive ? "url(#greenGlow)" : "url(#coralGlow)"}
                         />
                       );
                     })}
                   </Bar>
+                  <Customized component={(props: any) => <ShootingStars chartProps={props} topIdx={topImproverIdx} />} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -442,5 +460,100 @@ function AnalyticsPage() {
         </div>
       </div>
     </AppShell>
+  );
+}
+
+/* ---------- Shooting stars overlay for the top improver bar ---------- */
+function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number }) {
+  const item = chartProps?.formattedGraphicalItems?.[0];
+  const points = item?.props?.data as Array<{ x: number; y: number; width: number; height: number }> | undefined;
+  const bar = points?.[topIdx];
+  if (!bar) return null;
+  const { x, y, width } = bar;
+  const cx = x + width / 2;
+  const top = y;
+
+  // Star path (5-point, ~14px tall)
+  const starPath =
+    "M0,-7 L1.8,-2.2 L7,-2.2 L2.8,1 L4.3,6 L0,3 L-4.3,6 L-2.8,1 L-7,-2.2 L-1.8,-2.2 Z";
+
+  // Shooting trails: small star travels from upper-left toward bar top with a fading streak
+  const trails = [
+    { dx: -55, dy: -65, delay: "0s", dur: "1.6s" },
+    { dx: 60, dy: -80, delay: "0.5s", dur: "1.9s" },
+    { dx: -30, dy: -90, delay: "1.1s", dur: "1.7s" },
+  ];
+
+  // Stationary twinkles around the bar top
+  const twinkles = [
+    { dx: -18, dy: -12, scale: 0.55, delay: "0s" },
+    { dx: 22, dy: -22, scale: 0.7, delay: "0.4s" },
+    { dx: -6, dy: -34, scale: 0.45, delay: "0.8s" },
+    { dx: 14, dy: -6, scale: 0.5, delay: "1.2s" },
+  ];
+
+  return (
+    <g pointerEvents="none">
+      {/* Soft halo behind top of bar */}
+      <ellipse cx={cx} cy={top} rx={width * 0.9} ry={10} fill="rgba(255,210,120,0.45)">
+        <animate attributeName="opacity" values="0.35;0.75;0.35" dur="2.4s" repeatCount="indefinite" />
+      </ellipse>
+
+      {/* Twinkling stars */}
+      {twinkles.map((t, i) => (
+        <g key={`tw-${i}`} transform={`translate(${cx + t.dx}, ${top + t.dy}) scale(${t.scale})`}>
+          <path d={starPath} fill="#fffbe8" stroke="#0b1730" strokeWidth={0.8}>
+            <animate attributeName="opacity" values="0.2;1;0.2" dur="1.6s" begin={t.delay} repeatCount="indefinite" />
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0"
+              to="360"
+              dur="6s"
+              additive="sum"
+              repeatCount="indefinite"
+            />
+          </path>
+        </g>
+      ))}
+
+      {/* Shooting stars with trails */}
+      {trails.map((t, i) => {
+        const startX = cx + t.dx;
+        const startY = top + t.dy;
+        const endX = cx;
+        const endY = top - 2;
+        return (
+          <g key={`sh-${i}`}>
+            {/* trail */}
+            <line
+              x1={startX}
+              y1={startY}
+              x2={startX + (endX - startX) * 0.35}
+              y2={startY + (endY - startY) * 0.35}
+              stroke="url(#shineGradient)"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              opacity={0}
+            >
+              <animate attributeName="opacity" values="0;0.9;0" dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+            </line>
+            {/* star */}
+            <g opacity={0}>
+              <animate attributeName="opacity" values="0;1;0" dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values={`${startX},${startY}; ${endX},${endY}`}
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
+              <path d={starPath} fill="#ffd66b" stroke="#0b1730" strokeWidth={1} transform="scale(0.85)" />
+            </g>
+          </g>
+        );
+      })}
+    </g>
   );
 }
