@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, BarChart3, Plus, Trash2, Users, UserPlus, GraduationCap } from "lucide-react";
-import { AppShell, Badge3D } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { HexBadge } from "@/components/hex-badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -73,9 +74,9 @@ function ClassroomsPage() {
               <Card key={c.id} className="space-y-4 border-2 border-foreground/10 p-5 badge-shadow">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <Badge3D color={tone} className="h-12 w-12">
+                    <HexBadge tone={tone} size={48}>
                       <GraduationCap className="h-5 w-5" strokeWidth={2.5} />
-                    </Badge3D>
+                    </HexBadge>
                     <div>
                       <Input
                         value={c.name}
