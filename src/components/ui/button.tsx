@@ -33,6 +33,21 @@ const buttonVariants = cva(
         massive: "h-28 rounded-3xl px-10 text-2xl",
       },
     },
+    compoundVariants: [
+      // Upgrade plain ghost icon buttons to look like the chunky yellow badge reference
+      {
+        variant: "ghost",
+        size: "icon",
+        className:
+          "btn-gradient-sunshine btn-glossy chunky-border badge-shadow-pop text-foreground hover:translate-y-[-2px] active:translate-y-[1px] hover:bg-transparent",
+      },
+      {
+        variant: "link",
+        size: "icon",
+        className:
+          "btn-gradient-sunshine btn-glossy chunky-border badge-shadow-pop text-foreground hover:translate-y-[-2px] active:translate-y-[1px] no-underline hover:no-underline",
+      },
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",
