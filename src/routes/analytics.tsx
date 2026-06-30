@@ -319,30 +319,59 @@ function AnalyticsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
             <div className="flex items-center gap-3">
-              <HexBadge tone="coral" size={40}>
+              <HexBadge tone="mint" size={40}>
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
               </HexBadge>
               <div>
                 <div className="font-display text-lg font-black text-foreground">Individual improvement %</div>
-                <div className="text-xs font-semibold text-foreground">First session vs latest.</div>
+                <div className="text-xs font-semibold text-foreground">First session vs latest. Positive = green. Best = shining gold.</div>
               </div>
             </div>
             <div className="mt-6 h-72">
               <ResponsiveContainer>
                 <BarChart data={improvementByStudent}>
+                  <defs>
+                    <linearGradient id="positiveGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#4ddc9a" />
+                      <stop offset="100%" stopColor="#1ea877" />
+                    </linearGradient>
+                    <linearGradient id="positiveTopGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#b8f5d8" />
+                      <stop offset="40%" stopColor="#4ddc9a" />
+                      <stop offset="100%" stopColor="#1ea877" />
+                    </linearGradient>
+                    <linearGradient id="shineGradient" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+                      <stop offset="45%" stopColor="rgba(255,255,255,0.85)" />
+                      <stop offset="55%" stopColor="rgba(255,255,255,0.85)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                    </linearGradient>
+                    <linearGradient id="goldTopGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#fffbe8" />
+                      <stop offset="35%" stopColor="#ffe7a3" />
+                      <stop offset="70%" stopColor="#ffc95c" />
+                      <stop offset="100%" stopColor="#e85d2b" />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="student" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 11, fontWeight: 700 }} interval={0} angle={-25} textAnchor="end" height={50} />
                   <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
-                  <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
+                  <Tooltip cursor={{ fill: "var(--color-foreground)", fillOpacity: 0.06 }} contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
                   <Bar dataKey="improvement" radius={[8, 8, 0, 0]}>
-                    {improvementByStudent.map((_, i) => (
-                      <Cell
-                        key={i}
-                        fill={i === topImproverIdx ? "var(--color-sunshine)" : "var(--color-coral)"}
-                        stroke={i === topImproverIdx ? "var(--color-foreground)" : "none"}
-                        strokeWidth={i === topImproverIdx ? 2 : 0}
-                      />
-                    ))}
+                    {improvementByStudent.map((entry, i) => {
+                      const isTop = i === topImproverIdx;
+                      const isPositive = entry.improvement >= 0;
+                      const fill = isTop ? "url(#goldTopGradient)" : isPositive ? "url(#positiveGradient)" : "var(--color-coral)";
+                      return (
+                        <Cell
+                          key={i}
+                          fill={fill}
+                          stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "none"}
+                          strokeWidth={isTop ? 2.5 : isPositive ? 1.5 : 0}
+                          className={isTop ? "drop-shadow-[0_0_12px_rgba(255,200,80,0.9)]" : isPositive ? "drop-shadow-[0_0_6px_rgba(77,220,154,0.5)]" : ""}
+                        />
+                      );
+                    })}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
