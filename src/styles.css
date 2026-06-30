@@ -516,3 +516,9 @@
 }
 
 
+
+/* Allow chart overlays (shooting stars, halos) to render outside the chart bounds */
+.chart-overflow-visible .recharts-wrapper,
+.chart-overflow-visible .recharts-surface {
+  overflow: visible !important;
+}

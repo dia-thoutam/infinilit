@@ -47,13 +47,13 @@ export const chartTokens = {
 } as const;
 
 export function ChartGrid(props: Partial<CartesianGridProps>) {
-  return <RCCartesianGrid vertical={false} {...chartTokens.grid} {...props} />;
+  return <RCCartesianGrid {...chartTokens.grid} {...props} />;
 }
 
 export function ChartXAxis(props: XAxisProps) {
   return (
     <RCXAxis
-      tickLine={false}
+      tickLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.45 }}
       axisLine={chartTokens.axisLine}
       tick={chartTokens.tick}
       {...props}
@@ -64,7 +64,7 @@ export function ChartXAxis(props: XAxisProps) {
 export function ChartYAxis(props: YAxisProps) {
   return (
     <RCYAxis
-      tickLine={false}
+      tickLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.45 }}
       axisLine={chartTokens.axisLine}
       tick={chartTokens.tick}
       {...props}

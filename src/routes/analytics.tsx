@@ -325,7 +325,7 @@ function AnalyticsPage() {
                 <div className="text-xs font-semibold text-foreground">First session vs latest. Positive = green. Best = shining gold.</div>
               </div>
             </div>
-            <div className="mt-6 h-72">
+            <div className="mt-6 h-72 chart-overflow-visible overflow-visible">
               <ResponsiveContainer>
                 <BarChart data={improvementByStudent}>
                   <defs>
