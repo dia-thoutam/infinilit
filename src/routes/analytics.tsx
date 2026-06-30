@@ -116,7 +116,7 @@ function AnalyticsPage() {
             <BarChart3 className="h-3 w-3" strokeWidth={3} /> Class Analytics
           </div>
           <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Progress, in numbers.</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
+          <p className="mt-2 max-w-2xl font-medium text-foreground/85">
             Honest measures of learning — accuracy, calibration, and where the class is still tripping up.
           </p>
         </div>
