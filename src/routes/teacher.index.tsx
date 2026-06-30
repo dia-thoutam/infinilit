@@ -64,7 +64,7 @@ function TeacherIndex() {
               <Card key={q.id} className="flex h-full flex-col gap-4 border-2 border-foreground/10 p-5 badge-shadow">
                 <div className="flex items-start justify-between gap-2">
                   <Badge3D color={c} className="h-14 w-14">
-                    <Trophy className="h-6 w-6" strokeWidth={2.5} />
+                    <Trophy className="h-6 w-6 drop-shadow-sm" strokeWidth={3.5} />
                   </Badge3D>
                   {q.lastAttempt && (
                     <div className="rounded-2xl border-2 border-foreground/10 bg-background p-2 text-right text-[10px] font-semibold leading-tight">
