@@ -47,7 +47,7 @@ function TeacherIndex() {
           <Link to="/teacher/new" className="group">
             <Card className="flex h-full min-h-[260px] flex-col items-center justify-center gap-3 border-2 border-dashed border-foreground/30 bg-card p-6 text-center transition-colors hover:border-coral hover:bg-coral/5">
               <Badge3D color="coral" className="h-16 w-16 transition-transform group-hover:rotate-6">
-                <Plus className="h-7 w-7" strokeWidth={3} />
+                <Plus className="h-7 w-7 drop-shadow-sm" strokeWidth={3.5} />
               </Badge3D>
               <div className="font-display text-xl font-bold">New quiz</div>
               <p className="max-w-[200px] text-xs text-muted-foreground">
