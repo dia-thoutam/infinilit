@@ -5,6 +5,7 @@ import {
   Bar,
   BarChart,
   Cell,
+  Customized,
   Legend,
   Line,
   LineChart,
@@ -349,6 +350,18 @@ function AnalyticsPage() {
                       <stop offset="70%" stopColor="#ffc95c" />
                       <stop offset="100%" stopColor="#e85d2b" />
                     </linearGradient>
+                    <linearGradient id="coralGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ff8a6b" />
+                      <stop offset="100%" stopColor="#c2371b" />
+                    </linearGradient>
+                    <filter id="coralGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.95 0 0 0 0 0.35 0 0 0 0 0.2 0 0 0 0.6 0" result="glow" />
+                      <feMerge>
+                        <feMergeNode in="glow" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
                     <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
                       <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 0.78 0 0 0 0 0.2 0 0 0 1 0" result="glow" />
@@ -374,18 +387,23 @@ function AnalyticsPage() {
                     {improvementByStudent.map((entry, i) => {
                       const isTop = i === topImproverIdx;
                       const isPositive = entry.improvement >= 0;
-                      const fill = isTop ? "url(#goldTopGradient)" : isPositive ? "url(#positiveGradient)" : "var(--color-coral)";
+                      const fill = isTop
+                        ? "url(#goldTopGradient)"
+                        : isPositive
+                          ? "url(#positiveGradient)"
+                          : "url(#coralGradient)";
                       return (
                         <Cell
                           key={i}
                           fill={fill}
-                          stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "none"}
-                          strokeWidth={isTop ? 2.5 : isPositive ? 1.5 : 0}
-                          filter={isTop ? "url(#goldGlow)" : isPositive ? "url(#greenGlow)" : undefined}
+                          stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "#7a1f0d"}
+                          strokeWidth={isTop ? 2.5 : 1.5}
+                          filter={isTop ? "url(#goldGlow)" : isPositive ? "url(#greenGlow)" : "url(#coralGlow)"}
                         />
                       );
                     })}
                   </Bar>
+                  <Customized component={(props: any) => <ShootingStars chartProps={props} topIdx={topImproverIdx} />} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
