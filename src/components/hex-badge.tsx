@@ -44,11 +44,11 @@ export function HexBadge({
 }) {
   const tilePad = Math.round(size * 0.12);
   const hex = size - tilePad * 2;
-  const iconSize = Math.round(hex * 0.46);
+  const iconSize = Math.round(hex * 0.52);
   return (
     <div
       className={cn(
-        "relative grid place-items-center rounded-[28%] bg-gradient-to-br shadow-[0_8px_18px_-10px_rgba(15,20,60,0.35)]",
+        "relative grid place-items-center rounded-[28%] bg-gradient-to-br shadow-[0_10px_22px_-8px_rgba(15,20,60,0.45)]",
         tile[tone],
         className,
       )}
@@ -58,20 +58,30 @@ export function HexBadge({
         viewBox="0 0 100 100"
         width={hex}
         height={hex}
-        className="drop-shadow-[0_3px_0_rgba(15,20,60,0.18)]"
+        className="drop-shadow-[0_4px_0_rgba(15,20,60,0.35)] drop-shadow-[0_8px_14px_rgba(15,20,60,0.25)]"
       >
         <polygon
           points="50,4 92,28 92,72 50,96 8,72 8,28"
           className={hexFill[tone]}
+          stroke="rgba(15,20,60,0.85)"
+          strokeWidth="3"
+          strokeLinejoin="round"
         />
         <polygon
           points="50,4 92,28 50,52 8,28"
           fill="white"
-          fillOpacity="0.22"
+          fillOpacity="0.32"
+        />
+        <polygon
+          points="50,4 92,28 92,72 50,96 8,72 8,28"
+          fill="none"
+          stroke="rgba(255,255,255,0.5)"
+          strokeWidth="1.5"
+          transform="scale(0.86) translate(8 8)"
         />
       </svg>
       <div
-        className={cn("absolute inset-0 grid place-items-center", iconWrap[tone])}
+        className={cn("absolute inset-0 grid place-items-center text-[color:var(--color-ink)] drop-shadow-[0_2px_0_rgba(255,255,255,0.4)]", iconWrap[tone])}
         style={{ paddingBottom: Math.round(size * 0.02) }}
       >
         <div style={{ width: iconSize, height: iconSize }} className="grid place-items-center">
