@@ -29,8 +29,8 @@ function TeacherIndex() {
       <div className="space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1 text-xs font-bold uppercase tracking-wider text-mint-foreground chunky-border">
-              <Sparkles className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> Teacher Studio
+            <div className="section-pill inline-flex items-center gap-2 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-mint-foreground" style={{ background: "linear-gradient(180deg, #a8f0c8 0%, #5fd99a 55%, #2eb573 100%)" }}>
+              <Sparkles className="h-3.5 w-3.5 drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]" strokeWidth={3.5} /> Teacher Studio
             </div>
             <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Your quiz library</h1>
             <p className="mt-2 max-w-xl text-foreground/90 font-medium">
