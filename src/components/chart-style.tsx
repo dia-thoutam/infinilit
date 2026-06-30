@@ -47,7 +47,7 @@ export const chartTokens = {
 } as const;
 
 export function ChartGrid(props: Partial<CartesianGridProps>) {
-  return <RCCartesianGrid vertical={false} {...chartTokens.grid} {...props} />;
+  return <RCCartesianGrid {...chartTokens.grid} {...props} />;
 }
 
 export function ChartXAxis(props: XAxisProps) {
