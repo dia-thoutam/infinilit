@@ -13,7 +13,7 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-warm-gradient text-foreground">
       <header className="sticky top-0 z-40 border-b-2 border-foreground/10 bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link to="/quiz" className="flex items-center gap-2">
