@@ -6,6 +6,7 @@ import {
   BarChart,
   Cell,
   Customized,
+  Label,
   Legend,
   Line,
   LineChart,
