@@ -20,15 +20,12 @@ import {
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Legend,
   ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
 } from "recharts";
 import { AppShell } from "@/components/app-shell";
 import { HexBadge } from "@/components/hex-badge";
+import { ChartGrid, ChartTooltip, ChartXAxis, ChartYAxis, chartTokens } from "@/components/chart-style";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -754,9 +751,9 @@ function VoteBar({ votes, correct }: { votes: [number, number, number, number]; 
       <div className="h-32">
         <ResponsiveContainer>
           <BarChart data={data} layout="vertical" margin={{ left: 0, right: 16, top: 0, bottom: 0 }}>
-            <XAxis type="number" hide />
-            <YAxis type="category" dataKey="name" width={24} tickLine={false} axisLine={false} />
-            <Bar dataKey="votes" radius={[8, 8, 8, 8]} />
+            <ChartXAxis type="number" hide />
+            <ChartYAxis type="category" dataKey="name" width={28} />
+            <Bar dataKey="votes" radius={[10, 10, 10, 10]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -1075,13 +1072,13 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
           <div className="h-72">
             <ResponsiveContainer>
               <BarChart data={data}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="section" tickLine={false} axisLine={false} fontSize={12} />
-                <YAxis tickLine={false} axisLine={false} fontSize={12} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)" }} />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="Last session" fill="var(--color-muted-foreground)" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="This session" fill="var(--color-coral)" radius={[8, 8, 0, 0]} />
+                <ChartGrid />
+                <ChartXAxis dataKey="section" />
+                <ChartYAxis />
+                <ChartTooltip />
+                <Legend wrapperStyle={chartTokens.legend} />
+                <Bar dataKey="Last session" fill={chartTokens.palette.secondary} radius={chartTokens.barRadius} />
+                <Bar dataKey="This session" fill={chartTokens.palette.primary} radius={chartTokens.barRadius} />
               </BarChart>
             </ResponsiveContainer>
           </div>

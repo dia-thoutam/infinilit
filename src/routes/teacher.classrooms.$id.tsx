@@ -3,17 +3,14 @@ import { ArrowLeft, BarChart3, Brain, RotateCcw, Trophy, TrendingUp, Zap } from 
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
 } from "recharts";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ChartGrid, ChartTooltip, ChartXAxis, ChartYAxis, chartTokens } from "@/components/chart-style";
 import { useClassrooms } from "@/store/classrooms";
 
 export const Route = createFileRoute("/teacher/classrooms/$id")({
@@ -114,7 +111,7 @@ function ClassroomStatsPage() {
             <div className="mt-3 h-16">
               <ResponsiveContainer>
                 <LineChart data={sessionSeries}>
-                  <Line type="monotone" dataKey="accuracy" stroke="#67e8f9" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="accuracy" stroke={chartTokens.palette.secondary} strokeWidth={chartTokens.line.strokeWidth} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -153,11 +150,11 @@ function ClassroomStatsPage() {
               <div className="h-72">
                 <ResponsiveContainer>
                   <LineChart data={sessionSeries}>
-                    <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="label" tickLine={false} axisLine={false} />
-                    <YAxis tickLine={false} axisLine={false} />
-                    <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)" }} />
-                    <Line type="monotone" dataKey="accuracy" stroke="var(--color-coral)" strokeWidth={3} dot={{ r: 5, fill: "white" }} />
+                    <ChartGrid />
+                    <ChartXAxis dataKey="label" />
+                    <ChartYAxis />
+                    <ChartTooltip />
+                    <Line type="monotone" dataKey="accuracy" stroke={chartTokens.palette.primary} strokeWidth={chartTokens.line.strokeWidth} dot={chartTokens.line.dot} activeDot={chartTokens.line.activeDot} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -170,11 +167,11 @@ function ClassroomStatsPage() {
               <div className="h-72">
                 <ResponsiveContainer>
                   <BarChart data={perStudent}>
-                    <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="student" tickLine={false} axisLine={false} angle={-25} textAnchor="end" height={50} fontSize={11} />
-                    <YAxis tickLine={false} axisLine={false} />
-                    <Tooltip contentStyle={{ borderRadius: 12 }} />
-                    <Bar dataKey="accuracy" radius={[8, 8, 0, 0]} fill="var(--color-mint)" />
+                    <ChartGrid />
+                    <ChartXAxis dataKey="student" tick={chartTokens.tickSmall} interval={0} angle={-25} textAnchor="end" height={50} />
+                    <ChartYAxis />
+                    <ChartTooltip />
+                    <Bar dataKey="accuracy" radius={chartTokens.barRadius} fill={chartTokens.palette.accent} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
