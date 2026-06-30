@@ -128,12 +128,20 @@ function AnalyticsPage() {
               <div className="inline-flex items-center gap-2 rounded-full border-2 border-foreground/10 bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-background">
                 <Flame className="h-3.5 w-3.5 text-sunshine" strokeWidth={3} /> Since Session 1
               </div>
-              <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-                <span className="font-display text-[5rem] font-black leading-none tracking-tight text-foreground sm:text-[7rem]">
-                  +{classImprovement}%
-                </span>
-                <span className="font-display text-2xl font-bold text-foreground/90 sm:text-3xl">class improvement</span>
-              </div>
+                <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                  <span
+                    className="font-display text-[5rem] font-black leading-none tracking-tight sm:text-[7rem]"
+                    style={{
+                      background: "linear-gradient(180deg, #fffbe8 0%, #ffe7a3 35%, #ffc95c 70%, #e85d2b 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0 3px 0 rgba(80,35,10,0.18)) drop-shadow(0 6px 14px rgba(120,60,20,0.25))",
+                    }}
+                  >
+                    +{classImprovement}%
+                  </span>
+                  <span className="font-display text-2xl font-bold text-foreground/90 sm:text-3xl">class improvement</span>
+                </div>
               <p className="mt-4 max-w-md text-sm font-medium text-foreground/70">
                 Class average climbed from <span className="font-bold text-foreground">{classAvg[0].avg}</span> to <span className="font-bold text-foreground">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
               </p>
