@@ -227,7 +227,10 @@
 }
 
 @utility bg-warm-gradient {
-  background: radial-gradient(ellipse at 50% 20%, #a89a9c 0%, #9e8376 15%, #b38669 30%, #d98858 50%, #c9746b 65%, #9a7c85 80%, #6f6b78 100%);
+  background:
+    radial-gradient(ellipse 140% 120% at 50% 25%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 130% 130% at 50% 35%, #bfa69a 0%, #a68e7f 18%, #9c8273 32%, #b98b6c 50%, #a6736f 68%, #7d6d74 86%, #5e5663 100%);
   background-attachment: fixed;
 }
+
 
