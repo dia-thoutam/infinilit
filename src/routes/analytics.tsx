@@ -477,11 +477,13 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
   const starPath =
     "M0,-7 L1.8,-2.2 L7,-2.2 L2.8,1 L4.3,6 L0,3 L-4.3,6 L-2.8,1 L-7,-2.2 L-1.8,-2.2 Z";
 
-  // Shooting trails: small star travels from upper-left toward bar top with a fading streak
+  // Shooting stars radiating outward from the top of the bar, each with a trailing streak.
   const trails = [
-    { dx: -55, dy: -65, delay: "0s", dur: "1.6s" },
-    { dx: 60, dy: -80, delay: "0.5s", dur: "1.9s" },
-    { dx: -30, dy: -90, delay: "1.1s", dur: "1.7s" },
+    { dx: -70, dy: -40, delay: "0s", dur: "1.8s" },
+    { dx: -40, dy: -75, delay: "0.35s", dur: "1.9s" },
+    { dx: 0, dy: -90, delay: "0.7s", dur: "2s" },
+    { dx: 45, dy: -75, delay: "1.05s", dur: "1.9s" },
+    { dx: 75, dy: -40, delay: "1.4s", dur: "1.8s" },
   ];
 
   // Stationary twinkles around the bar top
@@ -517,34 +519,86 @@ function ShootingStars({ chartProps, topIdx }: { chartProps: any; topIdx: number
         </g>
       ))}
 
-      {/* Shooting stars with trails */}
+      {/* Shooting stars radiating outward, each with a trailing comet streak */}
       {trails.map((t, i) => {
-        const startX = cx + t.dx;
-        const startY = top + t.dy;
-        const endX = cx;
-        const endY = top - 2;
+        const ox = cx;
+        const oy = top - 2;
+        const ex = cx + t.dx;
+        const ey = top - 2 + t.dy;
+        // Trail starts as a zero-length segment at the origin, grows to follow the star,
+        // then fades. Star translates from origin to endpoint along the same vector.
         return (
           <g key={`sh-${i}`}>
-            {/* trail */}
+            {/* comet trail */}
             <line
-              x1={startX}
-              y1={startY}
-              x2={startX + (endX - startX) * 0.35}
-              y2={startY + (endY - startY) * 0.35}
-              stroke="url(#shineGradient)"
+              x1={ox}
+              y1={oy}
+              x2={ox}
+              y2={oy}
+              stroke="#ffd66b"
               strokeWidth={2.5}
               strokeLinecap="round"
               opacity={0}
             >
-              <animate attributeName="opacity" values="0;0.9;0" dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate
+                attributeName="x2"
+                values={`${ox};${ex}`}
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="y2"
+                values={`${oy};${ey}`}
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="opacity"
+                values="0;1;0.9;0"
+                keyTimes="0;0.15;0.7;1"
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
             </line>
-            {/* star */}
+            {/* soft glow trail */}
+            <line
+              x1={ox}
+              y1={oy}
+              x2={ox}
+              y2={oy}
+              stroke="#fffbe8"
+              strokeWidth={5}
+              strokeLinecap="round"
+              opacity={0}
+            >
+              <animate attributeName="x2" values={`${ox};${ex}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate attributeName="y2" values={`${oy};${ey}`} dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate
+                attributeName="opacity"
+                values="0;0.45;0.35;0"
+                keyTimes="0;0.2;0.7;1"
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
+            </line>
+            {/* the shooting star itself */}
             <g opacity={0}>
-              <animate attributeName="opacity" values="0;1;0" dur={t.dur} begin={t.delay} repeatCount="indefinite" />
+              <animate
+                attributeName="opacity"
+                values="0;1;1;0"
+                keyTimes="0;0.1;0.8;1"
+                dur={t.dur}
+                begin={t.delay}
+                repeatCount="indefinite"
+              />
               <animateTransform
                 attributeName="transform"
                 type="translate"
-                values={`${startX},${startY}; ${endX},${endY}`}
+                values={`${ox},${oy};${ex},${ey}`}
                 dur={t.dur}
                 begin={t.delay}
                 repeatCount="indefinite"
