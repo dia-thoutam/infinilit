@@ -89,22 +89,22 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.23 0.06 270);
 
-  --primary: oklch(0.68 0.16 32);               /* muted coral */
+  --primary: oklch(0.7 0.22 32);                /* vivid coral */
   --primary-foreground: oklch(0.99 0.005 85);
-  --coral: oklch(0.68 0.16 32);
+  --coral: oklch(0.7 0.22 32);
   --coral-foreground: oklch(0.99 0.005 85);
 
   --secondary: oklch(0.93 0.035 60);
   --secondary-foreground: oklch(0.23 0.06 270);
 
-  --sunshine: oklch(0.85 0.13 78);              /* muted amber */
+  --sunshine: oklch(0.87 0.18 82);              /* vivid sunshine */
   --sunshine-foreground: oklch(0.23 0.06 270);
-  --mint: oklch(0.74 0.11 162);                 /* dusty mint */
+  --mint: oklch(0.78 0.17 162);                 /* vivid mint */
   --mint-foreground: oklch(0.18 0.05 160);
-  --sky: oklch(0.68 0.09 245);                  /* muted sky */
+  --sky: oklch(0.72 0.15 245);                  /* vivid sky */
   --sky-foreground: oklch(0.99 0.005 85);
-  --amber-alert: oklch(0.76 0.12 65);
-  --violet: oklch(0.55 0.16 300);
+  --amber-alert: oklch(0.8 0.18 65);
+  --violet: oklch(0.6 0.22 300);
   --violet-foreground: oklch(0.99 0.005 85);
   --celebration-from: oklch(0.7 0.18 295);
   --celebration-to: oklch(0.5 0.22 285);
