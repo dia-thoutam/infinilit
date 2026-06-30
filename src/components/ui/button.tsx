@@ -9,20 +9,20 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary/95 text-primary-foreground shadow hover:bg-primary/80 backdrop-blur-sm",
+        default: "btn-gradient-coral chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         destructive: "bg-destructive/95 text-destructive-foreground shadow-sm hover:bg-destructive/80 backdrop-blur-sm",
         outline:
-          "border border-white/40 bg-white/50 text-foreground shadow-sm backdrop-blur-sm hover:bg-white/75 hover:text-foreground",
-        secondary: "bg-white/50 text-foreground shadow-sm backdrop-blur-sm hover:bg-white/75",
+          "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        secondary: "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
         ghost: "hover:bg-white/30 hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        coral: "bg-coral/95 text-coral-foreground chunky-border badge-shadow hover:bg-coral/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sunshine: "bg-sunshine/95 text-sunshine-foreground chunky-border badge-shadow hover:bg-sunshine/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        mint: "bg-mint/95 text-mint-foreground chunky-border badge-shadow hover:bg-mint/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sky: "bg-sky/95 text-sky-foreground chunky-border badge-shadow hover:bg-sky/80 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        badge: "bg-white/55 text-foreground border-2 border-white/40 chunky-border badge-shadow backdrop-blur-sm hover:bg-white/75 hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        gradient: "stat-gradient-violet chunky-border badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        gradientDark: "stat-gradient-dark badge-shadow hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold border-0",
+        coral: "btn-gradient-coral chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        sunshine: "btn-gradient-sunshine chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        mint: "btn-gradient-mint chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        sky: "btn-gradient-sky chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        badge: "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        gradient: "btn-gradient-violet chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        gradientDark: "stat-gradient-dark badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold border-0",
       },
       size: {
         default: "h-9 px-4 py-2",
