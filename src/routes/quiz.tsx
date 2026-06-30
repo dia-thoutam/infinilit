@@ -33,7 +33,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useClassrooms, type Classroom, type StudentSessionStat } from "@/store/classrooms";
-import { HexBadge } from "@/components/hex-badge";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
