@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Pencil, Trash2, Trophy, Calendar, Target, Zap, Sparkles, Users } from "lucide-react";
-import { AppShell, Badge3D } from "@/components/app-shell";
+import { AppShell } from "@/components/app-shell";
+import { HexBadge } from "@/components/hex-badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -46,9 +47,9 @@ function TeacherIndex() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <Link to="/teacher/new" className="group">
             <Card className="flex h-full min-h-[260px] flex-col items-center justify-center gap-3 border-2 border-dashed border-foreground/30 bg-card p-6 text-center transition-colors hover:border-coral hover:bg-coral/5">
-              <Badge3D color="coral" className="h-16 w-16 transition-transform group-hover:rotate-6">
-                <Plus className="h-7 w-7 drop-shadow-sm" strokeWidth={3.5} />
-              </Badge3D>
+              <HexBadge tone="coral" size={80} className="transition-transform group-hover:rotate-6">
+                <Plus strokeWidth={3.5} />
+              </HexBadge>
               <div className="font-display text-xl font-bold">New quiz</div>
               <p className="max-w-[200px] text-xs text-muted-foreground">
                 Start from scratch. Add questions, set difficulty, write explanations.
@@ -57,15 +58,15 @@ function TeacherIndex() {
           </Link>
 
           {quizzes.map((q, i) => {
-            const colors = ["sunshine", "mint", "sky", "coral"] as const;
-            const c = colors[i % colors.length];
+            const tones = ["sunshine", "mint", "sky", "coral", "violet"] as const;
+            const c = tones[i % tones.length];
             const totalXp = q.questions.reduce((s, x) => s + xpFor(x.difficulty), 0);
             return (
               <Card key={q.id} className="flex h-full flex-col gap-4 border-2 border-foreground/10 p-5 badge-shadow">
                 <div className="flex items-start justify-between gap-2">
-                  <Badge3D color={c} className="h-14 w-14">
-                    <Trophy className="h-6 w-6 drop-shadow-sm" strokeWidth={3.5} />
-                  </Badge3D>
+                  <HexBadge tone={c} size={68}>
+                    <Trophy strokeWidth={3} />
+                  </HexBadge>
                   {q.lastAttempt && (
                     <div className="rounded-2xl border-2 border-foreground/10 bg-background p-2 text-right text-[10px] font-semibold leading-tight">
                       <div className="flex items-center justify-end gap-1 text-mint">
