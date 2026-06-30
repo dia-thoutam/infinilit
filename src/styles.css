@@ -228,8 +228,8 @@
 
 @utility bg-warm-gradient {
   background:
-    radial-gradient(ellipse 140% 120% at 50% 25%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 130% 130% at 50% 35%, #bfa69a 0%, #a68e7f 18%, #9c8273 32%, #b98b6c 50%, #a6736f 68%, #7d6d74 86%, #5e5663 100%);
+    radial-gradient(ellipse 140% 120% at 50% 25%, rgba(255, 255, 255, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 140% 140% at 50% 35%, #f5c6a5 0%, #e8a87c 10%, #e08a5f 20%, #ff9a5c 30%, #ff7a45 40%, #e06b55 50%, #c46d6d 62%, #9b6b7d 75%, #6b5c6f 100%);
   background-attachment: fixed;
 }
 
