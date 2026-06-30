@@ -209,9 +209,32 @@ function ClassroomStatsPage() {
                 Confidence calibration = % of &quot;Sure&quot; answers that were correct. Only shown for sessions with confidence tracking ON.
               </p>
             </Card>
+
+            <ClassroomXpBadges totalXp={totalXp} />
           </>
         )}
       </div>
     </AppShell>
+  );
+}
+
+import { XpBadgeSet, tierForXp, XP_TIERS } from "@/components/xp-badge";
+
+function ClassroomXpBadges({ totalXp }: { totalXp: number }) {
+  const tier = tierForXp(totalXp);
+  const current = XP_TIERS[tier];
+  return (
+    <Card className="border-2 border-foreground/10 p-6 badge-shadow">
+      <div className="mb-1 flex items-center gap-2">
+        <Zap className="h-5 w-5" />
+        <div className="font-display text-lg font-bold">XP badge collection</div>
+      </div>
+      <p className="mb-5 text-xs text-muted-foreground">
+        Current tier: <span className="font-bold text-foreground">{current.label}</span> ·
+        {" "}
+        {totalXp.toLocaleString()} XP earned
+      </p>
+      <XpBadgeSet earnedXp={totalXp} />
+    </Card>
   );
 }

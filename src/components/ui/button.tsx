@@ -5,24 +5,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-all duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "btn-gradient-coral chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+        default: "btn-gradient-coral btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
         destructive: "bg-destructive/95 text-destructive-foreground shadow-sm hover:bg-destructive/80 backdrop-blur-sm",
         outline:
-          "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        secondary: "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
+          "btn-gradient-glass btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        secondary: "btn-gradient-glass btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
         ghost: "hover:bg-white/30 hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        coral: "btn-gradient-coral chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sunshine: "btn-gradient-sunshine chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        mint: "btn-gradient-mint chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        sky: "btn-gradient-sky chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        badge: "btn-gradient-glass chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        gradient: "btn-gradient-violet chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold",
-        gradientDark: "stat-gradient-dark badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] transition-transform rounded-2xl font-semibold border-0",
+        coral: "btn-gradient-coral btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        sunshine: "btn-gradient-sunshine btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        mint: "btn-gradient-mint btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        sky: "btn-gradient-sky btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        badge: "btn-gradient-glass btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        gradient: "btn-gradient-violet btn-glossy chunky-border badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold",
+        gradientDark: "stat-gradient-dark btn-glossy badge-shadow-pop hover:translate-y-[-2px] active:translate-y-[1px] rounded-2xl font-semibold border-0",
       },
       size: {
         default: "h-9 px-4 py-2",
