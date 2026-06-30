@@ -47,7 +47,7 @@ function ClassroomsPage() {
               <Users className="h-3 w-3" strokeWidth={3} /> Classrooms
             </div>
             <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Your classrooms</h1>
-            <p className="mt-2 max-w-xl text-muted-foreground">
+            <p className="mt-2 max-w-xl text-foreground/90 font-medium">
               Make a classroom, drop in your student roster, then pick it before starting a quiz. During the session you can tag which students chose each A/B/C/D.
             </p>
           </div>
@@ -83,7 +83,7 @@ function ClassroomsPage() {
                         onChange={(e) => upsert({ ...c, name: e.target.value })}
                         className="h-9 rounded-lg border-2 font-display text-lg font-bold"
                       />
-                      <div className="mt-1 text-xs text-muted-foreground">
+                      <div className="mt-1 text-xs text-foreground/90 font-medium">
                         {c.students.length} students · {c.sessions?.length ?? 0} sessions
                       </div>
                     </div>
@@ -153,7 +153,7 @@ function StudentList({
         <Button variant="mint" onClick={add}><UserPlus className="h-4 w-4" /> Add</Button>
       </div>
       {classroom.students.length === 0 ? (
-        <p className="rounded-xl bg-muted/40 p-3 text-center text-sm text-muted-foreground">No students yet. Add a few above.</p>
+        <p className="rounded-xl bg-muted/40 p-3 text-center text-sm text-foreground/90 font-medium">No students yet. Add a few above.</p>
       ) : (
         <ul className="grid gap-1.5 sm:grid-cols-2">
           {classroom.students.map((s) => (
@@ -165,7 +165,7 @@ function StudentList({
               />
               <button
                 onClick={() => onRemove(s.id)}
-                className="rounded-md p-1 text-muted-foreground hover:bg-coral/10 hover:text-coral"
+                className="rounded-md p-1 text-foreground/90 font-medium hover:bg-coral/10 hover:text-coral"
                 aria-label={`Remove ${s.name}`}
               >
                 <Trash2 className="h-3.5 w-3.5" />

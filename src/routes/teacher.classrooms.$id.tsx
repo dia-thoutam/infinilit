@@ -94,7 +94,7 @@ function ClassroomStatsPage() {
               <BarChart3 className="h-3 w-3" strokeWidth={3} /> Classroom stats
             </div>
             <h1 className="mt-3 font-display text-4xl font-bold sm:text-5xl">{classroom.name}</h1>
-            <p className="mt-1 text-muted-foreground">{classroom.students.length} students · {sessions.length} sessions recorded</p>
+            <p className="mt-1 text-foreground/90 font-medium">{classroom.students.length} students · {sessions.length} sessions recorded</p>
           </div>
           <Button
             variant="badge"
@@ -137,9 +137,9 @@ function ClassroomStatsPage() {
 
         {sessions.length === 0 ? (
           <Card className="grid place-items-center gap-3 border-2 border-dashed border-foreground/20 p-12 text-center">
-            <BarChart3 className="h-10 w-10 text-muted-foreground" />
+            <BarChart3 className="h-10 w-10 text-foreground/90 font-medium" />
             <div className="font-display text-xl font-bold">No sessions yet</div>
-            <p className="max-w-md text-sm text-muted-foreground">
+            <p className="max-w-md text-sm text-foreground/90 font-medium">
               Run a quiz with this classroom selected in the Play tab. Stats land here automatically after each session.
             </p>
             <Link to="/quiz"><Button variant="coral">Go to Play</Button></Link>
@@ -200,12 +200,12 @@ function ClassroomStatsPage() {
                       </span>
                     </div>
                     <div className="col-span-2 text-right">
-                      {p.calibration === null ? <span className="text-muted-foreground">—</span> : <span className="font-bold">{p.calibration}%</span>}
+                      {p.calibration === null ? <span className="text-foreground/90 font-medium">—</span> : <span className="font-bold">{p.calibration}%</span>}
                     </div>
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-xs text-muted-foreground">
+              <p className="mt-3 text-xs text-foreground/90 font-medium">
                 Confidence calibration = % of &quot;Sure&quot; answers that were correct. Only shown for sessions with confidence tracking ON.
               </p>
             </Card>
@@ -229,7 +229,7 @@ function ClassroomXpBadges({ totalXp }: { totalXp: number }) {
         <Zap className="h-5 w-5" />
         <div className="font-display text-lg font-bold">XP badge collection</div>
       </div>
-      <p className="mb-5 text-xs text-muted-foreground">
+      <p className="mb-5 text-xs text-foreground/90 font-medium">
         Current tier: <span className="font-bold text-foreground">{current.label}</span> ·
         {" "}
         {totalXp.toLocaleString()} XP earned

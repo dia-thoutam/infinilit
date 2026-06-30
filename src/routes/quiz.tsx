@@ -305,7 +305,7 @@ function QuizPage() {
         >
           <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
             {/* Top bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-foreground/90 font-medium">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
@@ -406,7 +406,7 @@ function QuizPage() {
 
             {teacherMode && phase === "question" && (
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-foreground/90 font-medium">
                   {Object.values(studentPicks).reduce((a, b) => a + b.length, 0)} / {classroom!.students.length} students recorded
                 </div>
                 <Button variant="coral" size="xl" onClick={lockInTeacherVotes}>
@@ -478,13 +478,13 @@ function Lobby({
           <h1 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">
             Pick a quiz.<br />Earn your XP.
           </h1>
-          <p className="mt-2 max-w-xl text-muted-foreground">
+          <p className="mt-2 max-w-xl text-foreground/90 font-medium">
             Easy = 20 XP · Medium = 50 XP · Hard = 100 XP. Race the timer, lock in your confidence, and outscore the class.
           </p>
         </div>
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-muted-foreground">Classroom</label>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">Classroom</label>
             <Select value={selectedClassroom} onValueChange={setSelectedClassroom}>
               <SelectTrigger className="h-11 w-[240px] rounded-xl border-2 text-base"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -530,15 +530,15 @@ function Lobby({
                   {q.lastAttempt && (
                     <div className="text-right text-xs">
                       <div className="font-bold text-mint">{q.lastAttempt.accuracy}% acc</div>
-                      <div className="text-muted-foreground">{q.lastAttempt.xp} XP</div>
+                      <div className="text-foreground/90 font-medium">{q.lastAttempt.xp} XP</div>
                     </div>
                   )}
                 </div>
                 <div>
                   <div className="font-display text-xl font-bold leading-snug">{q.title}</div>
-                  <p className="mt-1 text-sm text-muted-foreground">{q.description}</p>
+                  <p className="mt-1 text-sm text-foreground/90 font-medium">{q.description}</p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-foreground/90 font-medium">
                   <span className="rounded-full bg-muted px-2 py-1 font-semibold">{q.questions.length} questions</span>
                   <span className="rounded-full bg-muted px-2 py-1 font-semibold">
                     {q.questions.reduce((sum, x) => sum + xpFor(x.difficulty), 0)} XP total
@@ -599,12 +599,12 @@ function ChoiceWithStudents({
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-2" align="end">
-        <div className="mb-1 px-2 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        <div className="mb-1 px-2 py-1 text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">
           Who picked {letter}?
         </div>
         <div className="max-h-72 overflow-y-auto">
           {classroom.students.length === 0 ? (
-            <div className="px-2 py-3 text-sm text-muted-foreground">No students in this classroom.</div>
+            <div className="px-2 py-3 text-sm text-foreground/90 font-medium">No students in this classroom.</div>
           ) : (
             classroom.students.map((s) => {
               const checked = picked.includes(s.id);
@@ -631,7 +631,7 @@ function ChoiceWithStudents({
                     </span>
                     <span className="flex-1 font-medium">{s.name}</span>
                     {elsewhere && (
-                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">moves</span>
+                      <span className="text-[10px] uppercase tracking-wider text-foreground/90 font-medium">moves</span>
                     )}
                   </button>
                   {trackConfidence && checked && (
@@ -655,7 +655,7 @@ function ChoiceWithStudents({
                                   : c === "unsure"
                                   ? "bg-sunshine text-foreground border-sunshine"
                                   : "bg-coral text-coral-foreground border-coral"
-                                : "border-foreground/20 text-muted-foreground hover:bg-muted",
+                                : "border-foreground/20 text-foreground/90 font-medium hover:bg-muted",
                             )}
                           >
                             <Icon className="h-3 w-3" strokeWidth={3} /> {c}
@@ -738,8 +738,8 @@ function VoteBar({ votes, correct }: { votes: [number, number, number, number]; 
   return (
     <Card className="border-2 border-foreground/10 p-4">
       <div className="mb-2 flex items-center justify-between">
-        <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Class voted</div>
-        <div className="text-xs text-muted-foreground">{votes.reduce((a, b) => a + b, 0)} responses</div>
+        <div className="text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">Class voted</div>
+        <div className="text-xs text-foreground/90 font-medium">{votes.reduce((a, b) => a + b, 0)} responses</div>
       </div>
       <div className="h-32">
         <ResponsiveContainer>
@@ -863,7 +863,7 @@ function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number 
                     <Icon className="h-full w-full" strokeWidth={2.5} />
                   </HexBadge>
                 </div>
-                <div className="mt-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">{a.label}</div>
+                <div className="mt-3 text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">{a.label}</div>
                 <div className="mt-1 font-display text-xl font-bold">{a.winner}</div>
               </Card>
             );
@@ -1060,7 +1060,7 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
         <Card className="border-2 border-foreground/10 p-5 badge-shadow">
           <div className="mb-4 flex items-baseline justify-between">
             <div className="font-display text-xl font-bold">By section</div>
-            <div className="text-xs text-muted-foreground">Accuracy %</div>
+            <div className="text-xs text-foreground/90 font-medium">Accuracy %</div>
           </div>
           <div className="h-72">
             <ResponsiveContainer>
@@ -1086,9 +1086,9 @@ function ProgressSplit({ onDone }: { onDone: () => void }) {
                   <Icon strokeWidth={3} />
                 </HexBadge>
                 <div className="flex-1">
-                  <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{s.label}</div>
+                  <div className="text-xs font-bold uppercase tracking-wider text-foreground/90 font-medium">{s.label}</div>
                   <div className="font-display text-2xl font-bold">{s.name}</div>
-                  <div className="text-sm text-foreground/70">{s.value}</div>
+                  <div className="text-sm text-foreground/90">{s.value}</div>
                 </div>
               </Card>
             );
