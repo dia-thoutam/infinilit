@@ -185,11 +185,15 @@
 
 .dark .bg-warm-gradient {
   background:
-    radial-gradient(circle at 20% 18%, rgba(120, 70, 50, 0.55) 0%, transparent 45%),
-    radial-gradient(circle at 80% 22%, rgba(150, 80, 60, 0.45) 0%, transparent 42%),
-    radial-gradient(circle at 60% 70%, rgba(100, 60, 90, 0.45) 0%, transparent 50%),
-    radial-gradient(circle at 15% 85%, rgba(80, 50, 70, 0.45) 0%, transparent 48%),
-    linear-gradient(165deg, #2a1b1a 0%, #3a221d 30%, #422322 55%, #3a1e2e 80%, #2a1830 100%) !important;
+    radial-gradient(circle at 15% 15%, rgba(160, 110, 75, 0.55) 0%, transparent 28%),
+    radial-gradient(circle at 50% 10%, rgba(140, 90, 70, 0.45) 0%, transparent 24%),
+    radial-gradient(circle at 85% 20%, rgba(170, 100, 75, 0.50) 0%, transparent 30%),
+    radial-gradient(circle at 10% 50%, rgba(120, 75, 80, 0.48) 0%, transparent 26%),
+    radial-gradient(circle at 70% 55%, rgba(130, 70, 65, 0.52) 0%, transparent 28%),
+    radial-gradient(circle at 90% 70%, rgba(110, 65, 75, 0.42) 0%, transparent 24%),
+    radial-gradient(circle at 25% 85%, rgba(100, 60, 70, 0.46) 0%, transparent 26%),
+    radial-gradient(circle at 60% 90%, rgba(90, 55, 65, 0.40) 0%, transparent 28%),
+    linear-gradient(165deg, #1e1412 0%, #2a1814 25%, #2f1a1a 50%, #2a1624 75%, #1a1020 100%) !important;
 }
 
 @layer base {
@@ -467,15 +471,24 @@
 
 @utility bg-warm-gradient {
   background:
-    radial-gradient(circle at 18% 22%, rgba(255, 220, 185, 0.55) 0%, transparent 40%),
-    radial-gradient(circle at 82% 14%, rgba(255, 190, 145, 0.50) 0%, transparent 38%),
-    radial-gradient(circle at 62% 38%, rgba(255, 140, 100, 0.45) 0%, transparent 42%),
-    radial-gradient(circle at 22% 58%, rgba(255, 110, 95, 0.40) 0%, transparent 44%),
-    radial-gradient(circle at 78% 62%, rgba(255, 125, 130, 0.35) 0%, transparent 46%),
-    radial-gradient(circle at 40% 82%, rgba(255, 145, 145, 0.35) 0%, transparent 48%),
-    radial-gradient(circle at 88% 92%, rgba(255, 165, 165, 0.40) 0%, transparent 50%),
-    radial-gradient(circle at 8% 92%, rgba(255, 180, 155, 0.35) 0%, transparent 48%),
-    linear-gradient(165deg, #f5e0c0 0%, #f0c4a0 22%, #e99a78 45%, #d97a74 68%, #c97a8a 100%);
+    /* scattered light blobs — many small bright highlights for contrast */
+    radial-gradient(circle at 12% 12%, rgba(255, 235, 195, 0.72) 0%, transparent 28%),
+    radial-gradient(circle at 38% 8%, rgba(255, 205, 150, 0.58) 0%, transparent 24%),
+    radial-gradient(circle at 72% 18%, rgba(255, 185, 135, 0.62) 0%, transparent 30%),
+    radial-gradient(circle at 92% 6%, rgba(255, 215, 170, 0.50) 0%, transparent 22%),
+    radial-gradient(circle at 8% 42%, rgba(255, 160, 115, 0.55) 0%, transparent 26%),
+    radial-gradient(circle at 55% 35%, rgba(255, 145, 110, 0.60) 0%, transparent 32%),
+    radial-gradient(circle at 88% 48%, rgba(255, 175, 140, 0.52) 0%, transparent 28%),
+    radial-gradient(circle at 20% 68%, rgba(255, 190, 155, 0.48) 0%, transparent 24%),
+    radial-gradient(circle at 65% 72%, rgba(255, 165, 130, 0.56) 0%, transparent 30%),
+    radial-gradient(circle at 94% 82%, rgba(255, 200, 165, 0.50) 0%, transparent 26%),
+    radial-gradient(circle at 42% 92%, rgba(255, 180, 145, 0.54) 0%, transparent 28%),
+    radial-gradient(circle at 8% 88%, rgba(255, 210, 175, 0.45) 0%, transparent 24%),
+    /* deeper contrast shadows */
+    radial-gradient(circle at 0% 100%, rgba(90, 45, 45, 0.22) 0%, transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(75, 40, 60, 0.18) 0%, transparent 30%),
+    /* base — darker, less bright overall */
+    linear-gradient(165deg, #e7c9a4 0%, #dcb08a 22%, #c97f66 45%, #a85f5e 68%, #7d4a5a 100%);
   background-attachment: fixed;
 }
 
