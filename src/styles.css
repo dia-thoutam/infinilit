@@ -225,3 +225,9 @@
   background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
   border: 1px solid rgba(255,255,255,0.4);
 }
+
+@utility bg-warm-gradient {
+  background: radial-gradient(ellipse at 50% 20%, #a89a9c 0%, #9e8376 15%, #b38669 30%, #d98858 50%, #c9746b 65%, #9a7c85 80%, #6f6b78 100%);
+  background-attachment: fixed;
+}
+
