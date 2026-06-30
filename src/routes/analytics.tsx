@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, BarChart3, Brain, Flame, Sparkles, Target, TrendingUp, Zap } from "lucide-react";
+import { ArrowDown, ArrowUp, BarChart3, Brain, Flame, Target, TrendingUp, Zap } from "lucide-react";
 import {
   Bar,
   BarChart,
