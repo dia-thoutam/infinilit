@@ -221,16 +221,32 @@
 }
 
 @utility glass-card {
-  backdrop-filter: blur(14px);
-  background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
-  border: 1px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(18px) saturate(140%);
+  background: linear-gradient(135deg, rgba(255, 248, 240, 0.45), rgba(255, 235, 220, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 32px -12px rgba(60, 30, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 @utility bg-warm-gradient {
   background:
-    radial-gradient(ellipse 140% 120% at 50% 25%, rgba(255, 255, 255, 0.28) 0%, transparent 55%),
-    radial-gradient(ellipse 140% 140% at 50% 35%, #f5c6a5 0%, #e8a87c 10%, #e08a5f 20%, #ff9a5c 30%, #ff7a45 40%, #e06b55 50%, #c46d6d 62%, #9b6b7d 75%, #6b5c6f 100%);
+    radial-gradient(ellipse 120% 90% at 50% 18%, rgba(255, 240, 220, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 140% 140% at 50% 40%, #e8c9b0 0%, #dcae8e 14%, #d49778 28%, #d88a5f 42%, #c47a5a 55%, #a7706a 68%, #876876 82%, #5e5868 100%);
   background-attachment: fixed;
+}
+
+@utility glass-surface {
+  backdrop-filter: blur(16px) saturate(135%);
+  background: linear-gradient(135deg, rgba(255, 250, 244, 0.32), rgba(255, 235, 220, 0.10));
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow: 0 10px 30px -16px rgba(50, 25, 15, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+@utility bg-glass-noise {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(60, 30, 20, 0.05) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
 }
 
 
