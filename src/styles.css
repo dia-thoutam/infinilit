@@ -203,8 +203,6 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-}
-@utility btn-glossy {
   &::before {
     content: "";
     position: absolute;
