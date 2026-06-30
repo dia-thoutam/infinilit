@@ -91,7 +91,7 @@ function TeacherIndex() {
                 <div className="flex items-center gap-2">
                   <Link to="/teacher/$id/edit" params={{ id: q.id }} className="flex-1">
                     <Button variant="badge" className="w-full">
-                      <Pencil className="h-4 w-4" /> Edit
+                      <Pencil className="h-4 w-4 drop-shadow-sm" strokeWidth={3.5} /> Edit
                     </Button>
                   </Link>
                   <Button
@@ -102,7 +102,7 @@ function TeacherIndex() {
                     }}
                     className={cn("rounded-xl hover:bg-coral/10 hover:text-coral")}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4 drop-shadow-sm" strokeWidth={3.5} />
                   </Button>
                 </div>
               </Card>
