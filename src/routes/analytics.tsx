@@ -288,10 +288,10 @@ function AnalyticsPage() {
           <div className="mt-6 h-64">
             <ResponsiveContainer>
               <LineChart data={perStudentSeries}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="session" tickLine={false} axisLine={false} fontSize={12} />
-                <YAxis tickLine={false} axisLine={false} fontSize={12} domain={[0, 100]} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)" }} />
+                <CartesianGrid stroke="var(--color-foreground)" strokeOpacity={0.12} strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="session" tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} />
+                <YAxis tickLine={false} axisLine={{ stroke: "var(--color-foreground)", strokeOpacity: 0.35 }} tick={{ fill: "var(--color-foreground)", fontSize: 12, fontWeight: 700 }} domain={[0, 100]} />
+                <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)", color: "var(--color-foreground)" }} />
                 <Line
                   type="monotone"
                   dataKey={student}
@@ -306,9 +306,9 @@ function AnalyticsPage() {
 
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {studentScores.map((v, i) => (
-              <div key={i} className="rounded-xl border-2 border-foreground/5 bg-background p-3 text-center">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">S{i + 1}</div>
-                <div className="font-display text-xl font-bold">{v}</div>
+              <div key={i} className="rounded-xl border-2 border-foreground/15 bg-white p-3 text-center shadow-sm">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-foreground/75">S{i + 1}</div>
+                <div className="font-display text-xl font-bold text-foreground">{v}</div>
               </div>
             ))}
           </div>
