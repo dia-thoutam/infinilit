@@ -472,8 +472,8 @@ function Lobby({
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-sunshine px-3 py-1 text-xs font-bold uppercase tracking-wider text-foreground chunky-border">
-            <Star className="h-3 w-3" strokeWidth={3} /> Quiz Arena
+          <div className="section-pill inline-flex items-center gap-2 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-foreground" style={{ background: "linear-gradient(180deg, #ffe07a 0%, #ffc93a 55%, #f5a90b 100%)" }}>
+            <Star className="h-3.5 w-3.5 drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]" strokeWidth={3.5} /> Quiz Arena
           </div>
           <h1 className="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">
             Pick a quiz.<br />Earn your XP.

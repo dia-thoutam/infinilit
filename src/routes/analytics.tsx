@@ -113,8 +113,8 @@ function AnalyticsPage() {
     <AppShell>
       <div className="space-y-8 rounded-3xl bg-white/55 p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 shadow-2xl">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-sky px-3 py-1 text-xs font-bold uppercase tracking-wider text-sky-foreground chunky-border">
-            <BarChart3 className="h-3 w-3" strokeWidth={3} /> Class Analytics
+          <div className="section-pill inline-flex items-center gap-2 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white" style={{ background: "linear-gradient(180deg, #9fc8ff 0%, #5a9cff 55%, #2b6fe0 100%)" }}>
+            <BarChart3 className="h-3.5 w-3.5 drop-shadow-[0_1px_0_rgba(0,0,0,0.25)]" strokeWidth={3.5} /> Class Analytics
           </div>
           <h1 className="mt-3 font-display text-4xl font-black text-foreground sm:text-5xl [text-shadow:0_1px_0_rgba(255,255,255,0.6)]">Progress, in numbers.</h1>
           <p className="mt-2 max-w-2xl font-semibold text-foreground">
