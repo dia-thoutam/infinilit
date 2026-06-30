@@ -126,8 +126,8 @@ function AnalyticsPage() {
         <Card className="relative overflow-hidden border-2 border-foreground/20 p-0 badge-shadow bg-gradient-to-br from-[#fff7ed] via-[#ffedd5] to-[#fed7aa]">
           <div className="relative grid items-center gap-8 p-8 sm:grid-cols-[1fr_auto]">
             <div>
-              <div className="section-pill-soft inline-flex items-center gap-2 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-background" style={{ background: "linear-gradient(180deg, #1a1830 0%, #0d0b20 100%)" }}>
-                <span className="inline-flex items-center gap-2"><Flame className="h-3.5 w-3.5 text-sunshine" strokeWidth={3} /> Since Session 1</span>
+              <div className="section-pill-soft inline-flex items-center gap-2 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em]" style={{ background: "linear-gradient(180deg, #1a1830 0%, #0d0b20 100%)", color: "#ffd98a" }}>
+                <span className="inline-flex items-center gap-2"><Flame className="h-3.5 w-3.5" strokeWidth={3} style={{ color: "#ffb43a" }} /> Since Session 1</span>
               </div>
                 <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
                   <span
@@ -169,7 +169,7 @@ function AnalyticsPage() {
                 )}
               >
                 {isBest && (
-                  <span className="section-pill-soft absolute -top-2 -right-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-foreground" style={{ background: "linear-gradient(180deg, #ffe28a 0%, #ffcf5c 100%)" }}>
+                  <span className="section-pill-soft absolute -top-2 -right-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider" style={{ background: "linear-gradient(180deg, #ffe28a 0%, #ffcf5c 100%)", color: "#1a1830" }}>
                     <span>Top mover</span>
                   </span>
                 )}
