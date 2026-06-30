@@ -111,7 +111,7 @@ function AnalyticsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-8 rounded-3xl bg-white/55 p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 shadow-2xl">
+      <div className="space-y-8 rounded-3xl bg-[oklch(0.96_0.02_75)/0.7] dark:bg-[oklch(0.28_0.04_35)/0.7] p-6 sm:p-8 backdrop-blur-md border-2 border-white/70 shadow-2xl">
         <div>
           <div className="section-pill inline-flex items-center gap-2 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-white" style={{ background: "linear-gradient(180deg, #9fc8ff 0%, #5a9cff 55%, #2b6fe0 100%)" }}>
             <BarChart3 className="h-3.5 w-3.5 drop-shadow-[0_1px_0_rgba(0,0,0,0.25)]" strokeWidth={3.5} /> Class Analytics
@@ -194,7 +194,7 @@ function AnalyticsPage() {
 
         {/* Confidence calibration + Misconceptions */}
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="sky" size={40}>
                 <Brain className="h-5 w-5" strokeWidth={2.5} />
@@ -229,7 +229,7 @@ function AnalyticsPage() {
             </p>
           </Card>
 
-          <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-white">
+          <Card className="border-2 border-foreground/20 p-6 lg:col-span-2 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="coral" size={40}>
                 <Flame className="h-5 w-5" strokeWidth={2.5} />
@@ -241,7 +241,7 @@ function AnalyticsPage() {
             </div>
             <div className="mt-4 space-y-2">
               {misconceptions.map((m) => (
-                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-white p-3">
+                <div key={m.question} className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)] p-3">
                   <div className="flex-1">
                     <div className="text-sm font-black text-foreground">{m.question}</div>
                     <div className="text-[10px] font-black uppercase tracking-wider text-foreground">{m.section} · {m.sessions} sessions</div>
@@ -259,7 +259,7 @@ function AnalyticsPage() {
         </div>
 
         {/* Individual progress */}
-        <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
+        <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <HexBadge tone="mint" size={40}>
@@ -307,7 +307,7 @@ function AnalyticsPage() {
 
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
             {studentScores.map((v, i) => (
-              <div key={i} className="rounded-xl border-2 border-foreground/15 bg-white p-3 text-center shadow-sm">
+              <div key={i} className="rounded-xl border-2 border-foreground/15 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)] p-3 text-center shadow-sm">
                 <div className="text-[10px] font-black uppercase tracking-wider text-foreground">S{i + 1}</div>
                 <div className="font-display text-xl font-black text-foreground [text-shadow:0_1px_0_rgba(255,255,255,0.7)]">{v}</div>
               </div>
@@ -317,7 +317,7 @@ function AnalyticsPage() {
 
         {/* Class-wide improvement */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="coral" size={40}>
                 <Zap className="h-5 w-5" strokeWidth={2.5} />
@@ -349,7 +349,7 @@ function AnalyticsPage() {
             </div>
           </Card>
 
-          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-white">
+          <Card className="border-2 border-foreground/20 p-6 badge-shadow bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.3_0.04_35)]">
             <div className="flex items-center gap-3">
               <HexBadge tone="mint" size={40}>
                 <TrendingUp className="h-5 w-5" strokeWidth={2.5} />
