@@ -68,15 +68,22 @@ function TeacherIndex() {
                     <Trophy strokeWidth={3} />
                   </HexBadge>
                   {q.lastAttempt && (
-                    <div className="rounded-2xl border-2 border-foreground/10 bg-background p-2 text-right text-[10px] font-semibold leading-tight">
-                      <div className="flex items-center justify-end gap-1 text-mint">
-                        <Target className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.accuracy}%
+                    <div className="rounded-2xl border-2 border-foreground/15 bg-background/95 px-3 py-2 text-right text-xs font-bold leading-tight text-foreground shadow-[0_2px_0_rgba(0,0,0,0.08)]">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <span className="grid h-5 w-5 place-items-center rounded-full bg-mint text-mint-foreground">
+                          <Target className="h-3 w-3" strokeWidth={3.5} />
+                        </span>
+                        <span className="tabular-nums">{q.lastAttempt.accuracy}%</span>
                       </div>
-                      <div className="flex items-center justify-end gap-1 text-foreground/90">
-                        <Zap className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.xp} XP
+                      <div className="mt-1 flex items-center justify-end gap-1.5">
+                        <span className="grid h-5 w-5 place-items-center rounded-full bg-sunshine text-sunshine-foreground">
+                          <Zap className="h-3 w-3" strokeWidth={3.5} />
+                        </span>
+                        <span className="tabular-nums">{q.lastAttempt.xp} XP</span>
                       </div>
-                      <div className="flex items-center justify-end gap-1 text-foreground/90 font-medium">
-                        <Calendar className="h-3 w-3 drop-shadow-sm" strokeWidth={3.5} /> {q.lastAttempt.date}
+                      <div className="mt-1 flex items-center justify-end gap-1.5 text-foreground/80">
+                        <Calendar className="h-3 w-3" strokeWidth={3} />
+                        <span className="tabular-nums">{q.lastAttempt.date}</span>
                       </div>
                     </div>
                   )}
