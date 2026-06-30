@@ -5,9 +5,11 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   Legend,
   Line,
   LineChart,
+  ReferenceDot,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -74,6 +76,28 @@ function AnalyticsPage() {
     const last = seedSessionScores.at(-1)!.scores[s];
     return { student: s, improvement: Math.round(((last - first) / first) * 100) };
   });
+
+  // Highlight best-improving student in the bar chart
+  const topImproverIdx = improvementByStudent.reduce(
+    (best, x, i, arr) => (x.improvement > arr[best].improvement ? i : best),
+    0,
+  );
+
+  // Highlight biggest session-over-session jump on the class average line
+  const biggestJump = classAvg.reduce(
+    (acc, p, i) => {
+      if (i === 0) return acc;
+      const delta = p.avg - classAvg[i - 1].avg;
+      return delta > acc.delta ? { idx: i, delta, point: p } : acc;
+    },
+    { idx: 0, delta: -Infinity, point: classAvg[0] },
+  );
+
+  // Highlight best-moving section in the KPI row
+  const bestSectionIdx = seedSectionAccuracy.reduce(
+    (best, s, i, arr) => (s.current - s.last > arr[best].current - arr[best].last ? i : best),
+    0,
+  );
 
   const misconceptions = [
     { question: "Real return when inflation > nominal", section: "Inflation", wrongPct: 71, sessions: 3 },
@@ -169,8 +193,20 @@ function AnalyticsPage() {
             const delta = s.current - s.last;
             const up = delta >= 0;
             const colors = ["coral", "mint", "sky", "sunshine"] as const;
+            const isBest = i === bestSectionIdx;
             return (
-              <Card key={s.section} className="border-2 border-foreground/10 p-5 badge-shadow">
+              <Card
+                key={s.section}
+                className={cn(
+                  "border-2 border-foreground/10 p-5 badge-shadow relative",
+                  isBest && "border-sunshine ring-4 ring-sunshine/40",
+                )}
+              >
+                {isBest && (
+                  <span className="absolute -top-2 -right-2 inline-flex items-center gap-1 rounded-full bg-sunshine border-2 border-foreground px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-foreground badge-shadow">
+                    Top mover
+                  </span>
+                )}
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{s.section}</div>
                   <Badge3D color={colors[i]} className="h-9 w-9">
@@ -332,7 +368,16 @@ function AnalyticsPage() {
                   <XAxis dataKey="student" tickLine={false} axisLine={false} fontSize={11} interval={0} angle={-25} textAnchor="end" height={50} />
                   <YAxis tickLine={false} axisLine={false} fontSize={12} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "2px solid var(--color-foreground)" }} />
-                  <Bar dataKey="improvement" radius={[8, 8, 0, 0]} fill="var(--color-coral)" />
+                  <Bar dataKey="improvement" radius={[8, 8, 0, 0]}>
+                    {improvementByStudent.map((_, i) => (
+                      <Cell
+                        key={i}
+                        fill={i === topImproverIdx ? "var(--color-sunshine)" : "var(--color-coral)"}
+                        stroke={i === topImproverIdx ? "var(--color-foreground)" : "none"}
+                        strokeWidth={i === topImproverIdx ? 2 : 0}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -361,9 +406,27 @@ function AnalyticsPage() {
                     name="Class avg"
                     dataKey="avg"
                     stroke="var(--color-mint)"
-                    strokeWidth={3}
+                    strokeWidth={5}
                     dot={{ r: 5, strokeWidth: 2, fill: "white" }}
+                    activeDot={{ r: 8 }}
                   />
+                  {Number.isFinite(biggestJump.delta) && (
+                    <ReferenceDot
+                      x={biggestJump.point.session}
+                      y={biggestJump.point.avg}
+                      r={9}
+                      fill="var(--color-sunshine)"
+                      stroke="var(--color-foreground)"
+                      strokeWidth={2.5}
+                      label={{
+                        value: `+${biggestJump.delta} biggest jump`,
+                        position: "top",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        fill: "var(--color-foreground)",
+                      }}
+                    />
+                  )}
                 </LineChart>
               </ResponsiveContainer>
             </div>
