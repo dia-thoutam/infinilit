@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowDown, ArrowUp, BarChart3, Brain, Flame, Target, TrendingUp, Zap } from "lucide-react";
+import { ArrowDown, ArrowUp, BarChart3, Brain, Flame, Sparkles, Target, TrendingUp, Zap } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -98,25 +98,70 @@ function AnalyticsPage() {
         </div>
 
         {/* Hero metric */}
-        <Card className="overflow-hidden border-2 border-foreground bg-foreground p-0 text-background badge-shadow">
-          <div className="grid items-center gap-6 p-8 sm:grid-cols-[1fr_auto]">
-            <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-sunshine">Since Session 1</div>
-              <div className="mt-2 flex items-baseline gap-3">
-                <span className="font-display text-7xl font-black text-sunshine sm:text-8xl">
-                  +{classImprovement}%
-                </span>
-                <span className="font-display text-2xl font-bold">class improvement</span>
+        <div className="relative">
+          {/* Outer glow */}
+          <div
+            aria-hidden
+            className="absolute -inset-3 rounded-[2rem] opacity-70 blur-2xl"
+            style={{
+              background:
+                "radial-gradient(60% 80% at 20% 30%, oklch(0.78 0.19 60 / 0.9), transparent 70%), radial-gradient(60% 80% at 80% 70%, oklch(0.7 0.22 25 / 0.8), transparent 70%)",
+            }}
+          />
+          <Card
+            className="relative overflow-hidden border-[3px] border-foreground p-0 text-foreground badge-shadow-pop"
+            style={{
+              background:
+                "linear-gradient(135deg, oklch(0.96 0.08 85) 0%, oklch(0.88 0.14 60) 45%, oklch(0.78 0.18 30) 100%)",
+            }}
+          >
+            {/* Sheen highlight */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-1/2 opacity-60"
+              style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.55), transparent)" }}
+            />
+            {/* Floating sparkles */}
+            <Sparkles className="pointer-events-none absolute right-10 top-6 h-6 w-6 text-foreground/70 animate-pulse" strokeWidth={2.5} />
+            <Sparkles className="pointer-events-none absolute left-12 bottom-8 h-4 w-4 text-foreground/50 animate-pulse" strokeWidth={2.5} style={{ animationDelay: "0.6s" }} />
+            <Sparkles className="pointer-events-none absolute right-1/3 bottom-10 h-5 w-5 text-foreground/60 animate-pulse" strokeWidth={2.5} style={{ animationDelay: "1.1s" }} />
+
+            <div className="relative grid items-center gap-6 p-10 sm:grid-cols-[1fr_auto]">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-foreground px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-sunshine">
+                  <Flame className="h-3.5 w-3.5" strokeWidth={3} /> Since Session 1
+                </div>
+                <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                  <span
+                    className="font-display text-[5.5rem] font-black leading-none sm:text-[8rem]"
+                    style={{
+                      background: "linear-gradient(180deg, #fff8e6 0%, #ffd166 55%, #ef7a3a 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0 4px 0 rgba(40,20,10,0.25))",
+                    }}
+                  >
+                    +{classImprovement}%
+                  </span>
+                  <span className="font-display text-3xl font-black sm:text-4xl">class improvement</span>
+                </div>
+                <p className="mt-4 max-w-md text-sm font-medium text-foreground/80">
+                  Class average has climbed from <span className="font-bold">{classAvg[0].avg}</span> to <span className="font-bold">{classAvg.at(-1)!.avg}</span> over {classAvg.length} sessions. Keep the momentum.
+                </p>
               </div>
-              <p className="mt-3 max-w-md text-sm text-background/70">
-                Class average has climbed from {classAvg[0].avg} to {classAvg.at(-1)!.avg} over {classAvg.length} sessions. Keep the momentum.
-              </p>
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="absolute -inset-4 rounded-full opacity-80 blur-xl"
+                  style={{ background: "radial-gradient(circle, oklch(0.85 0.2 85 / 0.9), transparent 70%)" }}
+                />
+                <Badge3D color="sunshine" className="relative h-40 w-40">
+                  <TrendingUp className="h-20 w-20" strokeWidth={2.5} />
+                </Badge3D>
+              </div>
             </div>
-            <Badge3D color="sunshine" className="h-32 w-32">
-              <TrendingUp className="h-16 w-16" strokeWidth={2.5} />
-            </Badge3D>
-          </div>
-        </Card>
+          </Card>
+        </div>
 
         {/* KPI row */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
