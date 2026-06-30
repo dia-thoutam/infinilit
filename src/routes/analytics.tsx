@@ -384,7 +384,7 @@ function AnalyticsPage() {
                           fill={fill}
                           stroke={isTop ? "var(--color-foreground)" : isPositive ? "#0a5c3c" : "none"}
                           strokeWidth={isTop ? 2.5 : isPositive ? 1.5 : 0}
-                          className={isTop ? "drop-shadow-[0_0_12px_rgba(255,200,80,0.9)]" : isPositive ? "drop-shadow-[0_0_6px_rgba(77,220,154,0.5)]" : ""}
+                          filter={isTop ? "url(#goldGlow)" : isPositive ? "url(#greenGlow)" : undefined}
                         />
                       );
                     })}
