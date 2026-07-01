@@ -43,7 +43,24 @@ function trend(arr: number[]) {
 }
 
 function AnalyticsPage() {
-  const [student, setStudent] = useState(seedStudents[0]);
+  const [student, setStudent] = useState(seedStudents[0] ?? "");
+
+  if (seedSessionScores.length === 0 || seedStudents.length === 0) {
+    return (
+      <AppShell>
+        <div className="mx-auto max-w-2xl rounded-3xl border-2 border-foreground/20 bg-[oklch(0.97_0.018_75)] dark:bg-[oklch(0.24_0.035_30)] p-10 text-center badge-shadow">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-sunshine/90">
+            <BarChart3 className="h-8 w-8 text-foreground" strokeWidth={2.5} />
+          </div>
+          <h1 className="mt-5 font-display text-3xl font-black text-foreground">No data yet</h1>
+          <p className="mt-3 text-sm font-semibold text-foreground/90">
+            Run quizzes with a classroom from the <span className="font-black">Quiz</span> tab. Their scores, accuracy,
+            and improvement will appear here automatically.
+          </p>
+        </div>
+      </AppShell>
+    );
+  }
 
   const classAvg = useMemo(
     () =>
