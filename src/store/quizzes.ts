@@ -7,6 +7,9 @@ interface State {
   upsert: (q: Quiz) => void;
   remove: (id: string) => void;
   recordAttempt: (id: string, accuracy: number, xp: number) => void;
+  clearAttemptsInRange: (from: string, to: string) => void;
+  clearAllAttempts: () => void;
+  wipeAll: () => void;
 }
 
 export const useQuizzes = create<State>()(
@@ -30,6 +33,19 @@ export const useQuizzes = create<State>()(
               : q,
           ),
         })),
+      clearAttemptsInRange: (from, to) =>
+        set((s) => ({
+          quizzes: s.quizzes.map((q) =>
+            q.lastAttempt && q.lastAttempt.date >= from && q.lastAttempt.date <= to
+              ? { ...q, lastAttempt: undefined }
+              : q,
+          ),
+        })),
+      clearAllAttempts: () =>
+        set((s) => ({
+          quizzes: s.quizzes.map((q) => ({ ...q, lastAttempt: undefined })),
+        })),
+      wipeAll: () => set({ quizzes: [] }),
     }),
     { name: "infinilit-quizzes-v2" },
   ),
