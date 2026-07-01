@@ -45,6 +45,9 @@ interface State {
   renameStudent: (classroomId: string, studentId: string, name: string) => void;
   addSession: (classroomId: string, session: ClassroomSession) => void;
   resetStats: (classroomId: string) => void;
+  resetAllStats: () => void;
+  deleteSessionsInRange: (from: string, to: string) => void;
+  wipeAll: () => void;
 }
 
 export const useClassrooms = create<State>()(
@@ -108,6 +111,20 @@ export const useClassrooms = create<State>()(
             c.id === classroomId ? { ...c, sessions: [] } : c,
           ),
         })),
+      resetAllStats: () =>
+        set((s) => ({
+          classrooms: s.classrooms.map((c) => ({ ...c, sessions: [] })),
+        })),
+      deleteSessionsInRange: (from, to) =>
+        set((s) => ({
+          classrooms: s.classrooms.map((c) => ({
+            ...c,
+            sessions: (c.sessions ?? []).filter(
+              (sess) => sess.date < from || sess.date > to,
+            ),
+          })),
+        })),
+      wipeAll: () => set({ classrooms: [] }),
     }),
     { name: "infinilit-classrooms-v3" },
   ),
