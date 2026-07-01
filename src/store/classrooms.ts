@@ -34,22 +34,7 @@ export interface Classroom {
   sessions?: ClassroomSession[];
 }
 
-const seed: Classroom[] = [
-  {
-    id: "c-9a",
-    name: "Grade 9 — Section A",
-    students: [
-      { id: "s1", name: "Maya" },
-      { id: "s2", name: "Zara" },
-      { id: "s3", name: "Ananya" },
-      { id: "s4", name: "Priya" },
-      { id: "s5", name: "Kabir" },
-      { id: "s6", name: "Rohan" },
-      { id: "s7", name: "Ishaan" },
-      { id: "s8", name: "Aarav" },
-    ],
-  },
-];
+const seed: Classroom[] = [];
 
 interface State {
   classrooms: Classroom[];
@@ -124,6 +109,6 @@ export const useClassrooms = create<State>()(
           ),
         })),
     }),
-    { name: "infinilit-classrooms-v2" },
+    { name: "infinilit-classrooms-v3" },
   ),
 );

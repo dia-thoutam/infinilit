@@ -22,7 +22,8 @@ export interface Quiz {
 
 export const xpFor = (d: Difficulty) => (d === "hard" ? 100 : d === "medium" ? 50 : 20);
 
-export const seedQuizzes: Quiz[] = [
+export const seedQuizzes: Quiz[] = [];
+const _archivedSeedQuizzes: Quiz[] = [
   {
     id: "q-budget-basics",
     title: "Budget Basics",
@@ -145,37 +146,12 @@ export const seedQuizzes: Quiz[] = [
   },
 ];
 
-export const seedStudents = [
-  "Ananya",
-  "Rohan",
-  "Maya",
-  "Kabir",
-  "Zara",
-  "Aarav",
-  "Priya",
-  "Dev",
-  "Ishita",
-  "Vikram",
-  "Tara",
-  "Arjun",
-];
+export const seedStudents: string[] = [];
 
 // sessions x students improvement points (0-100)
-export const seedSessionScores: { session: number; date: string; scores: Record<string, number> }[] = [
-  { session: 1, date: "May 5", scores: { Ananya: 52, Rohan: 48, Maya: 60, Kabir: 35, Zara: 70, Aarav: 41, Priya: 58, Dev: 44, Ishita: 62, Vikram: 39, Tara: 55, Arjun: 47 } },
-  { session: 2, date: "May 12", scores: { Ananya: 61, Rohan: 50, Maya: 68, Kabir: 42, Zara: 74, Aarav: 47, Priya: 64, Dev: 51, Ishita: 66, Vikram: 45, Tara: 60, Arjun: 49 } },
-  { session: 3, date: "May 19", scores: { Ananya: 69, Rohan: 49, Maya: 75, Kabir: 53, Zara: 78, Aarav: 55, Priya: 70, Dev: 56, Ishita: 71, Vikram: 50, Tara: 64, Arjun: 52 } },
-  { session: 4, date: "May 26", scores: { Ananya: 74, Rohan: 47, Maya: 80, Kabir: 61, Zara: 82, Aarav: 60, Priya: 73, Dev: 62, Ishita: 76, Vikram: 53, Tara: 67, Arjun: 55 } },
-  { session: 5, date: "Jun 2", scores: { Ananya: 80, Rohan: 46, Maya: 86, Kabir: 70, Zara: 86, Aarav: 66, Priya: 78, Dev: 68, Ishita: 80, Vikram: 56, Tara: 72, Arjun: 58 } },
-  { session: 6, date: "Jun 9", scores: { Ananya: 85, Rohan: 45, Maya: 90, Kabir: 78, Zara: 89, Aarav: 71, Priya: 82, Dev: 73, Ishita: 84, Vikram: 58, Tara: 75, Arjun: 60 } },
-];
+export const seedSessionScores: { session: number; date: string; scores: Record<string, number> }[] = [];
 
-export const seedSectionAccuracy = [
-  { section: "Budgeting", last: 64, current: 81 },
-  { section: "Credit", last: 52, current: 68 },
-  { section: "Investing", last: 71, current: 86 },
-  { section: "Inflation", last: 48, current: 62 },
-];
+export const seedSectionAccuracy: { section: string; last: number; current: number }[] = [];
 
 // per-question class vote distribution (mock)
 export const mockVoteDistribution = (correct: number) => {
