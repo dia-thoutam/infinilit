@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Pencil, Trash2, Trophy, Calendar, Target, Zap, Sparkles, Users } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { HexBadge } from "@/components/hex-badge";
+import { ResetDataPanel } from "@/components/reset-data-panel";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -117,6 +118,8 @@ function TeacherIndex() {
             );
           })}
         </div>
+
+        <ResetDataPanel />
       </div>
     </AppShell>
   );
