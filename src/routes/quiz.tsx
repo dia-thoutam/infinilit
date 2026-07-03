@@ -785,27 +785,29 @@ function VoteBar({ votes, correct }: { votes: [number, number, number, number]; 
 }
 
 /* ---------- Leaderboard ---------- */
-function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number }) {
-  const ranked = [
-    { name: "You", improvement: 28, xp: 1820 + myXp },
-    { name: "Maya", improvement: 24, xp: 1740 },
-    { name: "Zara", improvement: 21, xp: 1690 },
-    { name: "Ananya", improvement: 18, xp: 1610 },
-    { name: "Priya", improvement: 16, xp: 1540 },
-    { name: "Kabir", improvement: 14, xp: 1470 },
-    { name: "Aarav", improvement: 12, xp: 1390 },
-    { name: "Dev", improvement: 9, xp: 1280 },
-    { name: "Tara", improvement: 7, xp: 1190 },
-    { name: "Ishita", improvement: 5, xp: 1080 },
-    { name: "Vikram", improvement: 2, xp: 980 },
-    { name: "Rohan", improvement: -3, xp: 860 },
-  ];
+function LeaderboardScreen({
+  classroom,
+  tally,
+  onNext,
+}: {
+  classroom: Classroom | null;
+  tally: Record<string, StudentSessionStat>;
+  onNext: () => void;
+}) {
+  const ranked = (classroom?.students ?? [])
+    .map((s) => {
+      const t = tally[s.id];
+      const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
+      const xp = t ? t.correct * 50 : 0;
+      return { name: s.name, improvement: acc, xp };
+    })
+    .sort((a, b) => b.improvement - a.improvement || b.xp - a.xp);
   const top3 = ranked.slice(0, 3);
+  const topScorer = ranked[0]?.name ?? "—";
   const awards = [
-    { label: "Most Improved", winner: "Maya", color: "coral" as const, icon: TrendingUp },
-    { label: "Most Consistent", winner: "Ananya", color: "mint" as const, icon: Target },
-    { label: "Fastest Mind", winner: "Zara", color: "sky" as const, icon: Zap },
-    { label: "Top Scorer", winner: "You", color: "sunshine" as const, icon: Crown },
+    { label: "Top Scorer", winner: topScorer, color: "sunshine" as const, icon: Crown },
+    { label: "Runner-up", winner: ranked[1]?.name ?? "—", color: "coral" as const, icon: TrendingUp },
+    { label: "Third place", winner: ranked[2]?.name ?? "—", color: "mint" as const, icon: Target },
   ];
 
   return (
