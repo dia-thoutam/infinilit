@@ -254,7 +254,13 @@ function QuizPage() {
   }
 
   if (phase === "leaderboard") {
-    return <LeaderboardScreen onNext={() => setPhase("progress")} myXp={finalXp || xp} />;
+    return (
+      <LeaderboardScreen
+        classroom={classroom}
+        tally={tally}
+        onNext={() => setPhase("progress")}
+      />
+    );
   }
 
   if (phase === "completed") {
@@ -282,7 +288,7 @@ function QuizPage() {
   if (phase === "progress") {
     return (
       <AppShell>
-        <ProgressSplit onDone={() => setPhase("lobby")} />
+        <ProgressSplit classroom={classroom} onDone={() => setPhase("lobby")} />
       </AppShell>
     );
   }
