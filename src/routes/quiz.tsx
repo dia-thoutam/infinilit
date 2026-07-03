@@ -34,7 +34,7 @@ import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { mockVoteDistribution, seedSectionAccuracy, xpFor } from "@/data/seed";
+import { xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
 import { playCorrect, playWrong, playXp, playFanfare } from "@/lib/sfx";
 
@@ -125,7 +125,13 @@ function QuizPage() {
     const id = setTimeout(() => {
       if (!confidence) setConfidence("guessing");
       setPhase("reveal");
-      if (question) setVotes(mockVoteDistribution(question.correct));
+      if (question && picked !== null && picked >= 0) {
+        const v: [number, number, number, number] = [0, 0, 0, 0];
+        v[picked as 0 | 1 | 2 | 3] = 1;
+        setVotes(v);
+      } else {
+        setVotes([0, 0, 0, 0]);
+      }
     }, 5000);
     return () => clearTimeout(id);
   }, [phase, confidence, question]);
@@ -219,8 +225,9 @@ function QuizPage() {
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
-      recordAttempt(quiz.id, accuracy, totalXp);
+      // Solo runs are practice-only: do NOT feed into any progress/analytics data.
       if (classroom) {
+        recordAttempt(quiz.id, accuracy, totalXp);
         addSession(classroom.id, {
           id: `sess-${Date.now()}`,
           date: new Date().toISOString().slice(0, 10),
@@ -256,7 +263,7 @@ function QuizPage() {
         xp={finalXp}
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
-        onContinue={() => setPhase("podium" as Phase)}
+        onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
   }
@@ -292,7 +299,17 @@ function QuizPage() {
         </div>
       )}
       {phase === "confidence" ? (
-        <ConfidenceScreen onPick={(c) => { setConfidence(c); setPhase("reveal"); setVotes(mockVoteDistribution(question.correct)); }} />
+        <ConfidenceScreen onPick={(c) => {
+          setConfidence(c);
+          setPhase("reveal");
+          if (picked !== null && picked >= 0) {
+            const v: [number, number, number, number] = [0, 0, 0, 0];
+            v[picked as 0 | 1 | 2 | 3] = 1;
+            setVotes(v);
+          } else {
+            setVotes([0, 0, 0, 0]);
+          }
+        }} />
       ) : (
         <div
           className={cn(
