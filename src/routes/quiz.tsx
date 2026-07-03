@@ -1065,13 +1065,56 @@ function PodiumScreen({
   );
 }
 
-function ProgressSplit({ onDone }: { onDone: () => void }) {
-  const data = seedSectionAccuracy.map((s) => ({ section: s.section, "Last session": s.last, "This session": s.current }));
-  const spotlights = [
-    { label: "Most Improved", name: "Kabir", value: "+33 pts", color: "coral" as const, icon: TrendingUp },
-    { label: "Most Consistent", name: "Ananya", value: "6 sessions ↑", color: "mint" as const, icon: Target },
-    { label: "Fastest Mind", name: "Zara", value: "avg 6.4s", color: "sky" as const, icon: Zap },
-  ];
+function ProgressSplit({ classroom, onDone }: { classroom: Classroom | null; onDone: () => void }) {
+  const sessions = classroom?.sessions ?? [];
+  // Compare the two most recent recorded sessions of this classroom, if any.
+  const sorted = [...sessions].sort((a, b) => a.date.localeCompare(b.date));
+  const last = sorted[sorted.length - 2];
+  const current = sorted[sorted.length - 1];
+  const data = current
+    ? [
+        {
+          section: current.quizTitle,
+          "Last session": last?.accuracy ?? 0,
+          "This session": current.accuracy,
+        },
+      ]
+    : [];
+
+  // Spotlights from real per-student tally on the most recent session.
+  const perStudent = current?.perStudent ?? [];
+  const nameFor = (sid: string) => classroom?.students.find((s) => s.id === sid)?.name ?? "—";
+  const byAcc = [...perStudent].sort((a, b) => {
+    const aAcc = a.total ? a.correct / a.total : 0;
+    const bAcc = b.total ? b.correct / b.total : 0;
+    return bAcc - aAcc;
+  });
+  const bySureCorrect = [...perStudent].sort((a, b) => b.sureCorrect - a.sureCorrect);
+  const spotlights = current
+    ? [
+        {
+          label: "Top Scorer",
+          name: byAcc[0] ? nameFor(byAcc[0].studentId) : "—",
+          value: byAcc[0] && byAcc[0].total ? `${Math.round((byAcc[0].correct / byAcc[0].total) * 100)}%` : "—",
+          color: "coral" as const,
+          icon: TrendingUp,
+        },
+        {
+          label: "Class average",
+          name: `${current.accuracy}%`,
+          value: `${current.perStudent.length} students`,
+          color: "mint" as const,
+          icon: Target,
+        },
+        {
+          label: "Most confident right",
+          name: bySureCorrect[0] ? nameFor(bySureCorrect[0].studentId) : "—",
+          value: bySureCorrect[0] ? `${bySureCorrect[0].sureCorrect} sure-correct` : "—",
+          color: "sky" as const,
+          icon: Zap,
+        },
+      ]
+    : [];
 
   return (
     <div className="space-y-6">
