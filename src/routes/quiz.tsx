@@ -802,7 +802,9 @@ function LeaderboardScreen({
       return { name: s.name, improvement: acc, xp };
     })
     .sort((a, b) => b.improvement - a.improvement || b.xp - a.xp);
-  const top3 = ranked.slice(0, 3);
+  const padded = [...ranked];
+  while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
+  const top3 = padded.slice(0, 3);
   const topScorer = ranked[0]?.name ?? "—";
   const awards = [
     { label: "Top Scorer", winner: topScorer, color: "sunshine" as const, icon: Crown },
