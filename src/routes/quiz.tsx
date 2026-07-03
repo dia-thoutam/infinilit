@@ -34,7 +34,7 @@ import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { mockVoteDistribution, seedSectionAccuracy, xpFor } from "@/data/seed";
+import { xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
 import { playCorrect, playWrong, playXp, playFanfare } from "@/lib/sfx";
 
@@ -125,7 +125,13 @@ function QuizPage() {
     const id = setTimeout(() => {
       if (!confidence) setConfidence("guessing");
       setPhase("reveal");
-      if (question) setVotes(mockVoteDistribution(question.correct));
+      if (question && picked !== null && picked >= 0) {
+        const v: [number, number, number, number] = [0, 0, 0, 0];
+        v[picked as 0 | 1 | 2 | 3] = 1;
+        setVotes(v);
+      } else {
+        setVotes([0, 0, 0, 0]);
+      }
     }, 5000);
     return () => clearTimeout(id);
   }, [phase, confidence, question]);
@@ -219,8 +225,9 @@ function QuizPage() {
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
-      recordAttempt(quiz.id, accuracy, totalXp);
+      // Solo runs are practice-only: do NOT feed into any progress/analytics data.
       if (classroom) {
+        recordAttempt(quiz.id, accuracy, totalXp);
         addSession(classroom.id, {
           id: `sess-${Date.now()}`,
           date: new Date().toISOString().slice(0, 10),
@@ -247,7 +254,13 @@ function QuizPage() {
   }
 
   if (phase === "leaderboard") {
-    return <LeaderboardScreen onNext={() => setPhase("progress")} myXp={finalXp || xp} />;
+    return (
+      <LeaderboardScreen
+        classroom={classroom}
+        tally={tally}
+        onNext={() => setPhase("progress")}
+      />
+    );
   }
 
   if (phase === "completed") {
@@ -256,7 +269,7 @@ function QuizPage() {
         xp={finalXp}
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
-        onContinue={() => setPhase("podium" as Phase)}
+        onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
   }
@@ -275,7 +288,7 @@ function QuizPage() {
   if (phase === "progress") {
     return (
       <AppShell>
-        <ProgressSplit onDone={() => setPhase("lobby")} />
+        <ProgressSplit classroom={classroom} onDone={() => setPhase("lobby")} />
       </AppShell>
     );
   }
@@ -292,7 +305,17 @@ function QuizPage() {
         </div>
       )}
       {phase === "confidence" ? (
-        <ConfidenceScreen onPick={(c) => { setConfidence(c); setPhase("reveal"); setVotes(mockVoteDistribution(question.correct)); }} />
+        <ConfidenceScreen onPick={(c) => {
+          setConfidence(c);
+          setPhase("reveal");
+          if (picked !== null && picked >= 0) {
+            const v: [number, number, number, number] = [0, 0, 0, 0];
+            v[picked as 0 | 1 | 2 | 3] = 1;
+            setVotes(v);
+          } else {
+            setVotes([0, 0, 0, 0]);
+          }
+        }} />
       ) : (
         <div
           className={cn(
@@ -762,27 +785,31 @@ function VoteBar({ votes, correct }: { votes: [number, number, number, number]; 
 }
 
 /* ---------- Leaderboard ---------- */
-function LeaderboardScreen({ onNext, myXp }: { onNext: () => void; myXp: number }) {
-  const ranked = [
-    { name: "You", improvement: 28, xp: 1820 + myXp },
-    { name: "Maya", improvement: 24, xp: 1740 },
-    { name: "Zara", improvement: 21, xp: 1690 },
-    { name: "Ananya", improvement: 18, xp: 1610 },
-    { name: "Priya", improvement: 16, xp: 1540 },
-    { name: "Kabir", improvement: 14, xp: 1470 },
-    { name: "Aarav", improvement: 12, xp: 1390 },
-    { name: "Dev", improvement: 9, xp: 1280 },
-    { name: "Tara", improvement: 7, xp: 1190 },
-    { name: "Ishita", improvement: 5, xp: 1080 },
-    { name: "Vikram", improvement: 2, xp: 980 },
-    { name: "Rohan", improvement: -3, xp: 860 },
-  ];
-  const top3 = ranked.slice(0, 3);
+function LeaderboardScreen({
+  classroom,
+  tally,
+  onNext,
+}: {
+  classroom: Classroom | null;
+  tally: Record<string, StudentSessionStat>;
+  onNext: () => void;
+}) {
+  const ranked = (classroom?.students ?? [])
+    .map((s) => {
+      const t = tally[s.id];
+      const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
+      const xp = t ? t.correct * 50 : 0;
+      return { name: s.name, improvement: acc, xp };
+    })
+    .sort((a, b) => b.improvement - a.improvement || b.xp - a.xp);
+  const padded = [...ranked];
+  while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
+  const top3 = padded.slice(0, 3);
+  const topScorer = ranked[0]?.name ?? "—";
   const awards = [
-    { label: "Most Improved", winner: "Maya", color: "coral" as const, icon: TrendingUp },
-    { label: "Most Consistent", winner: "Ananya", color: "mint" as const, icon: Target },
-    { label: "Fastest Mind", winner: "Zara", color: "sky" as const, icon: Zap },
-    { label: "Top Scorer", winner: "You", color: "sunshine" as const, icon: Crown },
+    { label: "Top Scorer", winner: topScorer, color: "sunshine" as const, icon: Crown },
+    { label: "Runner-up", winner: ranked[1]?.name ?? "—", color: "coral" as const, icon: TrendingUp },
+    { label: "Third place", winner: ranked[2]?.name ?? "—", color: "mint" as const, icon: Target },
   ];
 
   return (
@@ -1040,13 +1067,56 @@ function PodiumScreen({
   );
 }
 
-function ProgressSplit({ onDone }: { onDone: () => void }) {
-  const data = seedSectionAccuracy.map((s) => ({ section: s.section, "Last session": s.last, "This session": s.current }));
-  const spotlights = [
-    { label: "Most Improved", name: "Kabir", value: "+33 pts", color: "coral" as const, icon: TrendingUp },
-    { label: "Most Consistent", name: "Ananya", value: "6 sessions ↑", color: "mint" as const, icon: Target },
-    { label: "Fastest Mind", name: "Zara", value: "avg 6.4s", color: "sky" as const, icon: Zap },
-  ];
+function ProgressSplit({ classroom, onDone }: { classroom: Classroom | null; onDone: () => void }) {
+  const sessions = classroom?.sessions ?? [];
+  // Compare the two most recent recorded sessions of this classroom, if any.
+  const sorted = [...sessions].sort((a, b) => a.date.localeCompare(b.date));
+  const last = sorted[sorted.length - 2];
+  const current = sorted[sorted.length - 1];
+  const data = current
+    ? [
+        {
+          section: current.quizTitle,
+          "Last session": last?.accuracy ?? 0,
+          "This session": current.accuracy,
+        },
+      ]
+    : [];
+
+  // Spotlights from real per-student tally on the most recent session.
+  const perStudent = current?.perStudent ?? [];
+  const nameFor = (sid: string) => classroom?.students.find((s) => s.id === sid)?.name ?? "—";
+  const byAcc = [...perStudent].sort((a, b) => {
+    const aAcc = a.total ? a.correct / a.total : 0;
+    const bAcc = b.total ? b.correct / b.total : 0;
+    return bAcc - aAcc;
+  });
+  const bySureCorrect = [...perStudent].sort((a, b) => b.sureCorrect - a.sureCorrect);
+  const spotlights = current
+    ? [
+        {
+          label: "Top Scorer",
+          name: byAcc[0] ? nameFor(byAcc[0].studentId) : "—",
+          value: byAcc[0] && byAcc[0].total ? `${Math.round((byAcc[0].correct / byAcc[0].total) * 100)}%` : "—",
+          color: "coral" as const,
+          icon: TrendingUp,
+        },
+        {
+          label: "Class average",
+          name: `${current.accuracy}%`,
+          value: `${current.perStudent.length} students`,
+          color: "mint" as const,
+          icon: Target,
+        },
+        {
+          label: "Most confident right",
+          name: bySureCorrect[0] ? nameFor(bySureCorrect[0].studentId) : "—",
+          value: bySureCorrect[0] ? `${bySureCorrect[0].sureCorrect} sure-correct` : "—",
+          color: "sky" as const,
+          icon: Zap,
+        },
+      ]
+    : [];
 
   return (
     <div className="space-y-6">

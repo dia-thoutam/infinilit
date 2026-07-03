@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { type Quiz } from "@/data/seed";
+import { seedQuizzes, type Quiz } from "@/data/seed";
 
 interface State {
   quizzes: Quiz[];
@@ -15,7 +15,7 @@ interface State {
 export const useQuizzes = create<State>()(
   persist(
     (set) => ({
-      quizzes: [],
+      quizzes: seedQuizzes,
       upsert: (q) =>
         set((s) => {
           const idx = s.quizzes.findIndex((x) => x.id === q.id);
@@ -47,6 +47,6 @@ export const useQuizzes = create<State>()(
         })),
       wipeAll: () => set({ quizzes: [] }),
     }),
-    { name: "infinilit-quizzes-v2" },
+    { name: "infinilit-quizzes-v3" },
   ),
 );
