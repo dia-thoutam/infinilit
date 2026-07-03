@@ -22,14 +22,12 @@ export interface Quiz {
 
 export const xpFor = (d: Difficulty) => (d === "hard" ? 100 : d === "medium" ? 50 : 20);
 
-export const seedQuizzes: Quiz[] = [];
-const _archivedSeedQuizzes: Quiz[] = [
+export const seedQuizzes: Quiz[] = [
   {
     id: "q-budget-basics",
     title: "Budget Basics",
     description: "Needs vs wants, the 50/30/20 rule, and why your future self will thank you.",
     createdAt: "2026-05-12",
-    lastAttempt: { date: "2026-06-18", accuracy: 78, xp: 1240 },
     questions: [
       {
         id: "q1",
@@ -85,7 +83,6 @@ const _archivedSeedQuizzes: Quiz[] = [
     title: "Credit 101",
     description: "Cards, scores, and the silent cost of carrying a balance.",
     createdAt: "2026-05-28",
-    lastAttempt: { date: "2026-06-20", accuracy: 64, xp: 980 },
     questions: [
       {
         id: "c1",
@@ -114,33 +111,6 @@ const _archivedSeedQuizzes: Quiz[] = [
         explanation: "Below 30% is the rule of thumb — lower is better.",
         difficulty: "easy",
         section: "Credit",
-      },
-    ],
-  },
-  {
-    id: "q-invest-intro",
-    title: "Investing Intro",
-    description: "Stocks, bonds, index funds — and why diversification matters.",
-    createdAt: "2026-06-05",
-    lastAttempt: { date: "2026-06-22", accuracy: 82, xp: 1560 },
-    questions: [
-      {
-        id: "i1",
-        text: "An index fund holds…",
-        choices: ["One stock", "A basket tracking a market index", "Only bonds", "Cash"],
-        correct: 1,
-        explanation: "An index fund holds a broad basket designed to mirror a market index like the S&P 500.",
-        difficulty: "easy",
-        section: "Investing",
-      },
-      {
-        id: "i2",
-        text: "Diversification reduces…",
-        choices: ["Returns", "Specific (idiosyncratic) risk", "Inflation", "Taxes"],
-        correct: 1,
-        explanation: "Diversification cuts company-specific risk; broad market risk remains.",
-        difficulty: "hard",
-        section: "Investing",
       },
     ],
   },
