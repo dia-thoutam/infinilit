@@ -907,9 +907,12 @@ function LeaderboardScreen({
   tally: Record<string, StudentSessionStat>;
   onNext: () => void;
 }) {
+  const leakDetection = useDevFlags((s) => s.leakDetection);
   const rankedRaw = rankRoster(classroom, tally);
   const ranked = rankedRaw.map((r) => ({ name: r.name, improvement: r.acc, xp: r.xp }));
-  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
+  const integrityError = leakDetection
+    ? detectMockLeak(classroom, ranked.map((r) => r.name))
+    : null;
   const padded = [...ranked];
   while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
   const top3 = padded.slice(0, 3);
@@ -978,7 +981,7 @@ function LeaderboardScreen({
             <div className="col-span-4">Improvement</div>
             <div className="col-span-2 text-right">XP</div>
           </div>
-          {ranked.map((s, i) => (
+          {rankedRaw.map((s, i) => (
             <div
               key={s.name}
               className={cn(
@@ -987,13 +990,18 @@ function LeaderboardScreen({
               )}
             >
               <div className="col-span-1 font-bold">{i + 1}</div>
-              <div className="col-span-5">{s.name}</div>
+              <div className="col-span-5">
+                <div>{s.name}</div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60">
+                  {tieBreakReason(rankedRaw[i - 1], s)} · {s.acc}% · {s.xp} XP · {s.total} answered
+                </div>
+              </div>
               <div className="col-span-4 flex items-center gap-2">
                 <div className="h-2 w-24 overflow-hidden rounded-full bg-foreground/10">
-                  <div className={cn("h-full", s.improvement >= 0 ? "bg-mint" : "bg-coral")} style={{ width: `${Math.min(100, Math.abs(s.improvement) * 3)}%` }} />
+                  <div className={cn("h-full", s.acc >= 0 ? "bg-mint" : "bg-coral")} style={{ width: `${Math.min(100, Math.abs(s.acc) * 3)}%` }} />
                 </div>
-                <span className={cn("font-semibold", s.improvement >= 0 ? "text-mint-foreground" : "text-coral")}>
-                  {s.improvement > 0 ? "+" : ""}{s.improvement}
+                <span className={cn("font-semibold", s.acc >= 0 ? "text-mint-foreground" : "text-coral")}>
+                  {s.acc}%
                 </span>
               </div>
               <div className="col-span-2 text-right font-bold">{s.xp.toLocaleString()}</div>
