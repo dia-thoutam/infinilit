@@ -864,14 +864,9 @@ function LeaderboardScreen({
   tally: Record<string, StudentSessionStat>;
   onNext: () => void;
 }) {
-  const ranked = (classroom?.students ?? [])
-    .map((s) => {
-      const t = tally[s.id];
-      const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
-      const xp = t ? t.correct * 50 : 0;
-      return { name: s.name, improvement: acc, xp };
-    })
-    .sort((a, b) => b.improvement - a.improvement || b.xp - a.xp);
+  const rankedRaw = rankRoster(classroom, tally);
+  const ranked = rankedRaw.map((r) => ({ name: r.name, improvement: r.acc, xp: r.xp }));
+  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
   const padded = [...ranked];
   while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
   const top3 = padded.slice(0, 3);
@@ -885,6 +880,11 @@ function LeaderboardScreen({
   return (
     <div className="min-h-screen bg-sunshine text-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        {integrityError && (
+          <div className="mb-4 rounded-2xl border-2 border-coral bg-coral/15 px-4 py-3 text-sm font-semibold text-coral">
+            Data integrity check failed: {integrityError} Only real classroom data is shown.
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
@@ -900,7 +900,9 @@ function LeaderboardScreen({
         </div>
 
         <h1 className="mt-6 text-center font-display text-5xl font-bold sm:text-7xl">Final standings</h1>
-        <p className="mt-2 text-center text-sm font-semibold uppercase tracking-wider">Ranked by improvement score</p>
+        <p className="mt-2 text-center text-sm font-semibold uppercase tracking-wider">
+          Ranked by accuracy → XP → questions answered → name
+        </p>
 
         {/* Top 3 */}
         <div className="mt-10 grid items-end gap-4 sm:grid-cols-3">
