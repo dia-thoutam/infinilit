@@ -997,25 +997,15 @@ function PodiumScreen({
     const t = window.setTimeout(() => playFanfare(), 250);
     return () => window.clearTimeout(t);
   }, []);
-  // Build ranking. If classroom + tally, rank real students by accuracy then correct.
-  // Else fall back to a friendly default trio so solo runs still get a podium.
-  let ranked: { name: string; xp: number; acc: number }[] = [];
-  if (classroom && Object.keys(tally).length > 0) {
-    ranked = classroom.students
-      .map((s) => {
-        const t = tally[s.id];
-        const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
-        const xp = t ? t.correct * 50 : 0;
-        return { name: s.name, xp, acc };
-      })
-      .sort((a, b) => b.acc - a.acc || b.xp - a.xp);
-  } else {
-    ranked = [
-      { name: "You", xp: myXp || 320, acc: 92 },
-      { name: "Maya", xp: 280, acc: 86 },
-      { name: "Zara", xp: 240, acc: 78 },
-    ];
-  }
+  // Podium is a classroom-only screen. Rank only real roster + real tally.
+  // No synthetic entries — the leaderboard is padded visually with "—".
+  void myXp;
+  const ranked = rankRoster(classroom, tally).map((r) => ({
+    name: r.name,
+    xp: r.xp,
+    acc: r.acc,
+  }));
+  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
   const top3 = ranked.slice(0, 3);
   while (top3.length < 3) top3.push({ name: "—", xp: 0, acc: 0 });
 
@@ -1072,6 +1062,11 @@ function PodiumScreen({
         })}
       </div>
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+        {integrityError && (
+          <div className="mb-4 rounded-2xl border-2 border-white/60 bg-white/15 px-4 py-3 text-sm font-semibold text-white backdrop-blur">
+            Data integrity check failed: {integrityError}
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
             <Home className="h-4 w-4" strokeWidth={3} /> Home
