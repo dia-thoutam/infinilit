@@ -30,6 +30,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useClassrooms, type Classroom, type StudentSessionStat } from "@/store/classrooms";
+import { useDevFlags } from "@/store/dev-flags";
+import { useAuditLog } from "@/store/audit-log";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,6 +72,18 @@ function rankRoster(
         b.total - a.total ||
         a.name.localeCompare(b.name),
     );
+}
+
+/**
+ * Label describing which tie-break rule set this row's rank relative to the
+ * row above it (or the row below, for #1). Used purely for teacher display.
+ */
+function tieBreakReason(prev: Ranked | undefined, cur: Ranked): string {
+  if (!prev) return "Highest accuracy";
+  if (prev.acc !== cur.acc) return "Lower accuracy";
+  if (prev.xp !== cur.xp) return "Tied accuracy · lower XP";
+  if (prev.total !== cur.total) return "Tied XP · fewer answered";
+  return "Tied · alphabetical";
 }
 
 // Known mock/seed placeholders that must never leak into real leaderboards.
@@ -120,6 +134,7 @@ function QuizPage() {
   const recordAttempt = useQuizzes((s) => s.recordAttempt);
   const classrooms = useClassrooms((s) => s.classrooms);
   const addSession = useClassrooms((s) => s.addSession);
+  const recordAudit = useAuditLog((s) => s.record);
 
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [classroomId, setClassroomId] = useState<string | null>(null);
@@ -300,6 +315,16 @@ function QuizPage() {
           trackedConfidence: trackConfidence,
           perStudent: Object.values(tally),
         });
+        // Audit: which roster IDs powered this session's leaderboard/charts.
+        recordAudit({
+          classroomId: classroom.id,
+          classroomName: classroom.name,
+          quizId: quiz.id,
+          quizTitle: quiz.title,
+          rosterIds: classroom.students.map((s) => s.id),
+          tallyIds: Object.keys(tally),
+          source: "classroom-session",
+        });
       } else if (import.meta.env.DEV) {
         // eslint-disable-next-line no-console
         console.info(
@@ -339,12 +364,20 @@ function QuizPage() {
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
         isSolo={!classroom}
+        // HARD RULE: solo must always return to the lobby — never route to
+        // podium, leaderboard, or progress screens. Refreshing the /quiz
+        // route also lands on the lobby because phase state is not persisted.
         onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
   }
 
   if ((phase as PhaseExt) === "podium") {
+    // Defensive: if somehow a solo run reached podium, bounce to lobby.
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <PodiumScreen
         classroom={classroom}
@@ -356,11 +389,20 @@ function QuizPage() {
   }
 
   if (phase === "progress") {
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <AppShell>
         <ProgressSplit classroom={classroom} onDone={() => setPhase("lobby")} />
       </AppShell>
     );
+  }
+
+  if (phase === "leaderboard" && !classroom) {
+    setPhase("lobby");
+    return null;
   }
 
   const majorityWrong = phase === "reveal" && votes[question.correct] < Math.max(...votes);
