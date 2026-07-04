@@ -400,10 +400,6 @@ function QuizPage() {
     );
   }
 
-  if (phase === "leaderboard" && !classroom) {
-    setPhase("lobby");
-    return null;
-  }
 
   const majorityWrong = phase === "reveal" && votes[question.correct] < Math.max(...votes);
 
