@@ -38,6 +38,67 @@ import { xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
 import { playCorrect, playWrong, playXp, playFanfare } from "@/lib/sfx";
 
+/* ---------- Shared ranking + integrity ---------- */
+/**
+ * Deterministic tie-break: accuracy desc, XP desc, total answered desc, name asc.
+ * Only real classroom students are ranked — no synthetic entries.
+ */
+type Ranked = {
+  studentId: string;
+  name: string;
+  acc: number;
+  xp: number;
+  total: number;
+};
+function rankRoster(
+  classroom: Classroom | null,
+  tally: Record<string, StudentSessionStat>,
+): Ranked[] {
+  if (!classroom) return [];
+  return classroom.students
+    .map((s) => {
+      const t = tally[s.id];
+      const total = t?.total ?? 0;
+      const acc = t && total ? Math.round((t.correct / total) * 100) : 0;
+      const xp = t ? t.correct * 50 : 0;
+      return { studentId: s.id, name: s.name, acc, xp, total };
+    })
+    .sort(
+      (a, b) =>
+        b.acc - a.acc ||
+        b.xp - a.xp ||
+        b.total - a.total ||
+        a.name.localeCompare(b.name),
+    );
+}
+
+// Known mock/seed placeholders that must never leak into real leaderboards.
+const MOCK_NAME_BLOCKLIST = new Set([
+  "Maya",
+  "Zara",
+  "Ananya",
+  "You",
+  "Player 1",
+  "Player 2",
+]);
+function detectMockLeak(
+  classroom: Classroom | null,
+  displayedNames: string[],
+): string | null {
+  if (!classroom) return "Missing classroom roster — cannot display real ranking.";
+  const roster = new Set(classroom.students.map((s) => s.name));
+  for (const n of displayedNames) {
+    if (n === "—") continue;
+    if (MOCK_NAME_BLOCKLIST.has(n) && !roster.has(n)) {
+      return `Blocked mock name in results: "${n}".`;
+    }
+    if (!roster.has(n)) {
+      return `Name "${n}" is not in the classroom roster.`;
+    }
+  }
+  return null;
+}
+
 export const Route = createFileRoute("/quiz")({
   head: () => ({
     meta: [
@@ -225,8 +286,9 @@ function QuizPage() {
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
-      // Solo runs are practice-only: do NOT feed into any progress/analytics data.
-      if (classroom) {
+      // HARD GUARDRAIL — solo runs never touch persisted progress data.
+      // Only a classroom-bound run may call recordAttempt/addSession.
+      if (classroom && classroomId) {
         recordAttempt(quiz.id, accuracy, totalXp);
         addSession(classroom.id, {
           id: `sess-${Date.now()}`,
@@ -238,6 +300,13 @@ function QuizPage() {
           trackedConfidence: trackConfidence,
           perStudent: Object.values(tally),
         });
+      } else if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.info(
+          "[quiz] solo run complete — no progress data written (accuracy=%d, xp=%d)",
+          accuracy,
+          totalXp,
+        );
       }
       setFinalAccuracy(accuracy);
       setFinalXp(totalXp);
@@ -269,6 +338,7 @@ function QuizPage() {
         xp={finalXp}
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
+        isSolo={!classroom}
         onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
