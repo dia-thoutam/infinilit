@@ -12,11 +12,13 @@ export function CompletedScreen({
   accuracy,
   quizTitle,
   onContinue,
+  isSolo = false,
 }: {
   xp: number;
   accuracy: number;
   quizTitle: string;
   onContinue: () => void;
+  isSolo?: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -147,6 +149,11 @@ export function CompletedScreen({
               <Star className="h-4 w-4 fill-current" strokeWidth={0} />
               +{xp} XP
             </div>
+            {isSolo && (
+              <div className="mx-auto max-w-xs rounded-2xl border border-white/25 bg-white/10 px-4 py-3 text-xs font-semibold text-white/90 backdrop-blur">
+                Solo practice run — nothing was saved to progress data, leaderboards, or analytics.
+              </div>
+            )}
           </div>
 
           <Button

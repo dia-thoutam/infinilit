@@ -38,6 +38,67 @@ import { xpFor } from "@/data/seed";
 import { useQuizzes } from "@/store/quizzes";
 import { playCorrect, playWrong, playXp, playFanfare } from "@/lib/sfx";
 
+/* ---------- Shared ranking + integrity ---------- */
+/**
+ * Deterministic tie-break: accuracy desc, XP desc, total answered desc, name asc.
+ * Only real classroom students are ranked — no synthetic entries.
+ */
+type Ranked = {
+  studentId: string;
+  name: string;
+  acc: number;
+  xp: number;
+  total: number;
+};
+function rankRoster(
+  classroom: Classroom | null,
+  tally: Record<string, StudentSessionStat>,
+): Ranked[] {
+  if (!classroom) return [];
+  return classroom.students
+    .map((s) => {
+      const t = tally[s.id];
+      const total = t?.total ?? 0;
+      const acc = t && total ? Math.round((t.correct / total) * 100) : 0;
+      const xp = t ? t.correct * 50 : 0;
+      return { studentId: s.id, name: s.name, acc, xp, total };
+    })
+    .sort(
+      (a, b) =>
+        b.acc - a.acc ||
+        b.xp - a.xp ||
+        b.total - a.total ||
+        a.name.localeCompare(b.name),
+    );
+}
+
+// Known mock/seed placeholders that must never leak into real leaderboards.
+const MOCK_NAME_BLOCKLIST = new Set([
+  "Maya",
+  "Zara",
+  "Ananya",
+  "You",
+  "Player 1",
+  "Player 2",
+]);
+function detectMockLeak(
+  classroom: Classroom | null,
+  displayedNames: string[],
+): string | null {
+  if (!classroom) return "Missing classroom roster — cannot display real ranking.";
+  const roster = new Set(classroom.students.map((s) => s.name));
+  for (const n of displayedNames) {
+    if (n === "—") continue;
+    if (MOCK_NAME_BLOCKLIST.has(n) && !roster.has(n)) {
+      return `Blocked mock name in results: "${n}".`;
+    }
+    if (!roster.has(n)) {
+      return `Name "${n}" is not in the classroom roster.`;
+    }
+  }
+  return null;
+}
+
 export const Route = createFileRoute("/quiz")({
   head: () => ({
     meta: [
@@ -225,8 +286,9 @@ function QuizPage() {
     } else {
       const accuracy = Math.round(((correctCount + (picked === question.correct ? 1 : 0)) / quiz.questions.length) * 100);
       const totalXp = xp + (picked === question.correct ? xpFor(question.difficulty) : 0);
-      // Solo runs are practice-only: do NOT feed into any progress/analytics data.
-      if (classroom) {
+      // HARD GUARDRAIL — solo runs never touch persisted progress data.
+      // Only a classroom-bound run may call recordAttempt/addSession.
+      if (classroom && classroomId) {
         recordAttempt(quiz.id, accuracy, totalXp);
         addSession(classroom.id, {
           id: `sess-${Date.now()}`,
@@ -238,6 +300,13 @@ function QuizPage() {
           trackedConfidence: trackConfidence,
           perStudent: Object.values(tally),
         });
+      } else if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.info(
+          "[quiz] solo run complete — no progress data written (accuracy=%d, xp=%d)",
+          accuracy,
+          totalXp,
+        );
       }
       setFinalAccuracy(accuracy);
       setFinalXp(totalXp);
@@ -269,6 +338,7 @@ function QuizPage() {
         xp={finalXp}
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
+        isSolo={!classroom}
         onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
@@ -794,14 +864,9 @@ function LeaderboardScreen({
   tally: Record<string, StudentSessionStat>;
   onNext: () => void;
 }) {
-  const ranked = (classroom?.students ?? [])
-    .map((s) => {
-      const t = tally[s.id];
-      const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
-      const xp = t ? t.correct * 50 : 0;
-      return { name: s.name, improvement: acc, xp };
-    })
-    .sort((a, b) => b.improvement - a.improvement || b.xp - a.xp);
+  const rankedRaw = rankRoster(classroom, tally);
+  const ranked = rankedRaw.map((r) => ({ name: r.name, improvement: r.acc, xp: r.xp }));
+  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
   const padded = [...ranked];
   while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
   const top3 = padded.slice(0, 3);
@@ -815,6 +880,11 @@ function LeaderboardScreen({
   return (
     <div className="min-h-screen bg-sunshine text-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        {integrityError && (
+          <div className="mb-4 rounded-2xl border-2 border-coral bg-coral/15 px-4 py-3 text-sm font-semibold text-coral">
+            Data integrity check failed: {integrityError} Only real classroom data is shown.
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase text-background">
@@ -830,7 +900,9 @@ function LeaderboardScreen({
         </div>
 
         <h1 className="mt-6 text-center font-display text-5xl font-bold sm:text-7xl">Final standings</h1>
-        <p className="mt-2 text-center text-sm font-semibold uppercase tracking-wider">Ranked by improvement score</p>
+        <p className="mt-2 text-center text-sm font-semibold uppercase tracking-wider">
+          Ranked by accuracy → XP → questions answered → name
+        </p>
 
         {/* Top 3 */}
         <div className="mt-10 grid items-end gap-4 sm:grid-cols-3">
@@ -925,25 +997,15 @@ function PodiumScreen({
     const t = window.setTimeout(() => playFanfare(), 250);
     return () => window.clearTimeout(t);
   }, []);
-  // Build ranking. If classroom + tally, rank real students by accuracy then correct.
-  // Else fall back to a friendly default trio so solo runs still get a podium.
-  let ranked: { name: string; xp: number; acc: number }[] = [];
-  if (classroom && Object.keys(tally).length > 0) {
-    ranked = classroom.students
-      .map((s) => {
-        const t = tally[s.id];
-        const acc = t && t.total ? Math.round((t.correct / t.total) * 100) : 0;
-        const xp = t ? t.correct * 50 : 0;
-        return { name: s.name, xp, acc };
-      })
-      .sort((a, b) => b.acc - a.acc || b.xp - a.xp);
-  } else {
-    ranked = [
-      { name: "You", xp: myXp || 320, acc: 92 },
-      { name: "Maya", xp: 280, acc: 86 },
-      { name: "Zara", xp: 240, acc: 78 },
-    ];
-  }
+  // Podium is a classroom-only screen. Rank only real roster + real tally.
+  // No synthetic entries — the leaderboard is padded visually with "—".
+  void myXp;
+  const ranked = rankRoster(classroom, tally).map((r) => ({
+    name: r.name,
+    xp: r.xp,
+    acc: r.acc,
+  }));
+  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
   const top3 = ranked.slice(0, 3);
   while (top3.length < 3) top3.push({ name: "—", xp: 0, acc: 0 });
 
@@ -1000,6 +1062,11 @@ function PodiumScreen({
         })}
       </div>
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+        {integrityError && (
+          <div className="mb-4 rounded-2xl border-2 border-white/60 bg-white/15 px-4 py-3 text-sm font-semibold text-white backdrop-blur">
+            Data integrity check failed: {integrityError}
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <Link to="/quiz" className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
             <Home className="h-4 w-4" strokeWidth={3} /> Home
