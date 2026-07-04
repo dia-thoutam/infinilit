@@ -21,6 +21,7 @@ export function CompletedScreen({
   isSolo?: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
+  const finishedAt = useState(() => new Date())[0];
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 30);
     return () => clearTimeout(t);
@@ -150,8 +151,18 @@ export function CompletedScreen({
               +{xp} XP
             </div>
             {isSolo && (
-              <div className="mx-auto max-w-xs rounded-2xl border border-white/25 bg-white/10 px-4 py-3 text-xs font-semibold text-white/90 backdrop-blur">
-                Solo practice run — nothing was saved to progress data, leaderboards, or analytics.
+              <div className="mx-auto max-w-sm rounded-2xl border border-white/25 bg-white/10 px-4 py-3 text-left text-xs font-semibold text-white/90 backdrop-blur">
+                <div className="mb-1 text-center text-[11px] font-black uppercase tracking-widest text-white">
+                  Solo practice · {finishedAt.toLocaleString()}
+                </div>
+                <div className="text-center text-white/80">Nothing was saved to:</div>
+                <ul className="mt-2 space-y-1">
+                  <li>• Quiz <span className="font-mono">lastAttempt</span></li>
+                  <li>• Classroom progress / sessions</li>
+                  <li>• Leaderboard or podium</li>
+                  <li>• Analytics charts</li>
+                  <li>• Server audit log</li>
+                </ul>
               </div>
             )}
           </div>
