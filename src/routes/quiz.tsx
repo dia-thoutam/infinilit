@@ -1056,7 +1056,10 @@ function PodiumScreen({
     xp: r.xp,
     acc: r.acc,
   }));
-  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
+  const leakDetection = useDevFlags((s) => s.leakDetection);
+  const integrityError = leakDetection
+    ? detectMockLeak(classroom, ranked.map((r) => r.name))
+    : null;
   const top3 = ranked.slice(0, 3);
   while (top3.length < 3) top3.push({ name: "—", xp: 0, acc: 0 });
 
