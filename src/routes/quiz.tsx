@@ -348,6 +348,11 @@ function QuizPage() {
   }
 
   if (phase === "leaderboard") {
+    // Defensive: solo runs must never reach the leaderboard.
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <LeaderboardScreen
         classroom={classroom}
