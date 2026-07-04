@@ -30,6 +30,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useClassrooms, type Classroom, type StudentSessionStat } from "@/store/classrooms";
+import { useDevFlags } from "@/store/dev-flags";
+import { useAuditLog } from "@/store/audit-log";
 import { CompletedScreen } from "@/components/completed-screen";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,6 +72,18 @@ function rankRoster(
         b.total - a.total ||
         a.name.localeCompare(b.name),
     );
+}
+
+/**
+ * Label describing which tie-break rule set this row's rank relative to the
+ * row above it (or the row below, for #1). Used purely for teacher display.
+ */
+function tieBreakReason(prev: Ranked | undefined, cur: Ranked): string {
+  if (!prev) return "Highest accuracy";
+  if (prev.acc !== cur.acc) return "Lower accuracy";
+  if (prev.xp !== cur.xp) return "Tied accuracy · lower XP";
+  if (prev.total !== cur.total) return "Tied XP · fewer answered";
+  return "Tied · alphabetical";
 }
 
 // Known mock/seed placeholders that must never leak into real leaderboards.
@@ -120,6 +134,7 @@ function QuizPage() {
   const recordAttempt = useQuizzes((s) => s.recordAttempt);
   const classrooms = useClassrooms((s) => s.classrooms);
   const addSession = useClassrooms((s) => s.addSession);
+  const recordAudit = useAuditLog((s) => s.record);
 
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);
   const [classroomId, setClassroomId] = useState<string | null>(null);
@@ -300,6 +315,16 @@ function QuizPage() {
           trackedConfidence: trackConfidence,
           perStudent: Object.values(tally),
         });
+        // Audit: which roster IDs powered this session's leaderboard/charts.
+        recordAudit({
+          classroomId: classroom.id,
+          classroomName: classroom.name,
+          quizId: quiz.id,
+          quizTitle: quiz.title,
+          rosterIds: classroom.students.map((s) => s.id),
+          tallyIds: Object.keys(tally),
+          source: "classroom-session",
+        });
       } else if (import.meta.env.DEV) {
         // eslint-disable-next-line no-console
         console.info(
@@ -323,6 +348,11 @@ function QuizPage() {
   }
 
   if (phase === "leaderboard") {
+    // Defensive: solo runs must never reach the leaderboard.
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <LeaderboardScreen
         classroom={classroom}
@@ -339,12 +369,20 @@ function QuizPage() {
         accuracy={finalAccuracy}
         quizTitle={quiz.title}
         isSolo={!classroom}
+        // HARD RULE: solo must always return to the lobby — never route to
+        // podium, leaderboard, or progress screens. Refreshing the /quiz
+        // route also lands on the lobby because phase state is not persisted.
         onContinue={() => setPhase(classroom ? ("podium" as Phase) : "lobby")}
       />
     );
   }
 
   if ((phase as PhaseExt) === "podium") {
+    // Defensive: if somehow a solo run reached podium, bounce to lobby.
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <PodiumScreen
         classroom={classroom}
@@ -356,12 +394,17 @@ function QuizPage() {
   }
 
   if (phase === "progress") {
+    if (!classroom) {
+      setPhase("lobby");
+      return null;
+    }
     return (
       <AppShell>
         <ProgressSplit classroom={classroom} onDone={() => setPhase("lobby")} />
       </AppShell>
     );
   }
+
 
   const majorityWrong = phase === "reveal" && votes[question.correct] < Math.max(...votes);
 
@@ -864,9 +907,12 @@ function LeaderboardScreen({
   tally: Record<string, StudentSessionStat>;
   onNext: () => void;
 }) {
+  const leakDetection = useDevFlags((s) => s.leakDetection);
   const rankedRaw = rankRoster(classroom, tally);
   const ranked = rankedRaw.map((r) => ({ name: r.name, improvement: r.acc, xp: r.xp }));
-  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
+  const integrityError = leakDetection
+    ? detectMockLeak(classroom, ranked.map((r) => r.name))
+    : null;
   const padded = [...ranked];
   while (padded.length < 3) padded.push({ name: "—", improvement: 0, xp: 0 });
   const top3 = padded.slice(0, 3);
@@ -935,7 +981,7 @@ function LeaderboardScreen({
             <div className="col-span-4">Improvement</div>
             <div className="col-span-2 text-right">XP</div>
           </div>
-          {ranked.map((s, i) => (
+          {rankedRaw.map((s, i) => (
             <div
               key={s.name}
               className={cn(
@@ -944,13 +990,18 @@ function LeaderboardScreen({
               )}
             >
               <div className="col-span-1 font-bold">{i + 1}</div>
-              <div className="col-span-5">{s.name}</div>
+              <div className="col-span-5">
+                <div>{s.name}</div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60">
+                  {tieBreakReason(rankedRaw[i - 1], s)} · {s.acc}% · {s.xp} XP · {s.total} answered
+                </div>
+              </div>
               <div className="col-span-4 flex items-center gap-2">
                 <div className="h-2 w-24 overflow-hidden rounded-full bg-foreground/10">
-                  <div className={cn("h-full", s.improvement >= 0 ? "bg-mint" : "bg-coral")} style={{ width: `${Math.min(100, Math.abs(s.improvement) * 3)}%` }} />
+                  <div className={cn("h-full", s.acc >= 0 ? "bg-mint" : "bg-coral")} style={{ width: `${Math.min(100, Math.abs(s.acc) * 3)}%` }} />
                 </div>
-                <span className={cn("font-semibold", s.improvement >= 0 ? "text-mint-foreground" : "text-coral")}>
-                  {s.improvement > 0 ? "+" : ""}{s.improvement}
+                <span className={cn("font-semibold", s.acc >= 0 ? "text-mint-foreground" : "text-coral")}>
+                  {s.acc}%
                 </span>
               </div>
               <div className="col-span-2 text-right font-bold">{s.xp.toLocaleString()}</div>
@@ -1005,7 +1056,10 @@ function PodiumScreen({
     xp: r.xp,
     acc: r.acc,
   }));
-  const integrityError = detectMockLeak(classroom, ranked.map((r) => r.name));
+  const leakDetection = useDevFlags((s) => s.leakDetection);
+  const integrityError = leakDetection
+    ? detectMockLeak(classroom, ranked.map((r) => r.name))
+    : null;
   const top3 = ranked.slice(0, 3);
   while (top3.length < 3) top3.push({ name: "—", xp: 0, acc: 0 });
 

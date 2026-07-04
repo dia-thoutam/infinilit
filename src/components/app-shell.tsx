@@ -58,9 +58,6 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <div className="section-pill-soft hidden px-3 py-1 text-xs font-black text-sunshine-foreground md:block" style={{ background: "linear-gradient(180deg, #ffe28a 0%, #ffcf5c 100%)" }}>
-              <span>Dia &amp; Joshitha</span>
-            </div>
           </div>
         </div>
       </header>
