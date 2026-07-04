@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { KeyRound, Trash2, ShieldAlert, CalendarRange, Lock } from "lucide-react";
+import { KeyRound, Trash2, ShieldAlert, CalendarRange, Lock, FlaskConical, ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { HexBadge } from "@/components/hex-badge";
 import { useClassrooms } from "@/store/classrooms";
 import { useQuizzes } from "@/store/quizzes";
+import { useDevFlags } from "@/store/dev-flags";
+import { useAuditLog } from "@/store/audit-log";
 
 const PIN_KEY = "infinilit-teacher-pin";
 const DEFAULT_PIN = "2468";
@@ -31,6 +34,11 @@ export function ResetDataPanel() {
   const clearAttemptsInRange = useQuizzes((s) => s.clearAttemptsInRange);
   const clearAllAttempts = useQuizzes((s) => s.clearAllAttempts);
   const wipeQuizzes = useQuizzes((s) => s.wipeAll);
+  const leakDetection = useDevFlags((s) => s.leakDetection);
+  const setLeakDetection = useDevFlags((s) => s.setLeakDetection);
+  const auditEntries = useAuditLog((s) => s.entries);
+  const clearAudit = useAuditLog((s) => s.clear);
+  const [showAudit, setShowAudit] = useState(false);
 
   useEffect(() => {
     if (notice) {
@@ -222,6 +230,65 @@ export function ResetDataPanel() {
               Cancel
             </Button>
           </form>
+        )}
+      </div>
+
+      {/* Dev flags */}
+      <div className="rounded-2xl border-2 border-foreground/15 bg-background/70 p-4">
+        <div className="flex items-center gap-2 text-sm font-black text-foreground">
+          <FlaskConical className="h-4 w-4" strokeWidth={2.5} /> Developer flags
+        </div>
+        <label className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-muted/40 px-3 py-2 text-xs font-semibold">
+          <div>
+            <div className="text-sm font-black text-foreground">Mock / seed leak detection</div>
+            <div className="text-[11px] text-foreground/70">
+              Shows a red banner on the leaderboard / podium when a displayed name isn't in the classroom roster.
+              Turn OFF while testing solo or fresh-classroom flows.
+            </div>
+          </div>
+          <Switch checked={leakDetection} onCheckedChange={setLeakDetection} />
+        </label>
+      </div>
+
+      {/* Audit log */}
+      <div className="rounded-2xl border-2 border-foreground/15 bg-background/70 p-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-sm font-black text-foreground">
+            <ScrollText className="h-4 w-4" strokeWidth={2.5} /> Session audit log ({auditEntries.length})
+          </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={() => setShowAudit((v) => !v)} className="text-xs font-black">
+              {showAudit ? "Hide" : "View"}
+            </Button>
+            <Button variant="ghost" onClick={clearAudit} className="text-xs font-black text-coral">
+              Clear
+            </Button>
+          </div>
+        </div>
+        <p className="mt-1 text-[11px] font-semibold text-foreground/70">
+          Records the classroom roster IDs used to compute each recorded session's leaderboard / charts. Client-side; a true server-side log requires enabling Lovable Cloud.
+        </p>
+        {showAudit && (
+          <div className="mt-3 max-h-64 overflow-y-auto rounded-xl border border-foreground/10 bg-background text-xs">
+            {auditEntries.length === 0 ? (
+              <div className="p-3 text-foreground/60">No entries yet.</div>
+            ) : (
+              auditEntries.map((e) => (
+                <div key={e.id} className="border-b border-foreground/5 p-3 last:border-b-0">
+                  <div className="font-black">{e.quizTitle} · {e.classroomName}</div>
+                  <div className="text-[10px] text-foreground/70">{new Date(e.ts).toLocaleString()}</div>
+                  <div className="mt-1">
+                    <span className="font-semibold">Roster ({e.rosterIds.length}):</span>{" "}
+                    <span className="font-mono text-[10px]">{e.rosterIds.join(", ") || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Recorded picks ({e.tallyIds.length}):</span>{" "}
+                    <span className="font-mono text-[10px]">{e.tallyIds.join(", ") || "—"}</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         )}
       </div>
     </Card>
