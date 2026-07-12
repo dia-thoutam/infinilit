@@ -1,9 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Sparkles, GraduationCap, BarChart3, Trophy } from "lucide-react";
-import type { ReactNode } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Sparkles, GraduationCap, BarChart3, Trophy, LogOut, LogIn } from "lucide-react";
+import { useEffect, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { HexBadge } from "@/components/hex-badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useAuth } from "@/store/auth";
 
 const tabs = [
   { to: "/quiz", label: "Play", icon: Sparkles },
@@ -13,6 +14,21 @@ const tabs = [
 
 export function AppShell({ children, bare = false }: { children: ReactNode; bare?: boolean }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const user = useAuth((s) => s.user);
+  const initialized = useAuth((s) => s.initialized);
+  const signOut = useAuth((s) => s.signOut);
+
+  useEffect(() => {
+    if (initialized && !user) {
+      navigate({ to: "/login" });
+    }
+  }, [initialized, user, navigate]);
+
+  async function handleSignOut() {
+    await signOut();
+    navigate({ to: "/login" });
+  }
 
   return (
     <div className="relative min-h-screen bg-warm-gradient text-foreground">
@@ -58,6 +74,24 @@ export function AppShell({ children, bare = false }: { children: ReactNode; bare
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                title={user.email}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/30 bg-white/20 px-2.5 py-1.5 text-xs font-semibold text-foreground/90 backdrop-blur transition hover:bg-white/30"
+              >
+                <LogOut className="h-3.5 w-3.5" strokeWidth={2.5} />
+                <span className="hidden sm:inline">Log out</span>
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/30 bg-white/20 px-2.5 py-1.5 text-xs font-semibold text-foreground/90 backdrop-blur transition hover:bg-white/30"
+              >
+                <LogIn className="h-3.5 w-3.5" strokeWidth={2.5} />
+                <span className="hidden sm:inline">Log in</span>
+              </Link>
+            )}
           </div>
         </div>
       </header>
