@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import { useAuth } from "@/store/auth";
 import { friendlyAuthError } from "@/lib/amplify";
@@ -25,7 +25,7 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [needsConfirm, setNeedsConfirm] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setNeedsConfirm(false);
