@@ -18,7 +18,7 @@ type AuthState = {
   initialized: boolean;
   init: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ needsConfirmation: boolean }>;
+  signUp: (email: string, password: string, name: string) => Promise<{ needsConfirmation: boolean }>;
   confirmSignUp: (email: string, code: string) => Promise<void>;
   resendCode: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -34,9 +34,7 @@ export const useAuth = create<AuthState>((set) => ({
       const u = await getCurrentUser();
       const session = await fetchAuthSession();
       const email =
-        (session.tokens?.idToken?.payload?.email as string | undefined) ??
-        u.signInDetails?.loginId ??
-        u.username;
+        (session.tokens?.idToken?.payload?.email as string | undefined) ?? u.signInDetails?.loginId ?? u.username;
       set({ user: { userId: u.userId, email }, initialized: true });
     } catch {
       set({ user: null, initialized: true });
@@ -54,14 +52,14 @@ export const useAuth = create<AuthState>((set) => ({
       throw e;
     }
   },
-  async signUp(email, password) {
+  async signUp(email, password, name) {
     configureAmplify();
     set({ loading: true });
     try {
       const res = await amplifySignUp({
         username: email,
         password,
-        options: { userAttributes: { email } },
+        options: { userAttributes: { email, name } },
       });
       set({ loading: false });
       return { needsConfirmation: !res.isSignUpComplete };

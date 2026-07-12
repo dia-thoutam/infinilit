@@ -1,16 +1,13 @@
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { UserPlus, Mail, Lock, KeyRound, Loader2 } from "lucide-react";
+import { UserPlus, Mail, Lock, KeyRound, Loader2, User } from "lucide-react";
 import { useAuth } from "@/store/auth";
 import { friendlyAuthError } from "@/lib/amplify";
 import { AuthShell, AuthInput, AuthButton } from "@/components/auth-ui";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
-    meta: [
-      { title: "Sign up — InFiniLit" },
-      { name: "description", content: "Create your InFiniLit account." },
-    ],
+    meta: [{ title: "Sign up — InFiniLit" }, { name: "description", content: "Create your InFiniLit account." }],
   }),
   component: SignupPage,
 });
@@ -23,6 +20,7 @@ function SignupPage() {
   const { signUp, confirmSignUp, resendCode, signIn, loading } = useAuth();
   const [stage, setStage] = useState<Stage>("register");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +31,7 @@ function SignupPage() {
     setError(null);
     setInfo(null);
     try {
-      const { needsConfirmation } = await signUp(email.trim(), password);
+      const { needsConfirmation } = await signUp(email.trim(), password, name.trim());
       if (needsConfirmation) {
         setStage("confirm");
         setInfo(`We sent a verification code to ${email}.`);
@@ -106,9 +104,7 @@ function SignupPage() {
             </div>
           )}
           {error && (
-            <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
-              {error}
-            </div>
+            <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</div>
           )}
           <AuthButton type="submit" disabled={loading}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm & continue"}
@@ -129,6 +125,15 @@ function SignupPage() {
     >
       <form onSubmit={onRegister} className="space-y-4">
         <AuthInput
+          label="Name"
+          type="text"
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          icon={<User className="h-4 w-4" />}
+        />
+        <AuthInput
           label="Email"
           type="email"
           autoComplete="email"
@@ -147,22 +152,14 @@ function SignupPage() {
           minLength={8}
           icon={<Lock className="h-4 w-4" />}
         />
-        <p className="text-xs text-foreground/70">
-          Min 8 characters, including upper, lower and a number.
-        </p>
+        <p className="text-xs text-foreground/70">Min 8 characters, including upper, lower and a number.</p>
         {error && (
-          <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
-            {error}
-          </div>
+          <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</div>
         )}
         <AuthButton type="submit" disabled={loading}>
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create account"}
         </AuthButton>
-        <AuthButton
-          type="button"
-          variant="ghost"
-          onClick={() => setStage("confirm")}
-        >
+        <AuthButton type="button" variant="ghost" onClick={() => setStage("confirm")}>
           I already have a code
         </AuthButton>
       </form>
