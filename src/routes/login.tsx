@@ -70,11 +70,7 @@ function LoginPage() {
             {error}
             {needsConfirm && (
               <div className="mt-1">
-                <Link
-                  to="/signup"
-                  search={{ email }}
-                  className="font-semibold underline"
-                >
+                <Link to="/signup" className="font-semibold underline">
                   Verify your account
                 </Link>
               </div>
