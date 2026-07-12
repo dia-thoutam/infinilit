@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TeacherIndexRouteImport } from './routes/teacher.index'
@@ -33,6 +34,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const QuizRoute = QuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
@@ -74,6 +80,7 @@ const TeacherIdEditRoute = TeacherIdEditRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/login': typeof LoginRoute
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/login': typeof LoginRoute
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher/classrooms': typeof TeacherClassroomsRouteWithChildren
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
+  '/login': typeof LoginRoute
   '/quiz': typeof QuizRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teacher': typeof TeacherRouteWithChildren
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/analytics'
+    | '/login'
     | '/quiz'
     | '/sitemap.xml'
     | '/teacher'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/analytics'
+    | '/login'
     | '/quiz'
     | '/sitemap.xml'
     | '/teacher/classrooms'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/analytics'
+    | '/login'
     | '/quiz'
     | '/sitemap.xml'
     | '/teacher'
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  LoginRoute: typeof LoginRoute
   QuizRoute: typeof QuizRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeacherRoute: typeof TeacherRouteWithChildren
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/analytics': {
@@ -259,6 +279,7 @@ const TeacherRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
+  LoginRoute: LoginRoute,
   QuizRoute: QuizRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeacherRoute: TeacherRouteWithChildren,
