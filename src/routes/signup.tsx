@@ -152,7 +152,9 @@ function SignupPage() {
           minLength={8}
           icon={<Lock className="h-4 w-4" />}
         />
-        <p className="text-xs text-foreground/70">Min 8 characters, including upper, lower and a number.</p>
+        <p className="text-xs text-foreground/70">
+          Min 8 characters, including uppercase, lowercase, a number, and a special character (e.g. ! @ # $).
+        </p>
         {error && (
           <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</div>
         )}
