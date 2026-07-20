@@ -5,6 +5,7 @@ import {
   confirmSignUp as amplifyConfirmSignUp,
   resendSignUpCode,
   signOut as amplifySignOut,
+  deleteUser as amplifyDeleteUser,
   getCurrentUser,
   fetchAuthSession,
 } from "aws-amplify/auth";
@@ -22,12 +23,14 @@ type AuthState = {
   confirmSignUp: (email: string, code: string) => Promise<void>;
   resendCode: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 };
 
 export const useAuth = create<AuthState>((set) => ({
   user: null,
   loading: false,
   initialized: false,
+
   async init() {
     configureAmplify();
     try {
@@ -40,6 +43,7 @@ export const useAuth = create<AuthState>((set) => ({
       set({ user: null, initialized: true });
     }
   },
+
   async signIn(email, password) {
     configureAmplify();
     set({ loading: true });
@@ -52,6 +56,7 @@ export const useAuth = create<AuthState>((set) => ({
       throw e;
     }
   },
+
   async signUp(email, password, name) {
     configureAmplify();
     set({ loading: true });
@@ -68,6 +73,7 @@ export const useAuth = create<AuthState>((set) => ({
       throw e;
     }
   },
+
   async confirmSignUp(email, code) {
     configureAmplify();
     set({ loading: true });
@@ -79,13 +85,27 @@ export const useAuth = create<AuthState>((set) => ({
       throw e;
     }
   },
+
   async resendCode(email) {
     configureAmplify();
     await resendSignUpCode({ username: email });
   },
+
   async signOut() {
     configureAmplify();
     await amplifySignOut();
     set({ user: null });
+  },
+
+  async deleteAccount() {
+    configureAmplify();
+    set({ loading: true });
+    try {
+      await amplifyDeleteUser();
+      set({ user: null, loading: false });
+    } catch (e) {
+      set({ loading: false });
+      throw e;
+    }
   },
 }));
