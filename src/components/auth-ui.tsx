@@ -1,6 +1,6 @@
-import type { ReactNode, InputHTMLAttributes, ButtonHTMLAttributes } from "react";
+import { useState, type ReactNode, type InputHTMLAttributes, type ButtonHTMLAttributes } from "react";
 import { Link } from "@tanstack/react-router";
-import { Trophy } from "lucide-react";
+import { Trophy, Eye, EyeOff } from "lucide-react";
 import { HexBadge } from "@/components/hex-badge";
 import { cn } from "@/lib/utils";
 
@@ -49,6 +49,9 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export function AuthInput({ label, icon, className, ...props }: InputProps) {
+  const [show, setShow] = useState(false);
+  const isPassword = props.type === "password";
+  const effectiveType = isPassword ? (show ? "text" : "password") : props.type;
   return (
     <label className="block">
       <span className="mb-1 block text-sm font-semibold text-purple-950">{label}</span>
@@ -60,12 +63,25 @@ export function AuthInput({ label, icon, className, ...props }: InputProps) {
         )}
         <input
           {...props}
+          type={effectiveType}
           className={cn(
             "w-full rounded-xl border border-purple-200 bg-white px-3 py-2.5 text-sm text-foreground shadow-sm outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-300",
             icon && "pl-9",
+            isPassword && "pr-20",
             className,
           )}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShow((s) => !s)}
+            aria-label={show ? "Hide password" : "Show password"}
+            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-purple-700 hover:bg-purple-100"
+          >
+            {show ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+            {show ? "Hide" : "Show"}
+          </button>
+        )}
       </div>
     </label>
   );
