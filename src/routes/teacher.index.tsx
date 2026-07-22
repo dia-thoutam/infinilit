@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Plus, Pencil, Trash2, Trophy, Calendar, Target, Zap, Sparkles, Users } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { HexBadge } from "@/components/hex-badge";
@@ -24,6 +25,10 @@ export const Route = createFileRoute("/teacher/")({
 function TeacherIndex() {
   const quizzes = useQuizzes((s) => s.quizzes);
   const remove = useQuizzes((s) => s.remove);
+  const load = useQuizzes((s) => s.load);
+  const loading = useQuizzes((s) => s.loading);
+
+  useEffect(() => { load(); }, [load]);
 
   return (
     <AppShell>
@@ -44,6 +49,10 @@ function TeacherIndex() {
             </Button>
           </Link>
         </div>
+
+        {loading && (
+          <div className="text-center text-foreground/60 py-8">Loading quizzes...</div>
+        )}
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <Link to="/teacher/new" className="group">
