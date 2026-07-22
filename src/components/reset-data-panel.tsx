@@ -31,7 +31,6 @@ export function ResetDataPanel() {
   const deleteSessionsInRange = useClassrooms((s) => s.deleteSessionsInRange);
   const resetAllStats = useClassrooms((s) => s.resetAllStats);
   const wipeClassrooms = useClassrooms((s) => s.wipeAll);
-  const clearAttemptsInRange = useQuizzes((s) => s.clearAttemptsInRange);
   const clearAllAttempts = useQuizzes((s) => s.clearAllAttempts);
   const wipeQuizzes = useQuizzes((s) => s.wipeAll);
   const leakDetection = useDevFlags((s) => s.leakDetection);
@@ -69,7 +68,6 @@ export function ResetDataPanel() {
     }
     if (!confirm(`Delete all classroom sessions and quiz attempts between ${from} and ${to}?`)) return;
     deleteSessionsInRange(from, to);
-    clearAttemptsInRange(from, to);
     setNotice(`Deleted data from ${from} to ${to}.`);
   }
 
