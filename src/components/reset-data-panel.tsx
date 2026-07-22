@@ -68,7 +68,6 @@ export function ResetDataPanel() {
     }
     if (!confirm(`Delete all classroom sessions and quiz attempts between ${from} and ${to}?`)) return;
     deleteSessionsInRange(from, to);
-    clearAttemptsInRange(from, to);
     setNotice(`Deleted data from ${from} to ${to}.`);
   }
 
