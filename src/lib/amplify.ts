@@ -4,13 +4,9 @@ let configured = false;
 
 export function configureAmplify() {
   if (configured || typeof window === "undefined") return;
-  const region = import.meta.env.VITE_COGNITO_REGION as string;
-  const userPoolId = import.meta.env.VITE_COGNITO_USER_POOL_ID as string;
-  const userPoolClientId = import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID as string;
-  if (!region || !userPoolId || !userPoolClientId) {
-    console.warn("[amplify] Missing Cognito env vars");
-    return;
-  }
+  const region = "us-west-1";
+  const userPoolId = "us-west-1_QwiKlZ8cs";
+  const userPoolClientId = "60ph50n2pdo9b2h56f6u13osbp";
   Amplify.configure({
     Auth: {
       Cognito: {
