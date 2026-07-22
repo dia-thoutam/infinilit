@@ -37,7 +37,9 @@ export const useAuth = create<AuthState>((set) => ({
       const u = await getCurrentUser();
       const session = await fetchAuthSession();
       const email =
-        (session.tokens?.idToken?.payload?.email as string | undefined) ?? u.signInDetails?.loginId ?? u.username;
+        (session.tokens?.idToken?.payload?.email as string | undefined) ??
+        u.signInDetails?.loginId ??
+        u.username;
       set({ user: { userId: u.userId, email }, initialized: true });
     } catch {
       set({ user: null, initialized: true });
@@ -48,6 +50,11 @@ export const useAuth = create<AuthState>((set) => ({
     configureAmplify();
     set({ loading: true });
     try {
+      try {
+        await amplifySignOut();
+      } catch {
+        // no one was signed in — fine
+      }
       await amplifySignIn({ username: email, password });
       const u = await getCurrentUser();
       set({ user: { userId: u.userId, email }, loading: false });
